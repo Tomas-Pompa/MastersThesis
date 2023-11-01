@@ -46,6 +46,9 @@ If you need help getting git/GitHub to work with RStudio see: [Happy Git and Git
 
 - [ ] 3. Use `browseURL("docs/index.html")` to view your book locally (or just open `index.html` in a browser).
 
+git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
 - [ ] 4. If it looks good, commit and push all changed files to GitHub. 
 
 (You will need to repeat steps 2 and 4 every time you wish to update the book online.)
