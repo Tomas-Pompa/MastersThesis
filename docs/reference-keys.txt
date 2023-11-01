@@ -1,3 +1,5 @@
-down-the-rabbit-hole
+klasifikace
+metoda-podpůrných-vektorů-pro-funkcionální-data
 the-pool-of-tears
-a-caucus-race-and-a-long-tale
+vyhlazení-pozorovaných-křivek
+klasifikace-křivek

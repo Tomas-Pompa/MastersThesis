@@ -1,0 +1,23 @@
+# Klasifikace křivek
+
+Nejprve načteme potřebné knihovny pro klasifikaci.
+
+```{r warning=FALSE, message=FALSE}
+library(caTools) # pro rozdeleni na testovaci a trenovaci
+library(caret) # pro k-fold CV
+library(fda.usc) # pro KNN, fLR
+library(MASS) # pro LDA
+library(fdapace)
+library(pracma)
+library(refund) # pro LR na skorech
+library(nnet) # pro LR na skorech
+library(caret)
+library(rpart) # stromy
+library(rattle) # grafika
+library(e1071)
+library(randomForest) # nahodny les
+```
+
+Abychom mohli jednotlivé klasifikátory porovnat, rozdělíme množinu vygenerovaných pozorování na dvě části v poměru 70:30, a to na trénovací a testovací (validační) část.
+Trénovací část použijeme při konstrukci klasifikátoru a testovací na výpočet chyby klasifikace a případně dalších charakteristik našeho modelu. 
+Výsledné klasifikátory podle těchto spočtených charakteristik můžeme následně porovnat mezi sebou z pohledu jejich úspěnosti klasifikace.

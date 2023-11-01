@@ -1,9 +1,8 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "Tom"
+title: "Diplomová práce"
+author: "Tomáš Pompa"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Down the rabbit-hole
-
+# Klasifikace 
