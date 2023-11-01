@@ -1,5 +1,7 @@
+fig:unnamed-chunk-4
+fig:unnamed-chunk-7
 klasifikace
 metoda-podpůrných-vektorů-pro-funkcionální-data
-the-pool-of-tears
+simulace-funkcionálních-dat
 vyhlazení-pozorovaných-křivek
 klasifikace-křivek

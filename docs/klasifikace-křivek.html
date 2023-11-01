@@ -142,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Klasifikace</a></li>
 <li class="chapter" data-level="2" data-path="metoda-podpůrných-vektorů-pro-funkcionální-data.html"><a href="metoda-podpůrných-vektorů-pro-funkcionální-data.html"><i class="fa fa-check"></i><b>2</b> Metoda podpůrných vektorů pro funkcionální data</a></li>
-<li class="chapter" data-level="3" data-path="the-pool-of-tears.html"><a href="the-pool-of-tears.html"><i class="fa fa-check"></i><b>3</b> The pool of tears</a></li>
+<li class="chapter" data-level="3" data-path="simulace-funkcionálních-dat.html"><a href="simulace-funkcionálních-dat.html"><i class="fa fa-check"></i><b>3</b> Simulace funkcionálních dat</a></li>
 <li class="chapter" data-level="4" data-path="vyhlazení-pozorovaných-křivek.html"><a href="vyhlazení-pozorovaných-křivek.html"><i class="fa fa-check"></i><b>4</b> Vyhlazení pozorovaných křivek</a></li>
 <li class="chapter" data-level="5" data-path="klasifikace-křivek.html"><a href="klasifikace-křivek.html"><i class="fa fa-check"></i><b>5</b> Klasifikace křivek</a></li>
 </ul>
@@ -165,19 +165,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="klasifikace-křivek" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Kapitola 5</span> Klasifikace křivek<a href="klasifikace-křivek.html#klasifikace-křivek" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Nejprve načteme potřebné knihovny pro klasifikaci.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="klasifikace-křivek.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(caTools) <span class="co"># pro rozdeleni na testovaci a trenovaci</span></span>
-<span id="cb1-2"><a href="klasifikace-křivek.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(caret) <span class="co"># pro k-fold CV</span></span>
-<span id="cb1-3"><a href="klasifikace-křivek.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(fda.usc) <span class="co"># pro KNN, fLR</span></span>
-<span id="cb1-4"><a href="klasifikace-křivek.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># pro LDA</span></span>
-<span id="cb1-5"><a href="klasifikace-křivek.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(fdapace)</span>
-<span id="cb1-6"><a href="klasifikace-křivek.html#cb1-6" tabindex="-1"></a><span class="fu">library</span>(pracma)</span>
-<span id="cb1-7"><a href="klasifikace-křivek.html#cb1-7" tabindex="-1"></a><span class="fu">library</span>(refund) <span class="co"># pro LR na skorech</span></span>
-<span id="cb1-8"><a href="klasifikace-křivek.html#cb1-8" tabindex="-1"></a><span class="fu">library</span>(nnet) <span class="co"># pro LR na skorech</span></span>
-<span id="cb1-9"><a href="klasifikace-křivek.html#cb1-9" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb1-10"><a href="klasifikace-křivek.html#cb1-10" tabindex="-1"></a><span class="fu">library</span>(rpart) <span class="co"># stromy</span></span>
-<span id="cb1-11"><a href="klasifikace-křivek.html#cb1-11" tabindex="-1"></a><span class="fu">library</span>(rattle) <span class="co"># grafika</span></span>
-<span id="cb1-12"><a href="klasifikace-křivek.html#cb1-12" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
-<span id="cb1-13"><a href="klasifikace-křivek.html#cb1-13" tabindex="-1"></a><span class="fu">library</span>(randomForest) <span class="co"># nahodny les</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="klasifikace-křivek.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(caTools) <span class="co"># pro rozdeleni na testovaci a trenovaci</span></span>
+<span id="cb7-2"><a href="klasifikace-křivek.html#cb7-2" tabindex="-1"></a><span class="fu">library</span>(caret) <span class="co"># pro k-fold CV</span></span>
+<span id="cb7-3"><a href="klasifikace-křivek.html#cb7-3" tabindex="-1"></a><span class="fu">library</span>(fda.usc) <span class="co"># pro KNN, fLR</span></span>
+<span id="cb7-4"><a href="klasifikace-křivek.html#cb7-4" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># pro LDA</span></span>
+<span id="cb7-5"><a href="klasifikace-křivek.html#cb7-5" tabindex="-1"></a><span class="fu">library</span>(fdapace)</span>
+<span id="cb7-6"><a href="klasifikace-křivek.html#cb7-6" tabindex="-1"></a><span class="fu">library</span>(pracma)</span>
+<span id="cb7-7"><a href="klasifikace-křivek.html#cb7-7" tabindex="-1"></a><span class="fu">library</span>(refund) <span class="co"># pro LR na skorech</span></span>
+<span id="cb7-8"><a href="klasifikace-křivek.html#cb7-8" tabindex="-1"></a><span class="fu">library</span>(nnet) <span class="co"># pro LR na skorech</span></span>
+<span id="cb7-9"><a href="klasifikace-křivek.html#cb7-9" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb7-10"><a href="klasifikace-křivek.html#cb7-10" tabindex="-1"></a><span class="fu">library</span>(rpart) <span class="co"># stromy</span></span>
+<span id="cb7-11"><a href="klasifikace-křivek.html#cb7-11" tabindex="-1"></a><span class="fu">library</span>(rattle) <span class="co"># grafika</span></span>
+<span id="cb7-12"><a href="klasifikace-křivek.html#cb7-12" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb7-13"><a href="klasifikace-křivek.html#cb7-13" tabindex="-1"></a><span class="fu">library</span>(randomForest) <span class="co"># nahodny les</span></span></code></pre></div>
 <p>Abychom mohli jednotlivé klasifikátory porovnat, rozdělíme množinu vygenerovaných pozorování na dvě části v poměru 70:30, a to na trénovací a testovací (validační) část.
 Trénovací část použijeme při konstrukci klasifikátoru a testovací na výpočet chyby klasifikace a případně dalších charakteristik našeho modelu.
 Výsledné klasifikátory podle těchto spočtených charakteristik můžeme následně porovnat mezi sebou z pohledu jejich úspěnosti klasifikace.</p>

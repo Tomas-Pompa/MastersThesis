@@ -1,2 +1,146 @@
-# The pool of tears
+# Simulace funkcionálních dat
 
+Nejprve si simulujeme funkce, které budeme následně chtít klasifikovat. Budeme uvažovat pro jednoduchost dvě klasifikační třídy. Pro simulaci nejprve:
+
+-   zvolíme vhodné funkce,
+
+-   generujeme body ze zvoleného intervalu, které obsahují , například gaussovský, šum,
+
+-   takto získané diskrétní body vyhladíme do podoby funkcionálního objektu pomocí nějakého vhodného bázového systému.
+
+Tímto postupem získáme funkcionální objekty společně s hodnotou kategoriální proměnné $Y$, která rozlišuje příslušnost do klasifikační třídy.
+
+```{r include=FALSE, eval=TRUE}
+setwd('C:/Users/Tom/OneDrive - MUNI/Diplomka/R')
+```
+
+```{r warning=FALSE, message=FALSE}
+# nacteme potrebne balicky 
+
+library(fda)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ddalpha)
+
+# set.seed(42)
+```
+
+Uvažujme tedy dvě klasifikační třídy, $Y \in \{0, 1\}$, pro každou ze tříd stejný počet `n` generovaných funkcí. Definujme si nejprve dvě funkce, každá bude pro jednu třídu. Funkce budeme uvažovat na intervalu $I = [0, 1]$.
+
+Pro třídu $Y = 0$ a $Y = 1$ uvažujme funkce
+
+$$
+f_0(x) = 2 \cdot \sin\left(\frac{\pi x}{2}\right) + x^2 + \frac{1}{2},
+$$
+
+$$
+f_1(x) = 3 \cdot \sin\left(\frac{\pi x}{2}\right) + \frac{1}{2} x.
+$$
+
+Jejich grafy jsou na obrázcích níže.
+
+```{r}
+# generujici funkce pro Y = 0 a Y = 1
+funkce_0 <- function(x) {return(2 * sin(x*pi/2) + x^2 + 0.5)}
+# pridat nahodny posun v zacatku nebo periode
+funkce_1 <- function(x) {return(3 * sin(x*pi/2) + 0.5 * x)}
+```
+
+```{r fig.cap='Znázornění dvou funkcí na intervalu $[0, 1]$, ze kterých generujeme pozorování ze tříd 0 a 1.'}
+x <- seq(0, 1, length = 501)
+y0 <- funkce_0(x)
+y1 <- funkce_1(x)
+df <- data.frame(x = rep(x, 2),
+                 y = c(y0, y1),
+                 Y = rep(c('Y = 0', 'Y = 1'), each = length(x)))
+
+df |> ggplot(aes(x = x, y = y, colour = Y)) + 
+  geom_line(linewidth = 1) + 
+  theme_bw() +
+  labs(colour = 'Group')
+```
+
+Nyní si vytvoříme funkci pro generování náhodných funkcí s přidaným šumem (resp. bodů na předem dané síti) ze zvolené generující funkce. Argument `t` označuje vektor hodnot, ve kterých chceme dané funkce vyhodnotit, `fun` značí generující funkci, `n` počet funkcí a `sigma` směrodatnou odchylku $\sigma$ normálního rozdělení $\text{N}(\mu, \sigma^2)$, ze kterého náhodně generujeme gaussovský bílý šum s $\mu = 0$. Abychom ukázali výhodu použití metod, které pracují s funkcionálními daty, přidáme při generování ke každému simulovanému pozorování navíc i náhodný člen, který bude mít význam vertikálního posunu celé funkce. Tento posun budeme generovat s exponenciálního rozdělění s parametrem $\lambda_{\text{exp}}$.
+
+```{r}
+generate_values <- function(t, fun, n, sigma, lambda_exp = Inf) {
+  # Arguments:
+  # t ... vector of values, where the function will be evaluated
+  # fun ... generating function of t 
+  # n ... the number of generated functions / objects
+  # sigma ... standard deviation of normal distribution to add noise to data
+  # lambda_exp ... parameter of exponential distribution
+  
+  # Value:
+  # X ... matrix of dimension length(t) times n with generated values of one 
+  # function in a column 
+  
+  X <- matrix(rep(t, times = n), ncol = n, nrow = length(t), byrow = FALSE)
+  noise <- matrix(rnorm(n * length(t), mean = 0, sd = sigma),
+                  ncol = n, nrow = length(t), byrow = FALSE)
+  shift <- matrix(rep(rexp(n, rate = lambda_exp), each = length(t)),
+                  ncol = n, nrow = length(t))
+  return(fun(X) + noise + shift)
+}
+```
+
+Nyní můžeme generovat funkce. V každé ze dvou tříd budeme uvažovat 100 pozorování, tedy `n = 100`.
+
+```{r}
+# pocet vygenerovanych pozorovani pro kazdou tridu
+n <- 100
+# vektor casu ekvidistantni na intervalu [0, 1]
+t <- seq(0, 1, length = 51)
+
+# pro Y = 0
+X0 <- generate_values(t, funkce_0, n, 1, 0.6)
+# pro Y = 1
+X1 <- generate_values(t, funkce_1, n, 1, 0.6)
+```
+
+Vykreslíme vygenerované (ještě nevyhlazené) funkce barevně v závislosti na třídě (pouze prvních 10 pozorování z každé třídy pro přehlednost).
+
+```{r fig.cap='Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená.'}
+n_curves_plot <- 10 # pocet krivek, ktere chceme vykreslit z kazde skupiny
+
+DF0 <- cbind(t, X0[, 1:n_curves_plot]) |> 
+  as.data.frame() |> 
+  reshape(varying = 2:(n_curves_plot + 1), direction = 'long', sep = '') |> 
+  subset(select = -id) |> 
+  mutate(
+  time = time - 1,
+  group = 0
+  )
+
+DF1 <- cbind(t, X1[, 1:n_curves_plot]) |> 
+  as.data.frame() |> 
+  reshape(varying = 2:(n_curves_plot + 1), direction = 'long', sep = '') |> 
+  subset(select = -id) |> 
+  mutate(
+  time = time - 1,
+  group = 1
+  )
+
+DF <- rbind(DF0, DF1) |>
+  mutate(group = factor(group))
+
+DF |> ggplot(aes(x = t, y = V, group = interaction(time, group), 
+                 colour = group)) + 
+  geom_line(linewidth = 0.5) +
+  theme_bw() +
+  labs(x = 'Time',
+       y = 'Function',
+       colour = 'Group') +
+  scale_colour_discrete(labels=c('Y = 0', 'Y = 1'))
+```
+
+pokud chci napsat matematiku
+
+```{=tex}
+\begin{equation}
+
+Y = 2
+
+\end{equation}
+```
