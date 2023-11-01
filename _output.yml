@@ -1,7 +1,22 @@
 bookdown::gitbook:
+  highlight: tango
   css: style.css
+  code_folding: hide
+  fig_caption: true
+  number_sections: true
+  split_by: chapter
   config:
     toc:
+      collapse: subsection
+      scroll_highlight: true
       before: |
-        <li><a href="./">SHORT TITLE HERE</a></li>
-      after: null
+        <li><a href="./">Introduction</a></li>
+      after: |
+    toolbar:
+        position: fixed   # static
+    search: false
+    edit : null
+    download: false
+    fontsettings: null
+    sharing: null
+    info: true
