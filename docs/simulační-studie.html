@@ -186,33 +186,33 @@ Proto dělat jakékoli závěry o metodách a porovnávat je mezi sebou může b
 Výsledky si budeme ukládat do tabulky a nakonec spočítáme průměrné charakteristiky modelů přes jednotlivá opakování.
 Aby byly naše závěry dostatečně obecné, zvolíme počet opakování <span class="math inline">\(n_{sim} = 100\)</span>.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="simulační-studie.html#cb121-1" tabindex="-1"></a><span class="co"># pocet simulaci</span></span>
-<span id="cb121-2"><a href="simulační-studie.html#cb121-2" tabindex="-1"></a>n.sim <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb121-3"><a href="simulační-studie.html#cb121-3" tabindex="-1"></a></span>
-<span id="cb121-4"><a href="simulační-studie.html#cb121-4" tabindex="-1"></a><span class="do">## list, do ktereho budeme ukladat hodnoty chybovosti</span></span>
-<span id="cb121-5"><a href="simulační-studie.html#cb121-5" tabindex="-1"></a><span class="co"># ve sloupcich budou metody</span></span>
-<span id="cb121-6"><a href="simulační-studie.html#cb121-6" tabindex="-1"></a><span class="co"># v radcich budou jednotliva opakovani</span></span>
-<span id="cb121-7"><a href="simulační-studie.html#cb121-7" tabindex="-1"></a><span class="co"># list ma dve polozky ... train a test</span></span>
-<span id="cb121-8"><a href="simulační-studie.html#cb121-8" tabindex="-1"></a>methods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;KNN&#39;</span>, <span class="st">&#39;LDA&#39;</span>, <span class="st">&#39;QDA&#39;</span>, <span class="st">&#39;LR_functional&#39;</span>, <span class="st">&#39;LR_score&#39;</span>, <span class="st">&#39;Tree_discr&#39;</span>,</span>
-<span id="cb121-9"><a href="simulační-studie.html#cb121-9" tabindex="-1"></a>             <span class="st">&#39;Tree_score&#39;</span>, <span class="st">&#39;Tree_Bbasis&#39;</span>, <span class="st">&#39;RF_discr&#39;</span>, <span class="st">&#39;RF_score&#39;</span>, <span class="st">&#39;RF_Bbasis&#39;</span>, </span>
-<span id="cb121-10"><a href="simulační-studie.html#cb121-10" tabindex="-1"></a>             <span class="st">&#39;SVM linear - diskr&#39;</span>, <span class="st">&#39;SVM poly - diskr&#39;</span>, <span class="st">&#39;SVM rbf - diskr&#39;</span>, </span>
-<span id="cb121-11"><a href="simulační-studie.html#cb121-11" tabindex="-1"></a>             <span class="st">&#39;SVM linear - PCA&#39;</span>, <span class="st">&#39;SVM poly - PCA&#39;</span>, <span class="st">&#39;SVM rbf - PCA&#39;</span>, </span>
-<span id="cb121-12"><a href="simulační-studie.html#cb121-12" tabindex="-1"></a>             <span class="st">&#39;SVM linear - Bbasis&#39;</span>, <span class="st">&#39;SVM poly - Bbasis&#39;</span>, <span class="st">&#39;SVM rbf - Bbasis&#39;</span>,</span>
-<span id="cb121-13"><a href="simulační-studie.html#cb121-13" tabindex="-1"></a>             <span class="st">&#39;SVM linear - projection&#39;</span>, <span class="st">&#39;SVM poly - projection&#39;</span>, </span>
-<span id="cb121-14"><a href="simulační-studie.html#cb121-14" tabindex="-1"></a>             <span class="st">&#39;SVM rbf - projection&#39;</span>, <span class="st">&#39;SVM linear - RKHS - radial&#39;</span>, <span class="st">&#39;SVM poly - RKHS - radial&#39;</span>, <span class="st">&#39;SVM rbf - RKHS - radial&#39;</span>, <span class="st">&#39;SVM linear - RKHS - poly&#39;</span>, <span class="st">&#39;SVM poly - RKHS - poly&#39;</span>, <span class="st">&#39;SVM rbf - RKHS - poly&#39;</span>, <span class="st">&#39;SVM linear - RKHS - linear&#39;</span>, <span class="st">&#39;SVM poly - RKHS - linear&#39;</span>, <span class="st">&#39;SVM rbf - RKHS - linear&#39;</span>)</span>
-<span id="cb121-15"><a href="simulační-studie.html#cb121-15" tabindex="-1"></a></span>
-<span id="cb121-16"><a href="simulační-studie.html#cb121-16" tabindex="-1"></a>SIMULACE <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">train =</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(methods), </span>
-<span id="cb121-17"><a href="simulační-studie.html#cb121-17" tabindex="-1"></a>                                             <span class="at">nrow =</span> n.sim,</span>
-<span id="cb121-18"><a href="simulační-studie.html#cb121-18" tabindex="-1"></a>                                             <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span>n.sim, methods))), </span>
-<span id="cb121-19"><a href="simulační-studie.html#cb121-19" tabindex="-1"></a>                 <span class="at">test =</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(methods), </span>
-<span id="cb121-20"><a href="simulační-studie.html#cb121-20" tabindex="-1"></a>                                             <span class="at">nrow =</span> n.sim,</span>
-<span id="cb121-21"><a href="simulační-studie.html#cb121-21" tabindex="-1"></a>                                             <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span>n.sim, methods))))</span>
-<span id="cb121-22"><a href="simulační-studie.html#cb121-22" tabindex="-1"></a></span>
-<span id="cb121-23"><a href="simulační-studie.html#cb121-23" tabindex="-1"></a><span class="co"># objekt na ulozeni optimalnich hodnot hyperparametru, ktere se urcuji pomoci CV</span></span>
-<span id="cb121-24"><a href="simulační-studie.html#cb121-24" tabindex="-1"></a>CV_RESULTS <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">KNN_K =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n.sim),</span>
-<span id="cb121-25"><a href="simulační-studie.html#cb121-25" tabindex="-1"></a>                         <span class="at">SVM_d_Linear =</span> <span class="cn">NA</span>,</span>
-<span id="cb121-26"><a href="simulační-studie.html#cb121-26" tabindex="-1"></a>                         <span class="at">SVM_d_Poly =</span> <span class="cn">NA</span>,</span>
-<span id="cb121-27"><a href="simulační-studie.html#cb121-27" tabindex="-1"></a>                         <span class="at">SVM_d_Radial =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="simulační-studie.html#cb120-1" tabindex="-1"></a><span class="co"># pocet simulaci</span></span>
+<span id="cb120-2"><a href="simulační-studie.html#cb120-2" tabindex="-1"></a>n.sim <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb120-3"><a href="simulační-studie.html#cb120-3" tabindex="-1"></a></span>
+<span id="cb120-4"><a href="simulační-studie.html#cb120-4" tabindex="-1"></a><span class="do">## list, do ktereho budeme ukladat hodnoty chybovosti</span></span>
+<span id="cb120-5"><a href="simulační-studie.html#cb120-5" tabindex="-1"></a><span class="co"># ve sloupcich budou metody</span></span>
+<span id="cb120-6"><a href="simulační-studie.html#cb120-6" tabindex="-1"></a><span class="co"># v radcich budou jednotliva opakovani</span></span>
+<span id="cb120-7"><a href="simulační-studie.html#cb120-7" tabindex="-1"></a><span class="co"># list ma dve polozky ... train a test</span></span>
+<span id="cb120-8"><a href="simulační-studie.html#cb120-8" tabindex="-1"></a>methods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;KNN&#39;</span>, <span class="st">&#39;LDA&#39;</span>, <span class="st">&#39;QDA&#39;</span>, <span class="st">&#39;LR_functional&#39;</span>, <span class="st">&#39;LR_score&#39;</span>, <span class="st">&#39;Tree_discr&#39;</span>,</span>
+<span id="cb120-9"><a href="simulační-studie.html#cb120-9" tabindex="-1"></a>             <span class="st">&#39;Tree_score&#39;</span>, <span class="st">&#39;Tree_Bbasis&#39;</span>, <span class="st">&#39;RF_discr&#39;</span>, <span class="st">&#39;RF_score&#39;</span>, <span class="st">&#39;RF_Bbasis&#39;</span>, </span>
+<span id="cb120-10"><a href="simulační-studie.html#cb120-10" tabindex="-1"></a>             <span class="st">&#39;SVM linear - diskr&#39;</span>, <span class="st">&#39;SVM poly - diskr&#39;</span>, <span class="st">&#39;SVM rbf - diskr&#39;</span>, </span>
+<span id="cb120-11"><a href="simulační-studie.html#cb120-11" tabindex="-1"></a>             <span class="st">&#39;SVM linear - PCA&#39;</span>, <span class="st">&#39;SVM poly - PCA&#39;</span>, <span class="st">&#39;SVM rbf - PCA&#39;</span>, </span>
+<span id="cb120-12"><a href="simulační-studie.html#cb120-12" tabindex="-1"></a>             <span class="st">&#39;SVM linear - Bbasis&#39;</span>, <span class="st">&#39;SVM poly - Bbasis&#39;</span>, <span class="st">&#39;SVM rbf - Bbasis&#39;</span>,</span>
+<span id="cb120-13"><a href="simulační-studie.html#cb120-13" tabindex="-1"></a>             <span class="st">&#39;SVM linear - projection&#39;</span>, <span class="st">&#39;SVM poly - projection&#39;</span>, </span>
+<span id="cb120-14"><a href="simulační-studie.html#cb120-14" tabindex="-1"></a>             <span class="st">&#39;SVM rbf - projection&#39;</span>, <span class="st">&#39;SVM linear - RKHS - radial&#39;</span>, <span class="st">&#39;SVM poly - RKHS - radial&#39;</span>, <span class="st">&#39;SVM rbf - RKHS - radial&#39;</span>, <span class="st">&#39;SVM linear - RKHS - poly&#39;</span>, <span class="st">&#39;SVM poly - RKHS - poly&#39;</span>, <span class="st">&#39;SVM rbf - RKHS - poly&#39;</span>, <span class="st">&#39;SVM linear - RKHS - linear&#39;</span>, <span class="st">&#39;SVM poly - RKHS - linear&#39;</span>, <span class="st">&#39;SVM rbf - RKHS - linear&#39;</span>)</span>
+<span id="cb120-15"><a href="simulační-studie.html#cb120-15" tabindex="-1"></a></span>
+<span id="cb120-16"><a href="simulační-studie.html#cb120-16" tabindex="-1"></a>SIMULACE <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">train =</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(methods), </span>
+<span id="cb120-17"><a href="simulační-studie.html#cb120-17" tabindex="-1"></a>                                             <span class="at">nrow =</span> n.sim,</span>
+<span id="cb120-18"><a href="simulační-studie.html#cb120-18" tabindex="-1"></a>                                             <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span>n.sim, methods))), </span>
+<span id="cb120-19"><a href="simulační-studie.html#cb120-19" tabindex="-1"></a>                 <span class="at">test =</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(methods), </span>
+<span id="cb120-20"><a href="simulační-studie.html#cb120-20" tabindex="-1"></a>                                             <span class="at">nrow =</span> n.sim,</span>
+<span id="cb120-21"><a href="simulační-studie.html#cb120-21" tabindex="-1"></a>                                             <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span>n.sim, methods))))</span>
+<span id="cb120-22"><a href="simulační-studie.html#cb120-22" tabindex="-1"></a></span>
+<span id="cb120-23"><a href="simulační-studie.html#cb120-23" tabindex="-1"></a><span class="co"># objekt na ulozeni optimalnich hodnot hyperparametru, ktere se urcuji pomoci CV</span></span>
+<span id="cb120-24"><a href="simulační-studie.html#cb120-24" tabindex="-1"></a>CV_RESULTS <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">KNN_K =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n.sim),</span>
+<span id="cb120-25"><a href="simulační-studie.html#cb120-25" tabindex="-1"></a>                         <span class="at">SVM_d_Linear =</span> <span class="cn">NA</span>,</span>
+<span id="cb120-26"><a href="simulační-studie.html#cb120-26" tabindex="-1"></a>                         <span class="at">SVM_d_Poly =</span> <span class="cn">NA</span>,</span>
+<span id="cb120-27"><a href="simulační-studie.html#cb120-27" tabindex="-1"></a>                         <span class="at">SVM_d_Radial =</span> <span class="cn">NA</span>)</span></code></pre></div>
 </details>
 <p>Nyní zopakujeme celou předchozí část <code>n.sim</code>-krát a hodnoty chybovostí si budeme ukládat to listu <code>SIMULACE</code>.
 Do datové tabulky <code>CV_RESULTS</code> si potom budeme ukládat hodnoty optimálních hyperparametrů – pro metodu <span class="math inline">\(K\)</span> nejbližších sousedů a pro SVM hodnotu dimenze <span class="math inline">\(d\)</span> v případě projekce na B-splinovou bázi.</p>
@@ -241,10 +241,7 @@ gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": null,
 "fontsettings": null,
-"edit": {
-"link": "https://github.com/Tomas-Pompa/MastersThesis/edit/main/01-Simulace_1.Rmd",
-"text": "Edit"
-},
+"edit": null,
 "history": {
 "link": null,
 "text": null

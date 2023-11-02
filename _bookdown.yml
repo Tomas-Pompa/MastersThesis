@@ -1,7 +1,8 @@
 book_filename: "bookdownproj"
 output_dir: docs
 delete_merged_file: true
-edit: https://github.com/Tomas-Pompa/MastersThesis/edit/main/%s
+new_session: yes
+preview: true
 view: https://github.com/Tomas-Pompa/MastersThesis/blob/main/%s
 language:
   ui:
@@ -13,3 +14,9 @@ language:
     thm: "Tvrzení "
     def: "Definice "
     exm: "Příklad "
+rmd_files: # defines the .Rmd files to be included for each output format
+  html: ["index.Rmd", 
+         "01-Simulace_1.Rmd", 
+         "02-Simulace_2.Rmd", 
+         "03-Application_1.Rmd",
+         "04-Application_2.Rmd"] # 

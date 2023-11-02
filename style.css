@@ -1,6 +1,6 @@
 p.caption {
-  color: #8ADBF1;
-  margin-top: 10px;
+  color: #777;
+  margin-top: 7px;
 }
 p code {
   white-space: inherit;
@@ -21,8 +21,8 @@ pre code {
 }
 
 .toc-logo img {
-  max-width: 100%;
-  margin-bottom: 10px;
+  max-width: 50%;
+  margin-bottom: 1px;
 }
 
 .summary > li:first-child {
@@ -30,6 +30,6 @@ pre code {
 }
 
 .book .book-summary {
-  background: #8ADBF1;
-  border-right: 5px #5699cc solid;
+  background: #C2E7F1;
+  border-right: 2px #679DAC solid;
 }
