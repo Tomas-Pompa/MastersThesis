@@ -1,5 +1,7 @@
 # Aplikace na reálných datech 2
 
+Věnujme se datovému souboru XXX.
+
 ```{r eval=FALSE, echo=FALSE}
 # nacteni dat 
 data <- dataf.tecator()

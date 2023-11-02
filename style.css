@@ -12,3 +12,24 @@ pre {
 pre code {
   white-space: inherit;
 }
+
+.toc-logo {
+  width: 200px !important;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+}
+
+.toc-logo img {
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.summary > li:first-child {
+  height: auto !important; 
+}
+
+.book .book-summary {
+  background: #8ADBF1;
+  border-right: 5px #5699cc solid;
+}
