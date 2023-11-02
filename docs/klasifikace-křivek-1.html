@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | Diplomová práce</title>
-  <meta name="description" content="Page not found | Diplomová práce" />
+  <title>Kapitola 4 Klasifikace křivek | Diplomová práce</title>
+  <meta name="description" content="Kapitola 4 Klasifikace křivek | Diplomová práce" />
   <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | Diplomová práce" />
+  <meta property="og:title" content="Kapitola 4 Klasifikace křivek | Diplomová práce" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | Diplomová práce" />
+  <meta name="twitter:title" content="Kapitola 4 Klasifikace křivek | Diplomová práce" />
   
   
   
@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
+<link rel="prev" href="aplikace-na-reálných-datech-1.html"/>
 
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -158,7 +158,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.5" data-path="simulace-1.html"><a href="simulace-1.html#simulační-studie"><i class="fa fa-check"></i><b>2.5</b> Simulační studie</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html"><i class="fa fa-check"></i><b>3</b> Aplikace na reálných datech 1</a></li>
-<li class="chapter" data-level="4" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html"><i class="fa fa-check"></i><b>4</b> Aplikace na reálných datech 2</a></li>
+<li class="chapter" data-level="4" data-path="klasifikace-křivek-1.html"><a href="klasifikace-křivek-1.html"><i class="fa fa-check"></i><b>4</b> Klasifikace křivek</a></li>
 </ul>
 
       </nav>
@@ -176,18 +176,44 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="klasifikace-křivek-1" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Kapitola 4</span> Klasifikace křivek<a href="klasifikace-křivek-1.html#klasifikace-křivek-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Nejprve načteme potřebné knihovny pro klasifikaci.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="klasifikace-křivek-1.html#cb122-1" tabindex="-1"></a><span class="fu">library</span>(caTools) <span class="co"># pro rozdeleni na testovaci a trenovaci</span></span>
+<span id="cb122-2"><a href="klasifikace-křivek-1.html#cb122-2" tabindex="-1"></a><span class="fu">library</span>(caret) <span class="co"># pro k-fold CV</span></span>
+<span id="cb122-3"><a href="klasifikace-křivek-1.html#cb122-3" tabindex="-1"></a><span class="fu">library</span>(fda.usc) <span class="co"># pro KNN, fLR</span></span>
+<span id="cb122-4"><a href="klasifikace-křivek-1.html#cb122-4" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># pro LDA</span></span>
+<span id="cb122-5"><a href="klasifikace-křivek-1.html#cb122-5" tabindex="-1"></a><span class="fu">library</span>(fdapace)</span>
+<span id="cb122-6"><a href="klasifikace-křivek-1.html#cb122-6" tabindex="-1"></a><span class="fu">library</span>(pracma)</span>
+<span id="cb122-7"><a href="klasifikace-křivek-1.html#cb122-7" tabindex="-1"></a><span class="fu">library</span>(refund) <span class="co"># pro LR na skorech</span></span>
+<span id="cb122-8"><a href="klasifikace-křivek-1.html#cb122-8" tabindex="-1"></a><span class="fu">library</span>(nnet) <span class="co"># pro LR na skorech</span></span>
+<span id="cb122-9"><a href="klasifikace-křivek-1.html#cb122-9" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb122-10"><a href="klasifikace-křivek-1.html#cb122-10" tabindex="-1"></a><span class="fu">library</span>(rpart) <span class="co"># stromy</span></span>
+<span id="cb122-11"><a href="klasifikace-křivek-1.html#cb122-11" tabindex="-1"></a><span class="fu">library</span>(rattle) <span class="co"># grafika</span></span>
+<span id="cb122-12"><a href="klasifikace-křivek-1.html#cb122-12" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb122-13"><a href="klasifikace-křivek-1.html#cb122-13" tabindex="-1"></a><span class="fu">library</span>(randomForest) <span class="co"># nahodny les</span></span></code></pre></div>
+</details>
+<p>Abychom mohli jednotlivé klasifikátory porovnat, rozdělíme množinu vygenerovaných pozorování na dvě části v poměru 70:30, a to na trénovací a testovací (validační) část.
+Trénovací část použijeme při konstrukci klasifikátoru a testovací na výpočet chyby klasifikace a případně dalších charakteristik našeho modelu.
+Výsledné klasifikátory podle těchto spočtených charakteristik můžeme následně porovnat mezi sebou z pohledu jejich úspěnosti klasifikace.</p>
+
 </div>
+
+
+
+
+
+
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-
+<a href="aplikace-na-reálných-datech-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -205,7 +231,7 @@ gitbook.start({
 "sharing": null,
 "fontsettings": null,
 "edit": {
-"link": "https://github.com/Tomas-Pompa/MastersThesis/edit/main/%s",
+"link": "https://github.com/Tomas-Pompa/MastersThesis/edit/main/04-Application_2.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -213,7 +239,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/Tomas-Pompa/MastersThesis/blob/main/%s",
+"link": "https://github.com/Tomas-Pompa/MastersThesis/blob/main/04-Application_2.Rmd",
 "text": null
 },
 "download": null,

@@ -1,6 +1,0 @@
-# Vyhlazení pozorovaných křivek
-
-Nyní převedeme pozorované diskrétní hodnoty (vektory hodnot) na funkcionální objekty, se kterými budeme následně pracovat. Jelikož se nejedná o periodické křivky na intervalu $I = [0, 1]$, využijeme k vyhlazení B-sline bázi. 
-
-Za uzly bereme celý vektor `t`, standardně uvažujeme kubické spliny, proto volíme (implicitní volba v `R`) `norder = 4`. Budeme penalizovat druhou derivaci funkcí.
-

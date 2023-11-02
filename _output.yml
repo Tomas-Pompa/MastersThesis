@@ -1,5 +1,6 @@
 bookdown::gitbook:
   highlight: tango
+  clean: FALSE
   css: style.css
   code_folding: hide
   fig_caption: true
@@ -16,7 +17,7 @@ bookdown::gitbook:
         position: fixed   # static
     search: false
     edit : null
-    download: false
+    download: false # null
     fontsettings: null
     sharing: null
     info: true

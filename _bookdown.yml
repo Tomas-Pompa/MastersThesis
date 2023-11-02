@@ -6,3 +6,10 @@ view: https://github.com/Tomas-Pompa/MastersThesis/blob/main/%s
 language:
   ui:
     chapter_name: "Kapitola "
+  label: 
+    fig: 'Obrázek '
+    tab: "Tabulka "
+    eq: "Rovnice "
+    thm: "Tvrzení "
+    def: "Definice "
+    exm: "Příklad "

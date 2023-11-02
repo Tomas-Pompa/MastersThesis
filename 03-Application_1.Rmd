@@ -1,0 +1,36 @@
+# Aplikace na reálných datech 1
+
+```{r eval=FALSE, echo=FALSE}
+# nacteni dat 
+data <- dataf.tecator()
+```
+
+```{r eval=FALSE, echo=FALSE}
+# vlozeni dat do jedne matice pro vykresleni
+DFgg <- data$dataf
+DFgg <- data.frame(matrix(unlist(DFgg), ncol=2*length(DFgg), nrow = 100,
+                          byrow=FALSE))
+
+DFgg <- data.frame(wavelength = unlist(DFgg[, seq(1, dim(DFgg)[2], by = 2)]),
+                   absorbance = unlist(DFgg[, seq(2, dim(DFgg)[2], by = 2)])) |>
+  mutate(label = data$labels |> unlist() |> rep(each = 100),
+         ID = paste0('X', seq(1, 215)) |> rep(each = 100))
+DFgg$label <- factor(DFgg$label, 
+                     levels = c('small', 'large'), 
+                     labels = c('Fat < 20 %', 'Fat > 20 %'))
+
+DFgg |> ggplot(aes(x = wavelength, y = absorbance, colour = label, group = ID)) + 
+  geom_line() + 
+  facet_wrap(~label)
+```
+
+```{r include=FALSE}
+# library(ggplot2)
+# library(patchwork)
+# p1 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+# p2 <- ggplot(mtcars) + geom_boxplot(aes(gear, disp, group = gear))
+# p3 <- ggplot(mtcars) + geom_smooth(aes(disp, qsec)) 
+# p4 <- ggplot(mtcars) + geom_bar(aes(carb)) 
+# (p1 | p2 | p3) / 
+#       p4
+```
