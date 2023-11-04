@@ -1,7 +1,7 @@
 --- 
 title: "Diplomová práce"
 author: "Tomáš Pompa"
-date: "`r Sys.Date()`"
+date: "`r paste0(Sys.Date() |> substr(9, 10), '. ', Sys.Date() |> substr(6, 7), '. ', Sys.Date() |> substr(1,4))`"
 site: bookdown::bookdown_site
 ---
 

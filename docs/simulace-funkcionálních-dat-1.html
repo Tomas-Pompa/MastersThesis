@@ -23,7 +23,6 @@
 <meta name="author" content="Tomáš Pompa" />
 
 
-<meta name="date" content="2023-11-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -155,7 +154,10 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3.7" data-path="klasifikace-křivek.html"><a href="klasifikace-křivek.html#support-vector-machines"><i class="fa fa-check"></i><b>2.3.7</b> 7) Support Vector Machines</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="tabulka-výsledků.html"><a href="tabulka-výsledků.html"><i class="fa fa-check"></i><b>2.4</b> Tabulka výsledků</a></li>
-<li class="chapter" data-level="2.5" data-path="simulační-studie.html"><a href="simulační-studie.html"><i class="fa fa-check"></i><b>2.5</b> Simulační studie</a></li>
+<li class="chapter" data-level="2.5" data-path="simulační-studie.html"><a href="simulační-studie.html"><i class="fa fa-check"></i><b>2.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="simulační-studie.html"><a href="simulační-studie.html#výsledky"><i class="fa fa-check"></i><b>2.5.1</b> Výsledky</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="simulace-2.html"><a href="simulace-2.html"><i class="fa fa-check"></i><b>3</b> Simulace 2</a>
 <ul>
@@ -172,7 +174,10 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3.7" data-path="klasifikace-křivek-1.html"><a href="klasifikace-křivek-1.html#support-vector-machines-1"><i class="fa fa-check"></i><b>3.3.7</b> 7) Support Vector Machines</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="tabulka-výsledků-1.html"><a href="tabulka-výsledků-1.html"><i class="fa fa-check"></i><b>3.4</b> Tabulka výsledků</a></li>
-<li class="chapter" data-level="3.5" data-path="simulační-studie-1.html"><a href="simulační-studie-1.html"><i class="fa fa-check"></i><b>3.5</b> Simulační studie</a></li>
+<li class="chapter" data-level="3.5" data-path="simulační-studie-1.html"><a href="simulační-studie-1.html"><i class="fa fa-check"></i><b>3.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="simulační-studie-1.html"><a href="simulační-studie-1.html#výsledky-1"><i class="fa fa-check"></i><b>3.5.1</b> Výsledky</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html"><i class="fa fa-check"></i><b>4</b> Aplikace na reálných datech 1</a></li>
 <li class="chapter" data-level="5" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html"><i class="fa fa-check"></i><b>5</b> Aplikace na reálných datech 2</a></li>
@@ -205,15 +210,15 @@ Pro simulaci nejprve:</p>
 </ul>
 <p>Tímto postupem získáme funkcionální objekty společně s hodnotou kategoriální proměnné <span class="math inline">\(Y\)</span>, která rozlišuje příslušnost do klasifikační třídy.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="simulace-funkcionálních-dat-1.html#cb1-1" tabindex="-1"></a><span class="co"># nacteme potrebne balicky </span></span>
-<span id="cb1-2"><a href="simulace-funkcionálních-dat-1.html#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="simulace-funkcionálních-dat-1.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(fda)</span>
-<span id="cb1-4"><a href="simulace-funkcionálních-dat-1.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-5"><a href="simulace-funkcionálních-dat-1.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-6"><a href="simulace-funkcionálních-dat-1.html#cb1-6" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-7"><a href="simulace-funkcionálních-dat-1.html#cb1-7" tabindex="-1"></a><span class="fu">library</span>(ddalpha)</span>
-<span id="cb1-8"><a href="simulace-funkcionálních-dat-1.html#cb1-8" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="simulace-funkcionálních-dat-1.html#cb1-9" tabindex="-1"></a><span class="co"># set.seed(42)</span></span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="simulace-funkcionálních-dat-1.html#cb127-1" tabindex="-1"></a><span class="co"># nacteme potrebne balicky </span></span>
+<span id="cb127-2"><a href="simulace-funkcionálních-dat-1.html#cb127-2" tabindex="-1"></a></span>
+<span id="cb127-3"><a href="simulace-funkcionálních-dat-1.html#cb127-3" tabindex="-1"></a><span class="fu">library</span>(fda)</span>
+<span id="cb127-4"><a href="simulace-funkcionálních-dat-1.html#cb127-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb127-5"><a href="simulace-funkcionálních-dat-1.html#cb127-5" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb127-6"><a href="simulace-funkcionálních-dat-1.html#cb127-6" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb127-7"><a href="simulace-funkcionálních-dat-1.html#cb127-7" tabindex="-1"></a><span class="fu">library</span>(ddalpha)</span>
+<span id="cb127-8"><a href="simulace-funkcionálních-dat-1.html#cb127-8" tabindex="-1"></a></span>
+<span id="cb127-9"><a href="simulace-funkcionálních-dat-1.html#cb127-9" tabindex="-1"></a><span class="co"># set.seed(42)</span></span></code></pre></div>
 </details>
 <p>Uvažujme tedy dvě klasifikační třídy, <span class="math inline">\(Y \in \{0, 1\}\)</span>, pro každou ze tříd stejný počet <code>n</code> generovaných funkcí.
 Definujme si nejprve dvě funkce, každá bude pro jednu třídu.
@@ -227,23 +232,23 @@ f_1(x) = 3 \cdot \sin\left(\frac{\pi x}{2}\right) + \frac{1}{2} x.
 \]</span></p>
 <p>Jejich grafy jsou na obrázcích níže.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="simulace-funkcionálních-dat-1.html#cb2-1" tabindex="-1"></a><span class="co"># generujici funkce pro Y = 0 a Y = 1</span></span>
-<span id="cb2-2"><a href="simulace-funkcionálních-dat-1.html#cb2-2" tabindex="-1"></a>funkce_0 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {<span class="fu">return</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">sin</span>(x<span class="sc">*</span>pi<span class="sc">/</span><span class="dv">2</span>) <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span>)}</span>
-<span id="cb2-3"><a href="simulace-funkcionálních-dat-1.html#cb2-3" tabindex="-1"></a><span class="co"># pridat nahodny posun v zacatku nebo periode</span></span>
-<span id="cb2-4"><a href="simulace-funkcionálních-dat-1.html#cb2-4" tabindex="-1"></a>funkce_1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {<span class="fu">return</span>(<span class="dv">3</span> <span class="sc">*</span> <span class="fu">sin</span>(x<span class="sc">*</span>pi<span class="sc">/</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x)}</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="simulace-funkcionálních-dat-1.html#cb128-1" tabindex="-1"></a><span class="co"># generujici funkce pro Y = 0 a Y = 1</span></span>
+<span id="cb128-2"><a href="simulace-funkcionálních-dat-1.html#cb128-2" tabindex="-1"></a>funkce_0 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {<span class="fu">return</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">sin</span>(x<span class="sc">*</span>pi<span class="sc">/</span><span class="dv">2</span>) <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span>)}</span>
+<span id="cb128-3"><a href="simulace-funkcionálních-dat-1.html#cb128-3" tabindex="-1"></a><span class="co"># pridat nahodny posun v zacatku nebo periode</span></span>
+<span id="cb128-4"><a href="simulace-funkcionálních-dat-1.html#cb128-4" tabindex="-1"></a>funkce_1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {<span class="fu">return</span>(<span class="dv">3</span> <span class="sc">*</span> <span class="fu">sin</span>(x<span class="sc">*</span>pi<span class="sc">/</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x)}</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="simulace-funkcionálních-dat-1.html#cb3-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">501</span>)</span>
-<span id="cb3-2"><a href="simulace-funkcionálních-dat-1.html#cb3-2" tabindex="-1"></a>y0 <span class="ot">&lt;-</span> <span class="fu">funkce_0</span>(x)</span>
-<span id="cb3-3"><a href="simulace-funkcionálních-dat-1.html#cb3-3" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">funkce_1</span>(x)</span>
-<span id="cb3-4"><a href="simulace-funkcionálních-dat-1.html#cb3-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rep</span>(x, <span class="dv">2</span>),</span>
-<span id="cb3-5"><a href="simulace-funkcionálních-dat-1.html#cb3-5" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">c</span>(y0, y1),</span>
-<span id="cb3-6"><a href="simulace-funkcionálních-dat-1.html#cb3-6" tabindex="-1"></a>                 <span class="at">Y =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>), <span class="at">each =</span> <span class="fu">length</span>(x)))</span>
-<span id="cb3-7"><a href="simulace-funkcionálních-dat-1.html#cb3-7" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="simulace-funkcionálních-dat-1.html#cb3-8" tabindex="-1"></a>df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Y)) <span class="sc">+</span> </span>
-<span id="cb3-9"><a href="simulace-funkcionálních-dat-1.html#cb3-9" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb3-10"><a href="simulace-funkcionálních-dat-1.html#cb3-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-11"><a href="simulace-funkcionálních-dat-1.html#cb3-11" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="simulace-funkcionálních-dat-1.html#cb129-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">501</span>)</span>
+<span id="cb129-2"><a href="simulace-funkcionálních-dat-1.html#cb129-2" tabindex="-1"></a>y0 <span class="ot">&lt;-</span> <span class="fu">funkce_0</span>(x)</span>
+<span id="cb129-3"><a href="simulace-funkcionálních-dat-1.html#cb129-3" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">funkce_1</span>(x)</span>
+<span id="cb129-4"><a href="simulace-funkcionálních-dat-1.html#cb129-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rep</span>(x, <span class="dv">2</span>),</span>
+<span id="cb129-5"><a href="simulace-funkcionálních-dat-1.html#cb129-5" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">c</span>(y0, y1),</span>
+<span id="cb129-6"><a href="simulace-funkcionálních-dat-1.html#cb129-6" tabindex="-1"></a>                 <span class="at">Y =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>), <span class="at">each =</span> <span class="fu">length</span>(x)))</span>
+<span id="cb129-7"><a href="simulace-funkcionálních-dat-1.html#cb129-7" tabindex="-1"></a></span>
+<span id="cb129-8"><a href="simulace-funkcionálních-dat-1.html#cb129-8" tabindex="-1"></a>df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Y)) <span class="sc">+</span> </span>
+<span id="cb129-9"><a href="simulace-funkcionálních-dat-1.html#cb129-9" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb129-10"><a href="simulace-funkcionálních-dat-1.html#cb129-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb129-11"><a href="simulace-funkcionálních-dat-1.html#cb129-11" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>)</span></code></pre></div>
 </details>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
 <img src="02-Simulace_2_files/figure-html/unnamed-chunk-3-1.png" alt="Znázornění dvou funkcí na intervalu $[0, 1]$, ze kterých generujeme pozorování ze tříd 0 a 1." width="672" />
@@ -256,72 +261,72 @@ Argument <code>t</code> označuje vektor hodnot, ve kterých chceme dané funkce
 Abychom ukázali výhodu použití metod, které pracují s funkcionálními daty, přidáme při generování ke každému simulovanému pozorování navíc i náhodný člen, který bude mít význam vertikálního posunu celé funkce.
 Tento posun budeme generovat s normálního rozdělění s parametrem <span class="math inline">\(\sigma^2 = 4\)</span>.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="simulace-funkcionálních-dat-1.html#cb4-1" tabindex="-1"></a>generate_values <span class="ot">&lt;-</span> <span class="cf">function</span>(t, fun, n, sigma, <span class="at">sigma_shift =</span> <span class="dv">0</span>) {</span>
-<span id="cb4-2"><a href="simulace-funkcionálních-dat-1.html#cb4-2" tabindex="-1"></a>  <span class="co"># Arguments:</span></span>
-<span id="cb4-3"><a href="simulace-funkcionálních-dat-1.html#cb4-3" tabindex="-1"></a>  <span class="co"># t ... vector of values, where the function will be evaluated</span></span>
-<span id="cb4-4"><a href="simulace-funkcionálních-dat-1.html#cb4-4" tabindex="-1"></a>  <span class="co"># fun ... generating function of t </span></span>
-<span id="cb4-5"><a href="simulace-funkcionálních-dat-1.html#cb4-5" tabindex="-1"></a>  <span class="co"># n ... the number of generated functions / objects</span></span>
-<span id="cb4-6"><a href="simulace-funkcionálních-dat-1.html#cb4-6" tabindex="-1"></a>  <span class="co"># sigma ... standard deviation of normal distribution to add noise to data</span></span>
-<span id="cb4-7"><a href="simulace-funkcionálních-dat-1.html#cb4-7" tabindex="-1"></a>  <span class="co"># sigma_shift ... parameter of normal distribution for generating shift</span></span>
-<span id="cb4-8"><a href="simulace-funkcionálních-dat-1.html#cb4-8" tabindex="-1"></a>  </span>
-<span id="cb4-9"><a href="simulace-funkcionálních-dat-1.html#cb4-9" tabindex="-1"></a>  <span class="co"># Value:</span></span>
-<span id="cb4-10"><a href="simulace-funkcionálních-dat-1.html#cb4-10" tabindex="-1"></a>  <span class="co"># X ... matrix of dimension length(t) times n with generated values of one </span></span>
-<span id="cb4-11"><a href="simulace-funkcionálních-dat-1.html#cb4-11" tabindex="-1"></a>  <span class="co"># function in a column </span></span>
-<span id="cb4-12"><a href="simulace-funkcionálních-dat-1.html#cb4-12" tabindex="-1"></a>  </span>
-<span id="cb4-13"><a href="simulace-funkcionálních-dat-1.html#cb4-13" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(t, <span class="at">times =</span> n), <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t), <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-14"><a href="simulace-funkcionálních-dat-1.html#cb4-14" tabindex="-1"></a>  noise <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> <span class="fu">length</span>(t), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma),</span>
-<span id="cb4-15"><a href="simulace-funkcionálních-dat-1.html#cb4-15" tabindex="-1"></a>                  <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t), <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-16"><a href="simulace-funkcionálních-dat-1.html#cb4-16" tabindex="-1"></a>  shift <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma_shift), <span class="at">each =</span> <span class="fu">length</span>(t)),</span>
-<span id="cb4-17"><a href="simulace-funkcionálních-dat-1.html#cb4-17" tabindex="-1"></a>                  <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t))</span>
-<span id="cb4-18"><a href="simulace-funkcionálních-dat-1.html#cb4-18" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">fun</span>(X) <span class="sc">+</span> noise <span class="sc">+</span> shift)</span>
-<span id="cb4-19"><a href="simulace-funkcionálních-dat-1.html#cb4-19" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="simulace-funkcionálních-dat-1.html#cb130-1" tabindex="-1"></a>generate_values <span class="ot">&lt;-</span> <span class="cf">function</span>(t, fun, n, sigma, <span class="at">sigma_shift =</span> <span class="dv">0</span>) {</span>
+<span id="cb130-2"><a href="simulace-funkcionálních-dat-1.html#cb130-2" tabindex="-1"></a>  <span class="co"># Arguments:</span></span>
+<span id="cb130-3"><a href="simulace-funkcionálních-dat-1.html#cb130-3" tabindex="-1"></a>  <span class="co"># t ... vector of values, where the function will be evaluated</span></span>
+<span id="cb130-4"><a href="simulace-funkcionálních-dat-1.html#cb130-4" tabindex="-1"></a>  <span class="co"># fun ... generating function of t </span></span>
+<span id="cb130-5"><a href="simulace-funkcionálních-dat-1.html#cb130-5" tabindex="-1"></a>  <span class="co"># n ... the number of generated functions / objects</span></span>
+<span id="cb130-6"><a href="simulace-funkcionálních-dat-1.html#cb130-6" tabindex="-1"></a>  <span class="co"># sigma ... standard deviation of normal distribution to add noise to data</span></span>
+<span id="cb130-7"><a href="simulace-funkcionálních-dat-1.html#cb130-7" tabindex="-1"></a>  <span class="co"># sigma_shift ... parameter of normal distribution for generating shift</span></span>
+<span id="cb130-8"><a href="simulace-funkcionálních-dat-1.html#cb130-8" tabindex="-1"></a>  </span>
+<span id="cb130-9"><a href="simulace-funkcionálních-dat-1.html#cb130-9" tabindex="-1"></a>  <span class="co"># Value:</span></span>
+<span id="cb130-10"><a href="simulace-funkcionálních-dat-1.html#cb130-10" tabindex="-1"></a>  <span class="co"># X ... matrix of dimension length(t) times n with generated values of one </span></span>
+<span id="cb130-11"><a href="simulace-funkcionálních-dat-1.html#cb130-11" tabindex="-1"></a>  <span class="co"># function in a column </span></span>
+<span id="cb130-12"><a href="simulace-funkcionálních-dat-1.html#cb130-12" tabindex="-1"></a>  </span>
+<span id="cb130-13"><a href="simulace-funkcionálních-dat-1.html#cb130-13" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(t, <span class="at">times =</span> n), <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t), <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb130-14"><a href="simulace-funkcionálních-dat-1.html#cb130-14" tabindex="-1"></a>  noise <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> <span class="fu">length</span>(t), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma),</span>
+<span id="cb130-15"><a href="simulace-funkcionálních-dat-1.html#cb130-15" tabindex="-1"></a>                  <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t), <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb130-16"><a href="simulace-funkcionálních-dat-1.html#cb130-16" tabindex="-1"></a>  shift <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma_shift), <span class="at">each =</span> <span class="fu">length</span>(t)),</span>
+<span id="cb130-17"><a href="simulace-funkcionálních-dat-1.html#cb130-17" tabindex="-1"></a>                  <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t))</span>
+<span id="cb130-18"><a href="simulace-funkcionálních-dat-1.html#cb130-18" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">fun</span>(X) <span class="sc">+</span> noise <span class="sc">+</span> shift)</span>
+<span id="cb130-19"><a href="simulace-funkcionálních-dat-1.html#cb130-19" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <p>Nyní můžeme generovat funkce.
 V každé ze dvou tříd budeme uvažovat 100 pozorování, tedy <code>n = 100</code>.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="simulace-funkcionálních-dat-1.html#cb5-1" tabindex="-1"></a><span class="co"># pocet vygenerovanych pozorovani pro kazdou tridu</span></span>
-<span id="cb5-2"><a href="simulace-funkcionálních-dat-1.html#cb5-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb5-3"><a href="simulace-funkcionálních-dat-1.html#cb5-3" tabindex="-1"></a><span class="co"># vektor casu ekvidistantni na intervalu [0, 1]</span></span>
-<span id="cb5-4"><a href="simulace-funkcionálních-dat-1.html#cb5-4" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">51</span>)</span>
-<span id="cb5-5"><a href="simulace-funkcionálních-dat-1.html#cb5-5" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="simulace-funkcionálních-dat-1.html#cb5-6" tabindex="-1"></a><span class="co"># pro Y = 0</span></span>
-<span id="cb5-7"><a href="simulace-funkcionálních-dat-1.html#cb5-7" tabindex="-1"></a>X0 <span class="ot">&lt;-</span> <span class="fu">generate_values</span>(t, funkce_0, n, <span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb5-8"><a href="simulace-funkcionálních-dat-1.html#cb5-8" tabindex="-1"></a><span class="co"># pro Y = 1</span></span>
-<span id="cb5-9"><a href="simulace-funkcionálních-dat-1.html#cb5-9" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">generate_values</span>(t, funkce_1, n, <span class="dv">1</span>, <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="simulace-funkcionálních-dat-1.html#cb131-1" tabindex="-1"></a><span class="co"># pocet vygenerovanych pozorovani pro kazdou tridu</span></span>
+<span id="cb131-2"><a href="simulace-funkcionálních-dat-1.html#cb131-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb131-3"><a href="simulace-funkcionálních-dat-1.html#cb131-3" tabindex="-1"></a><span class="co"># vektor casu ekvidistantni na intervalu [0, 1]</span></span>
+<span id="cb131-4"><a href="simulace-funkcionálních-dat-1.html#cb131-4" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">51</span>)</span>
+<span id="cb131-5"><a href="simulace-funkcionálních-dat-1.html#cb131-5" tabindex="-1"></a></span>
+<span id="cb131-6"><a href="simulace-funkcionálních-dat-1.html#cb131-6" tabindex="-1"></a><span class="co"># pro Y = 0</span></span>
+<span id="cb131-7"><a href="simulace-funkcionálních-dat-1.html#cb131-7" tabindex="-1"></a>X0 <span class="ot">&lt;-</span> <span class="fu">generate_values</span>(t, funkce_0, n, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb131-8"><a href="simulace-funkcionálních-dat-1.html#cb131-8" tabindex="-1"></a><span class="co"># pro Y = 1</span></span>
+<span id="cb131-9"><a href="simulace-funkcionálních-dat-1.html#cb131-9" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">generate_values</span>(t, funkce_1, n, <span class="dv">1</span>, <span class="dv">2</span>)</span></code></pre></div>
 </details>
 <p>Vykreslíme vygenerované (ještě nevyhlazené) funkce barevně v závislosti na třídě (pouze prvních 10 pozorování z každé třídy pro přehlednost).</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="simulace-funkcionálních-dat-1.html#cb6-1" tabindex="-1"></a>n_curves_plot <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># pocet krivek, ktere chceme vykreslit z kazde skupiny</span></span>
-<span id="cb6-2"><a href="simulace-funkcionálních-dat-1.html#cb6-2" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="simulace-funkcionálních-dat-1.html#cb6-3" tabindex="-1"></a>DF0 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, X0[, <span class="dv">1</span><span class="sc">:</span>n_curves_plot]) <span class="sc">|&gt;</span> </span>
-<span id="cb6-4"><a href="simulace-funkcionálních-dat-1.html#cb6-4" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb6-5"><a href="simulace-funkcionálních-dat-1.html#cb6-5" tabindex="-1"></a>  <span class="fu">reshape</span>(<span class="at">varying =</span> <span class="dv">2</span><span class="sc">:</span>(n_curves_plot <span class="sc">+</span> <span class="dv">1</span>), <span class="at">direction =</span> <span class="st">&#39;long&#39;</span>, <span class="at">sep =</span> <span class="st">&#39;&#39;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb6-6"><a href="simulace-funkcionálních-dat-1.html#cb6-6" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="sc">-</span>id) <span class="sc">|&gt;</span> </span>
-<span id="cb6-7"><a href="simulace-funkcionálních-dat-1.html#cb6-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb6-8"><a href="simulace-funkcionálních-dat-1.html#cb6-8" tabindex="-1"></a>  <span class="at">time =</span> time <span class="sc">-</span> <span class="dv">1</span>,</span>
-<span id="cb6-9"><a href="simulace-funkcionálních-dat-1.html#cb6-9" tabindex="-1"></a>  <span class="at">group =</span> <span class="dv">0</span></span>
-<span id="cb6-10"><a href="simulace-funkcionálních-dat-1.html#cb6-10" tabindex="-1"></a>  )</span>
-<span id="cb6-11"><a href="simulace-funkcionálních-dat-1.html#cb6-11" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="simulace-funkcionálních-dat-1.html#cb6-12" tabindex="-1"></a>DF1 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, X1[, <span class="dv">1</span><span class="sc">:</span>n_curves_plot]) <span class="sc">|&gt;</span> </span>
-<span id="cb6-13"><a href="simulace-funkcionálních-dat-1.html#cb6-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb6-14"><a href="simulace-funkcionálních-dat-1.html#cb6-14" tabindex="-1"></a>  <span class="fu">reshape</span>(<span class="at">varying =</span> <span class="dv">2</span><span class="sc">:</span>(n_curves_plot <span class="sc">+</span> <span class="dv">1</span>), <span class="at">direction =</span> <span class="st">&#39;long&#39;</span>, <span class="at">sep =</span> <span class="st">&#39;&#39;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb6-15"><a href="simulace-funkcionálních-dat-1.html#cb6-15" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="sc">-</span>id) <span class="sc">|&gt;</span> </span>
-<span id="cb6-16"><a href="simulace-funkcionálních-dat-1.html#cb6-16" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb6-17"><a href="simulace-funkcionálních-dat-1.html#cb6-17" tabindex="-1"></a>  <span class="at">time =</span> time <span class="sc">-</span> <span class="dv">1</span>,</span>
-<span id="cb6-18"><a href="simulace-funkcionálních-dat-1.html#cb6-18" tabindex="-1"></a>  <span class="at">group =</span> <span class="dv">1</span></span>
-<span id="cb6-19"><a href="simulace-funkcionálních-dat-1.html#cb6-19" tabindex="-1"></a>  )</span>
-<span id="cb6-20"><a href="simulace-funkcionálních-dat-1.html#cb6-20" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="simulace-funkcionálních-dat-1.html#cb6-21" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(DF0, DF1) <span class="sc">|&gt;</span></span>
-<span id="cb6-22"><a href="simulace-funkcionálních-dat-1.html#cb6-22" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">factor</span>(group))</span>
-<span id="cb6-23"><a href="simulace-funkcionálních-dat-1.html#cb6-23" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="simulace-funkcionálních-dat-1.html#cb6-24" tabindex="-1"></a>DF <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> V, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
-<span id="cb6-25"><a href="simulace-funkcionálních-dat-1.html#cb6-25" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
-<span id="cb6-26"><a href="simulace-funkcionálních-dat-1.html#cb6-26" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb6-27"><a href="simulace-funkcionálních-dat-1.html#cb6-27" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb6-28"><a href="simulace-funkcionálních-dat-1.html#cb6-28" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
-<span id="cb6-29"><a href="simulace-funkcionálních-dat-1.html#cb6-29" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Function&#39;</span>,</span>
-<span id="cb6-30"><a href="simulace-funkcionálních-dat-1.html#cb6-30" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>) <span class="sc">+</span></span>
-<span id="cb6-31"><a href="simulace-funkcionálních-dat-1.html#cb6-31" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="simulace-funkcionálních-dat-1.html#cb132-1" tabindex="-1"></a>n_curves_plot <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># pocet krivek, ktere chceme vykreslit z kazde skupiny</span></span>
+<span id="cb132-2"><a href="simulace-funkcionálních-dat-1.html#cb132-2" tabindex="-1"></a></span>
+<span id="cb132-3"><a href="simulace-funkcionálních-dat-1.html#cb132-3" tabindex="-1"></a>DF0 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, X0[, <span class="dv">1</span><span class="sc">:</span>n_curves_plot]) <span class="sc">|&gt;</span> </span>
+<span id="cb132-4"><a href="simulace-funkcionálních-dat-1.html#cb132-4" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb132-5"><a href="simulace-funkcionálních-dat-1.html#cb132-5" tabindex="-1"></a>  <span class="fu">reshape</span>(<span class="at">varying =</span> <span class="dv">2</span><span class="sc">:</span>(n_curves_plot <span class="sc">+</span> <span class="dv">1</span>), <span class="at">direction =</span> <span class="st">&#39;long&#39;</span>, <span class="at">sep =</span> <span class="st">&#39;&#39;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb132-6"><a href="simulace-funkcionálních-dat-1.html#cb132-6" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="sc">-</span>id) <span class="sc">|&gt;</span> </span>
+<span id="cb132-7"><a href="simulace-funkcionálních-dat-1.html#cb132-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb132-8"><a href="simulace-funkcionálních-dat-1.html#cb132-8" tabindex="-1"></a>  <span class="at">time =</span> time <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb132-9"><a href="simulace-funkcionálních-dat-1.html#cb132-9" tabindex="-1"></a>  <span class="at">group =</span> <span class="dv">0</span></span>
+<span id="cb132-10"><a href="simulace-funkcionálních-dat-1.html#cb132-10" tabindex="-1"></a>  )</span>
+<span id="cb132-11"><a href="simulace-funkcionálních-dat-1.html#cb132-11" tabindex="-1"></a></span>
+<span id="cb132-12"><a href="simulace-funkcionálních-dat-1.html#cb132-12" tabindex="-1"></a>DF1 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, X1[, <span class="dv">1</span><span class="sc">:</span>n_curves_plot]) <span class="sc">|&gt;</span> </span>
+<span id="cb132-13"><a href="simulace-funkcionálních-dat-1.html#cb132-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb132-14"><a href="simulace-funkcionálních-dat-1.html#cb132-14" tabindex="-1"></a>  <span class="fu">reshape</span>(<span class="at">varying =</span> <span class="dv">2</span><span class="sc">:</span>(n_curves_plot <span class="sc">+</span> <span class="dv">1</span>), <span class="at">direction =</span> <span class="st">&#39;long&#39;</span>, <span class="at">sep =</span> <span class="st">&#39;&#39;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb132-15"><a href="simulace-funkcionálních-dat-1.html#cb132-15" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="sc">-</span>id) <span class="sc">|&gt;</span> </span>
+<span id="cb132-16"><a href="simulace-funkcionálních-dat-1.html#cb132-16" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb132-17"><a href="simulace-funkcionálních-dat-1.html#cb132-17" tabindex="-1"></a>  <span class="at">time =</span> time <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb132-18"><a href="simulace-funkcionálních-dat-1.html#cb132-18" tabindex="-1"></a>  <span class="at">group =</span> <span class="dv">1</span></span>
+<span id="cb132-19"><a href="simulace-funkcionálních-dat-1.html#cb132-19" tabindex="-1"></a>  )</span>
+<span id="cb132-20"><a href="simulace-funkcionálních-dat-1.html#cb132-20" tabindex="-1"></a></span>
+<span id="cb132-21"><a href="simulace-funkcionálních-dat-1.html#cb132-21" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(DF0, DF1) <span class="sc">|&gt;</span></span>
+<span id="cb132-22"><a href="simulace-funkcionálních-dat-1.html#cb132-22" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">factor</span>(group))</span>
+<span id="cb132-23"><a href="simulace-funkcionálních-dat-1.html#cb132-23" tabindex="-1"></a></span>
+<span id="cb132-24"><a href="simulace-funkcionálních-dat-1.html#cb132-24" tabindex="-1"></a>DF <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> V, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
+<span id="cb132-25"><a href="simulace-funkcionálních-dat-1.html#cb132-25" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
+<span id="cb132-26"><a href="simulace-funkcionálních-dat-1.html#cb132-26" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb132-27"><a href="simulace-funkcionálních-dat-1.html#cb132-27" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb132-28"><a href="simulace-funkcionálních-dat-1.html#cb132-28" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
+<span id="cb132-29"><a href="simulace-funkcionálních-dat-1.html#cb132-29" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Function&#39;</span>,</span>
+<span id="cb132-30"><a href="simulace-funkcionálních-dat-1.html#cb132-30" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>) <span class="sc">+</span></span>
+<span id="cb132-31"><a href="simulace-funkcionálních-dat-1.html#cb132-31" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
 </details>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
 <img src="02-Simulace_2_files/figure-html/unnamed-chunk-6-1.png" alt="Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená." width="672" />

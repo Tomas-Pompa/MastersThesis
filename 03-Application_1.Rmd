@@ -1,38 +1,22 @@
 # Aplikace na reálných datech 1
 
-Nyní se věnujme aplikaci na reálných datech. Budeme pracovat s daty `dataf.tecator()`, které jsou dostupné v knihovně `XY`.
+Nyní se věnujme aplikaci na reálných datech. Budeme pracovat s daty `dataf.growth()`, které jsou dostupné v knihovně `ddalpha`.
 
-```{r eval=FALSE, echo=TRUE}
+Nejprve si data načteme a vykreslíme.
+
+```{r eval=TRUE, echo=TRUE}
 # nacteni dat 
-data <- dataf.tecator()
+library(ddalpha)
+dataf <- dataf.growth()
 ```
 
-```{r eval=FALSE, echo=FALSE}
-# vlozeni dat do jedne matice pro vykresleni
-DFgg <- data$dataf
-DFgg <- data.frame(matrix(unlist(DFgg), ncol=2*length(DFgg), nrow = 100,
-                          byrow=FALSE))
-
-DFgg <- data.frame(wavelength = unlist(DFgg[, seq(1, dim(DFgg)[2], by = 2)]),
-                   absorbance = unlist(DFgg[, seq(2, dim(DFgg)[2], by = 2)])) |>
-  mutate(label = data$labels |> unlist() |> rep(each = 100),
-         ID = paste0('X', seq(1, 215)) |> rep(each = 100))
-DFgg$label <- factor(DFgg$label, 
-                     levels = c('small', 'large'), 
-                     labels = c('Fat < 20 %', 'Fat > 20 %'))
-
-DFgg |> ggplot(aes(x = wavelength, y = absorbance, colour = label, group = ID)) + 
-  geom_line() + 
-  facet_wrap(~label)
+```{r eval=TRUE, echo=FALSE}
+labels = unlist(dataf$labels)
+plot(dataf, 
+  main = paste("Growth: girls red (", sum(labels == "girl"), "),", 
+                    " boys blue (", sum(labels == "boy"), ")", sep=""),
+  xlab="Year", ylab="Height, cm",
+  colors = c("blue", "red")   # in alphabetical order of class labels   
+  )
 ```
 
-```{r include=FALSE}
-# library(ggplot2)
-# library(patchwork)
-# p1 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
-# p2 <- ggplot(mtcars) + geom_boxplot(aes(gear, disp, group = gear))
-# p3 <- ggplot(mtcars) + geom_smooth(aes(disp, qsec)) 
-# p4 <- ggplot(mtcars) + geom_bar(aes(carb)) 
-# (p1 | p2 | p3) / 
-#       p4
-```
