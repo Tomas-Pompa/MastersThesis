@@ -2109,7 +2109,7 @@ data.RKHS <- cbind(data.RKHS, grid.data.test[, -dim(grid.data.test)[2]] |> t())
 
 # jadro a jadrova matice ... Gaussovske s parametrem gamma
 Gauss.kernel <- function(x, y, gamma) {
-  return(exp(-gamma * norm(c(x - y) |> t(), type = 'F')))
+  return(exp(-gamma * norm(c(x - y) |> t(), type = 'F')^2))
 }
 
 Kernel.RKHS <- function(x, gamma) {

@@ -7,11 +7,93 @@ Nejprve si data načteme a vykreslíme.
 
 ```r
 # nacteni dat 
-library(ddalpha)
+library(fda)
+```
+
+```
+## Loading required package: splines
+```
+
+```
+## Loading required package: fds
+```
+
+```
+## Loading required package: rainbow
 ```
 
 ```
 ## Loading required package: MASS
+```
+
+```
+## Loading required package: pcaPP
+```
+
+```
+## Loading required package: RCurl
+```
+
+```
+## Loading required package: deSolve
+```
+
+```
+## 
+## Attaching package: 'fda'
+```
+
+```
+## The following object is masked from 'package:graphics':
+## 
+##     matplot
+```
+
+```r
+library(ggplot2)
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following object is masked from 'package:MASS':
+## 
+##     select
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+library(tidyr)
+```
+
+```
+## 
+## Attaching package: 'tidyr'
+```
+
+```
+## The following object is masked from 'package:RCurl':
+## 
+##     complete
+```
+
+```r
+library(ddalpha)
 ```
 
 ```
@@ -27,12 +109,183 @@ library(ddalpha)
 ```
 
 ```
+## 
+## Attaching package: 'sfsmisc'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     last
+```
+
+```
 ## Loading required package: geometry
 ```
 
 ```r
 dataf <- dataf.growth()
+labels <- unlist(dataf$labels)
 ```
 
-<img src="03-Application_1_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+
+```r
+data.gr <- matrix(NA, nrow = length(dataf$dataf[[1]]$args), 
+                  ncol = length(labels) + 1)
+```
+
+
+```r
+colnames(data.gr) <- c('time', paste0(labels, 1:length(labels)))
+data.gr <- as.data.frame(data.gr)
+```
+
+
+```r
+data.gr[, 1] <- dataf$dataf[[1]]$args
+```
+
+
+```r
+for (i in 1:length(labels)) {
+  data.gr[, i + 1] <- dataf$dataf[[i]]$vals
+}
+```
+
+
+
+```r
+pivot_longer(data.gr, cols = girl1:boy93, names_to = 'sample',
+                        values_to = 'height', cols_vary = 'slowest') |>
+  mutate(Individual = as.factor(sample),
+         Gender = factor(rep(labels, each = length(data.gr$time)), 
+                         levels = c('girl', 'boy'))) |>
+  ggplot(aes(x = time, y = height, colour = Gender, group = Individual)) + 
+  geom_line() + 
+  theme_bw()
+```
+
+<img src="03-Application_1_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+
+## Vyhlazení pozorovaných křivek
+
+Nyní převedeme pozorované diskrétní hodnoty (vektory hodnot) na funkcionální objekty, se kterými budeme následně pracovat.
+Jelikož se nejedná o periodické křivky na intervalu $I = [0, 1]$, využijeme k vyhlazení B-sline bázi.
+
+Za uzly bereme celý vektor `time`, standardně uvažujeme kubické spliny, proto volíme (implicitní volba v `R`) `norder = 4`.
+Budeme penalizovat druhou derivaci funkcí.
+
+
+```r
+t <- data.gr$time
+rangeval <- range(t)
+breaks <- t
+norder <- 4
+
+bbasis <- create.bspline.basis(rangeval = rangeval, 
+                               norder = norder, 
+                               breaks = breaks)
+
+curv.Lfd <- int2Lfd(2) # penalizujeme 2. derivaci
+```
+
+Najdeme vhodnou hodnotu vyhlazovacího parametru $\lambda > 0$ pomocí $GCV(\lambda)$, tedy pomocí zobecněné cross--validace.
+Hodnotu $\lambda$ budeme uvažovat pro obě klasifikační skupiny stejnou, neboť pro testovací pozorování bychom dopředu nevěděli, kterou hodnotu $\lambda$, v případě rozdílné volby pro každou třídu, máme volit.
+
+
+```r
+# spojeni pozorovani do jedne matice
+XX <- data.gr[, -1] |> as.matrix()
+
+lambda.vect <- 10^seq(from = -7, to = 1, length.out = 25) # vektor lambd
+gcv <- rep(NA, length = length(lambda.vect)) # prazdny vektor pro ulozebi GCV
+
+for(index in 1:length(lambda.vect)) {
+  curv.Fdpar <- fdPar(bbasis, curv.Lfd, lambda.vect[index])
+  BSmooth <- smooth.basis(t, XX, curv.Fdpar) # vyhlazeni
+  gcv[index] <- mean(BSmooth$gcv) # prumer pres vsechny pozorovane krivky
+}
+
+GCV <- data.frame(
+  lambda = round(log10(lambda.vect), 3),
+  GCV = gcv
+)
+
+# najdeme hodnotu minima
+lambda.opt <- lambda.vect[which.min(gcv)]
+```
+
+Pro lepší znázornění si vykreslíme průběh $GCV(\lambda)$.
+
+
+```r
+GCV |> ggplot(aes(x = lambda, y = GCV)) + 
+  geom_line(linetype = 'dashed', linewidth = 0.8) + 
+  geom_point(size = 2.5) + 
+  theme_bw() + 
+  labs(x = bquote(paste(log[10](lambda), ' ;   ', 
+                        lambda[optimal] == .(round(lambda.opt, 4)))),
+       y = expression(GCV(lambda))) + 
+  geom_point(aes(x = log10(lambda.opt), y = min(gcv)), colour = 'red', size = 3)
+```
+
+<div class="figure">
+<img src="03-Application_1_files/figure-html/unnamed-chunk-9-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-9)Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$.</p>
+</div>
+
+S touto optimální volbou vyhlazovacího parametru $\lambda$ nyní vyhladíme všechny funkce.
+
+
+```r
+n <- sum(labels == 'girls')
+curv.fdPar <- fdPar(bbasis, curv.Lfd, lambda.opt)
+BSmooth <- smooth.basis(t, XX, curv.fdPar)
+XXfd <- BSmooth$fd
+
+fdobjSmootheval <- eval.fd(fdobj = XXfd, evalarg = t)
+DF$Vsmooth <- c(fdobjSmootheval[, c(1 : n_curves_plot, 
+                                    (n + 1) : (n + n_curves_plot))])
+
+DF |> ggplot(aes(x = t, y = Vsmooth, group = interaction(time, group), 
+                 colour = group)) + 
+  geom_line(linewidth = 0.75) +
+  theme_bw() +
+  labs(x = 'Time',
+       y = 'Function',
+       colour = 'Group') +
+  scale_colour_discrete(labels=c('Y = 0', 'Y = 1'))
+```
+
+Ještě znázorněme všechny křivky včetně průměru zvlášť pro každou třídu.
+
+
+```r
+DFsmooth <- data.frame(
+  t = rep(t, 2 * n),
+  time = rep(rep(1:n, each = length(t)), 2),
+  Smooth = c(fdobjSmootheval),
+  Mean = c(rep(apply(fdobjSmootheval[ , 1 : n], 1, mean), n),
+            rep(apply(fdobjSmootheval[ , (n + 1) : (2 * n)], 1, mean), n)),
+  group = factor(rep(c(0, 1), each = n * length(t)))
+)
+
+DFmean <- data.frame(
+  t = rep(t, 2),
+  Mean = c(apply(fdobjSmootheval[ , 1 : n], 1, mean), 
+            apply(fdobjSmootheval[ , (n + 1) : (2 * n)], 1, mean)),
+  group = factor(rep(c(0, 1), each = length(t)))
+)
+
+DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group), 
+                 colour = group)) + 
+  geom_line(linewidth = 0.25) +
+  theme_bw() +
+  labs(x = 'Time',
+       y = 'Function',
+       colour = 'Group') +
+  scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) + 
+  geom_line(aes(x = t, y = Mean), 
+            colour = 'black', linewidth = 1, linetype = 'twodash')
+```
 

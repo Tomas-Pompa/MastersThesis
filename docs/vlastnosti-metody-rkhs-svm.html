@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitola 5 Aplikace na reálných datech 2 | Diplomová práce</title>
-  <meta name="description" content="Kapitola 5 Aplikace na reálných datech 2 | Diplomová práce" />
+  <title>Kapitola 5 Vlastnosti metody RKHS + SVM | Diplomová práce</title>
+  <meta name="description" content="Kapitola 5 Vlastnosti metody RKHS + SVM | Diplomová práce" />
   <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitola 5 Aplikace na reálných datech 2 | Diplomová práce" />
+  <meta property="og:title" content="Kapitola 5 Vlastnosti metody RKHS + SVM | Diplomová práce" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitola 5 Aplikace na reálných datech 2 | Diplomová práce" />
+  <meta name="twitter:title" content="Kapitola 5 Vlastnosti metody RKHS + SVM | Diplomová práce" />
   
   
   
@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="aplikace-na-reálných-datech-1.html"/>
-
+<link rel="next" href="handwrit-data.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -180,7 +180,11 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html"><i class="fa fa-check"></i><b>4</b> Aplikace na reálných datech 1</a></li>
-<li class="chapter" data-level="5" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html"><i class="fa fa-check"></i><b>5</b> Aplikace na reálných datech 2</a></li>
+<li class="chapter" data-level="5" data-path="vlastnosti-metody-rkhs-svm.html"><a href="vlastnosti-metody-rkhs-svm.html"><i class="fa fa-check"></i><b>5</b> Vlastnosti metody RKHS + SVM</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="handwrit-data.html"><a href="handwrit-data.html"><i class="fa fa-check"></i><b>5.1</b> <em>handwrit</em> data</a></li>
+<li class="chapter" data-level="5.2" data-path="growth-data.html"><a href="growth-data.html"><i class="fa fa-check"></i><b>5.2</b> <code>growth</code> data</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -198,31 +202,35 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="aplikace-na-reálných-datech-2" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number">Kapitola 5</span> Aplikace na reálných datech 2<a href="aplikace-na-reálných-datech-2.html#aplikace-na-reálných-datech-2" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Věnujme se datovému souboru XXX. Zkouška po pulnoci.</p>
-
+<div id="vlastnosti-metody-rkhs-svm" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Kapitola 5</span> Vlastnosti metody RKHS + SVM<a href="vlastnosti-metody-rkhs-svm.html#vlastnosti-metody-rkhs-svm" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>V této části se podíváme podrobněji na klasifikaci pomocí postupu, při kterém nejprve data projektujeme na Reproducing Kernel Hilbert Space definovaný jádrem <span class="math inline">\(K\)</span> a následně pomocí koeficientů této projekce klasifikujeme data pomocí metody SVM. K získání koeficientů projekce se také využívá metoda SVM, avšak její analogie pro řešení regresních preblémů (SVM for regression). Tento postup je podrobněji popsán ve článku<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, jehož autory jsou Muñoz a González.</p>
+<p>Autoři ve svém článku popisují mimo jiné i chování koeficientů z vyjádření pomocí jádrových funkcí (kernel expansion) a zlepšení stability koeficientů pomocí RKHS. Tuto vlastnost si nyní ilustrujme na analogickém příkladě, jako uvádějí autoři.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="vlastnosti-metody-rkhs-svm.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(fda)</span>
+<span id="cb1-2"><a href="vlastnosti-metody-rkhs-svm.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="vlastnosti-metody-rkhs-svm.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="vlastnosti-metody-rkhs-svm.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-5"><a href="vlastnosti-metody-rkhs-svm.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(ddalpha)</span>
+<span id="cb1-6"><a href="vlastnosti-metody-rkhs-svm.html#cb1-6" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-7"><a href="vlastnosti-metody-rkhs-svm.html#cb1-7" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb1-8"><a href="vlastnosti-metody-rkhs-svm.html#cb1-8" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb1-9"><a href="vlastnosti-metody-rkhs-svm.html#cb1-9" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span></code></pre></div>
+</details>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Muñoz, A. and González, J. (2010) <em>Representing functional data using support vector machines</em>, Pattern Recognition Letters, 31(6), pp. 511–516. <a href="https://www.sciencedirect.com/science/article/pii/S0167865509001913">doi:10.1016/j.patrec.2009.07.014</a>.<a href="vlastnosti-metody-rkhs-svm.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="aplikace-na-reálných-datech-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="aplikace-na-reálných-datech-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="handwrit-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

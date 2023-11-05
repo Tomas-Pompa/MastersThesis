@@ -136,3 +136,7 @@ simulační-studie-1
 výsledky-1
 aplikace-na-reálných-datech-1
 aplikace-na-reálných-datech-2
+vlastnosti-metody-rkhs-svm
+handwrit-data
+growth-data
+vyhlazení-pozorovaných-křivek-2
