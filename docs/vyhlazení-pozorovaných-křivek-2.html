@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="aplikace-na-reálných-datech-1.html"/>
-<link rel="next" href="vlastnosti-metody-rkhs-svm.html"/>
+<link rel="next" href="klasifikace-křivek-2.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -182,11 +182,26 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html"><i class="fa fa-check"></i><b>4</b> Aplikace na reálných datech 1</a>
 <ul>
 <li class="chapter" data-level="4.1" data-path="vyhlazení-pozorovaných-křivek-2.html"><a href="vyhlazení-pozorovaných-křivek-2.html"><i class="fa fa-check"></i><b>4.1</b> Vyhlazení pozorovaných křivek</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="vlastnosti-metody-rkhs-svm.html"><a href="vlastnosti-metody-rkhs-svm.html"><i class="fa fa-check"></i><b>5</b> Vlastnosti metody RKHS + SVM</a>
+<li class="chapter" data-level="4.2" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html"><i class="fa fa-check"></i><b>4.2</b> Klasifikace křivek</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="handwrit-data.html"><a href="handwrit-data.html"><i class="fa fa-check"></i><b>5.1</b> <em>handwrit</em> data</a></li>
-<li class="chapter" data-level="5.2" data-path="growth-data.html"><a href="growth-data.html"><i class="fa fa-check"></i><b>5.2</b> <code>growth</code> data</a></li>
+<li class="chapter" data-level="4.2.1" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#k-nejbližších-sousedů-2"><i class="fa fa-check"></i><b>4.2.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="4.2.2" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#lineární-diskriminační-analýza-2"><i class="fa fa-check"></i><b>4.2.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="4.2.3" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#kvadratická-diskriminační-analýza-2"><i class="fa fa-check"></i><b>4.2.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="4.2.4" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#logistická-regrese-2"><i class="fa fa-check"></i><b>4.2.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="4.2.5" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#rozhodovací-stromy-2"><i class="fa fa-check"></i><b>4.2.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="4.2.6" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#náhodné-lesy-2"><i class="fa fa-check"></i><b>4.2.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="4.2.7" data-path="klasifikace-křivek-2.html"><a href="klasifikace-křivek-2.html#support-vector-machines-2"><i class="fa fa-check"></i><b>4.2.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="tabulka-výsledků-2.html"><a href="tabulka-výsledků-2.html"><i class="fa fa-check"></i><b>4.3</b> Tabulka výsledků</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="opakování.html"><a href="opakování.html"><i class="fa fa-check"></i><b>5</b> Opakování</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="opakování.html"><a href="opakování.html#výsledky-2"><i class="fa fa-check"></i><b>5.0.1</b> Výsledky</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="vlastnosti-metody-rkhs-svm.html"><a href="vlastnosti-metody-rkhs-svm.html"><i class="fa fa-check"></i><b>6</b> Vlastnosti metody RKHS + SVM</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="handwrit-data.html"><a href="handwrit-data.html"><i class="fa fa-check"></i><b>6.1</b> <em>handwrit</em> data</a></li>
+<li class="chapter" data-level="6.2" data-path="growth-data.html"><a href="growth-data.html"><i class="fa fa-check"></i><b>6.2</b> <code>growth</code> data</a></li>
 </ul></li>
 </ul>
 
@@ -212,116 +227,104 @@ Jelikož se nejedná o periodické křivky na intervalu <span class="math inline
 <p>Za uzly bereme celý vektor <code>time</code>, standardně uvažujeme kubické spliny, proto volíme (implicitní volba v <code>R</code>) <code>norder = 4</code>.
 Budeme penalizovat druhou derivaci funkcí.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> data.gr<span class="sc">$</span>time</span>
-<span id="cb32-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-2" tabindex="-1"></a>rangeval <span class="ot">&lt;-</span> <span class="fu">range</span>(t)</span>
-<span id="cb32-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-3" tabindex="-1"></a>breaks <span class="ot">&lt;-</span> t</span>
-<span id="cb32-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-4" tabindex="-1"></a>norder <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb32-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-5" tabindex="-1"></a></span>
-<span id="cb32-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-6" tabindex="-1"></a>bbasis <span class="ot">&lt;-</span> <span class="fu">create.bspline.basis</span>(<span class="at">rangeval =</span> rangeval, </span>
-<span id="cb32-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-7" tabindex="-1"></a>                               <span class="at">norder =</span> norder, </span>
-<span id="cb32-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-8" tabindex="-1"></a>                               <span class="at">breaks =</span> breaks)</span>
-<span id="cb32-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-9" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb32-10" tabindex="-1"></a>curv.Lfd <span class="ot">&lt;-</span> <span class="fu">int2Lfd</span>(<span class="dv">2</span>) <span class="co"># penalizujeme 2. derivaci</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> data.gr<span class="sc">$</span>age</span>
+<span id="cb4-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-2" tabindex="-1"></a>rangeval <span class="ot">&lt;-</span> <span class="fu">range</span>(t)</span>
+<span id="cb4-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-3" tabindex="-1"></a>breaks <span class="ot">&lt;-</span> t</span>
+<span id="cb4-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-4" tabindex="-1"></a>norder <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb4-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-6" tabindex="-1"></a>bbasis <span class="ot">&lt;-</span> <span class="fu">create.bspline.basis</span>(<span class="at">rangeval =</span> rangeval, </span>
+<span id="cb4-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-7" tabindex="-1"></a>                               <span class="at">norder =</span> norder, </span>
+<span id="cb4-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-8" tabindex="-1"></a>                               <span class="at">breaks =</span> breaks)</span>
+<span id="cb4-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-9" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb4-10" tabindex="-1"></a>curv.Lfd <span class="ot">&lt;-</span> <span class="fu">int2Lfd</span>(<span class="dv">2</span>) <span class="co"># penalizujeme 2. derivaci</span></span></code></pre></div>
 </details>
 <p>Najdeme vhodnou hodnotu vyhlazovacího parametru <span class="math inline">\(\lambda &gt; 0\)</span> pomocí <span class="math inline">\(GCV(\lambda)\)</span>, tedy pomocí zobecněné cross–validace.
 Hodnotu <span class="math inline">\(\lambda\)</span> budeme uvažovat pro obě klasifikační skupiny stejnou, neboť pro testovací pozorování bychom dopředu nevěděli, kterou hodnotu <span class="math inline">\(\lambda\)</span>, v případě rozdílné volby pro každou třídu, máme volit.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-1" tabindex="-1"></a><span class="co"># spojeni pozorovani do jedne matice</span></span>
-<span id="cb33-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-2" tabindex="-1"></a>XX <span class="ot">&lt;-</span> data.gr[, <span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="fu">as.matrix</span>()</span>
-<span id="cb33-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-3" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-4" tabindex="-1"></a>lambda.vect <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">7</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">25</span>) <span class="co"># vektor lambd</span></span>
-<span id="cb33-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-5" tabindex="-1"></a>gcv <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="at">length =</span> <span class="fu">length</span>(lambda.vect)) <span class="co"># prazdny vektor pro ulozebi GCV</span></span>
-<span id="cb33-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-6" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-7" tabindex="-1"></a><span class="cf">for</span>(index <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(lambda.vect)) {</span>
-<span id="cb33-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-8" tabindex="-1"></a>  curv.Fdpar <span class="ot">&lt;-</span> <span class="fu">fdPar</span>(bbasis, curv.Lfd, lambda.vect[index])</span>
-<span id="cb33-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-9" tabindex="-1"></a>  BSmooth <span class="ot">&lt;-</span> <span class="fu">smooth.basis</span>(t, XX, curv.Fdpar) <span class="co"># vyhlazeni</span></span>
-<span id="cb33-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-10" tabindex="-1"></a>  gcv[index] <span class="ot">&lt;-</span> <span class="fu">mean</span>(BSmooth<span class="sc">$</span>gcv) <span class="co"># prumer pres vsechny pozorovane krivky</span></span>
-<span id="cb33-11"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-11" tabindex="-1"></a>}</span>
-<span id="cb33-12"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-12" tabindex="-1"></a></span>
-<span id="cb33-13"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-13" tabindex="-1"></a>GCV <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb33-14"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-14" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">round</span>(<span class="fu">log10</span>(lambda.vect), <span class="dv">3</span>),</span>
-<span id="cb33-15"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-15" tabindex="-1"></a>  <span class="at">GCV =</span> gcv</span>
-<span id="cb33-16"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-16" tabindex="-1"></a>)</span>
-<span id="cb33-17"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-17" tabindex="-1"></a></span>
-<span id="cb33-18"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-18" tabindex="-1"></a><span class="co"># najdeme hodnotu minima</span></span>
-<span id="cb33-19"><a href="vyhlazení-pozorovaných-křivek-2.html#cb33-19" tabindex="-1"></a>lambda.opt <span class="ot">&lt;-</span> lambda.vect[<span class="fu">which.min</span>(gcv)]</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-1" tabindex="-1"></a><span class="co"># spojeni pozorovani do jedne matice</span></span>
+<span id="cb5-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-2" tabindex="-1"></a>XX <span class="ot">&lt;-</span> data.gr[, <span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="fu">as.matrix</span>()</span>
+<span id="cb5-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-4" tabindex="-1"></a>lambda.vect <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">7</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">25</span>) <span class="co"># vektor lambd</span></span>
+<span id="cb5-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-5" tabindex="-1"></a>gcv <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="at">length =</span> <span class="fu">length</span>(lambda.vect)) <span class="co"># prazdny vektor pro ulozebi GCV</span></span>
+<span id="cb5-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-7" tabindex="-1"></a><span class="cf">for</span>(index <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(lambda.vect)) {</span>
+<span id="cb5-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-8" tabindex="-1"></a>  curv.Fdpar <span class="ot">&lt;-</span> <span class="fu">fdPar</span>(bbasis, curv.Lfd, lambda.vect[index])</span>
+<span id="cb5-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-9" tabindex="-1"></a>  BSmooth <span class="ot">&lt;-</span> <span class="fu">smooth.basis</span>(t, XX, curv.Fdpar) <span class="co"># vyhlazeni</span></span>
+<span id="cb5-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-10" tabindex="-1"></a>  gcv[index] <span class="ot">&lt;-</span> <span class="fu">mean</span>(BSmooth<span class="sc">$</span>gcv) <span class="co"># prumer pres vsechny pozorovane krivky</span></span>
+<span id="cb5-11"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-11" tabindex="-1"></a>}</span>
+<span id="cb5-12"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-12" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-13" tabindex="-1"></a>GCV <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-14"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-14" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">round</span>(<span class="fu">log10</span>(lambda.vect), <span class="dv">3</span>),</span>
+<span id="cb5-15"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-15" tabindex="-1"></a>  <span class="at">GCV =</span> gcv</span>
+<span id="cb5-16"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-16" tabindex="-1"></a>)</span>
+<span id="cb5-17"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-17" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-18" tabindex="-1"></a><span class="co"># najdeme hodnotu minima</span></span>
+<span id="cb5-19"><a href="vyhlazení-pozorovaných-křivek-2.html#cb5-19" tabindex="-1"></a>lambda.opt <span class="ot">&lt;-</span> lambda.vect[<span class="fu">which.min</span>(gcv)]</span></code></pre></div>
 </details>
 <p>Pro lepší znázornění si vykreslíme průběh <span class="math inline">\(GCV(\lambda)\)</span>.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-1" tabindex="-1"></a>GCV <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lambda, <span class="at">y =</span> GCV)) <span class="sc">+</span> </span>
-<span id="cb34-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-2" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
-<span id="cb34-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span> </span>
-<span id="cb34-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-4" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb34-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">bquote</span>(<span class="fu">paste</span>(log[<span class="dv">10</span>](lambda), <span class="st">&#39; ;   &#39;</span>, </span>
-<span id="cb34-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-6" tabindex="-1"></a>                        lambda[optimal] <span class="sc">==</span> .(<span class="fu">round</span>(lambda.opt, <span class="dv">4</span>)))),</span>
-<span id="cb34-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">GCV</span>(lambda))) <span class="sc">+</span> </span>
-<span id="cb34-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb34-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log10</span>(lambda.opt), <span class="at">y =</span> <span class="fu">min</span>(gcv)), <span class="at">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-1" tabindex="-1"></a>GCV <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lambda, <span class="at">y =</span> GCV)) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-2" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb6-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span> </span>
+<span id="cb6-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-4" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb6-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">bquote</span>(<span class="fu">paste</span>(log[<span class="dv">10</span>](lambda), <span class="st">&#39; ;   &#39;</span>, </span>
+<span id="cb6-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-6" tabindex="-1"></a>                        lambda[optimal] <span class="sc">==</span> .(<span class="fu">round</span>(lambda.opt, <span class="dv">4</span>)))),</span>
+<span id="cb6-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">GCV</span>(lambda))) <span class="sc">+</span> </span>
+<span id="cb6-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb6-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log10</span>(lambda.opt), <span class="at">y =</span> <span class="fu">min</span>(gcv)), <span class="at">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
-<img src="03-Application_1_files/figure-html/unnamed-chunk-9-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<img src="03-Application_1_files/figure-html/unnamed-chunk-6-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
 <p class="caption">
 Obrázek 4.1: Průběh <span class="math inline">\(GCV(\lambda)\)</span> pro zvolený vektor <span class="math inline">\(\boldsymbol\lambda\)</span>. Na ose <span class="math inline">\(x\)</span> jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru <span class="math inline">\(\lambda_{optimal}\)</span>.
 </p>
 </div>
 <p>S touto optimální volbou vyhlazovacího parametru <span class="math inline">\(\lambda\)</span> nyní vyhladíme všechny funkce.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(labels <span class="sc">==</span> <span class="st">&#39;girls&#39;</span>)</span>
-<span id="cb35-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-2" tabindex="-1"></a>curv.fdPar <span class="ot">&lt;-</span> <span class="fu">fdPar</span>(bbasis, curv.Lfd, lambda.opt)</span>
-<span id="cb35-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-3" tabindex="-1"></a>BSmooth <span class="ot">&lt;-</span> <span class="fu">smooth.basis</span>(t, XX, curv.fdPar)</span>
-<span id="cb35-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-4" tabindex="-1"></a>XXfd <span class="ot">&lt;-</span> BSmooth<span class="sc">$</span>fd</span>
-<span id="cb35-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-5" tabindex="-1"></a></span>
-<span id="cb35-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-6" tabindex="-1"></a>fdobjSmootheval <span class="ot">&lt;-</span> <span class="fu">eval.fd</span>(<span class="at">fdobj =</span> XXfd, <span class="at">evalarg =</span> t)</span>
-<span id="cb35-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-7" tabindex="-1"></a>DF<span class="sc">$</span>Vsmooth <span class="ot">&lt;-</span> <span class="fu">c</span>(fdobjSmootheval[, <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">:</span> n_curves_plot, </span>
-<span id="cb35-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-8" tabindex="-1"></a>                                    (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (n <span class="sc">+</span> n_curves_plot))])</span>
-<span id="cb35-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-9" tabindex="-1"></a></span>
-<span id="cb35-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-10" tabindex="-1"></a>DF <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Vsmooth, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
-<span id="cb35-11"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-11" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
-<span id="cb35-12"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-12" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb35-13"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-13" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb35-14"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
-<span id="cb35-15"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-15" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Function&#39;</span>,</span>
-<span id="cb35-16"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-16" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>) <span class="sc">+</span></span>
-<span id="cb35-17"><a href="vyhlazení-pozorovaných-křivek-2.html#cb35-17" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb7-1" tabindex="-1"></a>curv.fdPar <span class="ot">&lt;-</span> <span class="fu">fdPar</span>(bbasis, curv.Lfd, lambda.opt)</span>
+<span id="cb7-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb7-2" tabindex="-1"></a>BSmooth <span class="ot">&lt;-</span> <span class="fu">smooth.basis</span>(t, XX, curv.fdPar)</span>
+<span id="cb7-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb7-3" tabindex="-1"></a>XXfd <span class="ot">&lt;-</span> BSmooth<span class="sc">$</span>fd</span>
+<span id="cb7-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb7-5" tabindex="-1"></a>fdobjSmootheval <span class="ot">&lt;-</span> <span class="fu">eval.fd</span>(<span class="at">fdobj =</span> XXfd, <span class="at">evalarg =</span> t)</span></code></pre></div>
 </details>
 <p>Ještě znázorněme všechny křivky včetně průměru zvlášť pro každou třídu.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-1" tabindex="-1"></a>DFsmooth <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb36-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-2" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span> <span class="sc">*</span> n),</span>
-<span id="cb36-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-3" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> <span class="fu">length</span>(t)), <span class="dv">2</span>),</span>
-<span id="cb36-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-4" tabindex="-1"></a>  <span class="at">Smooth =</span> <span class="fu">c</span>(fdobjSmootheval),</span>
-<span id="cb36-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-5" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n], <span class="dv">1</span>, mean), n),</span>
-<span id="cb36-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-6" tabindex="-1"></a>            <span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">2</span> <span class="sc">*</span> n)], <span class="dv">1</span>, mean), n)),</span>
-<span id="cb36-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-7" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">each =</span> n <span class="sc">*</span> <span class="fu">length</span>(t)))</span>
-<span id="cb36-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-8" tabindex="-1"></a>)</span>
-<span id="cb36-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-9" tabindex="-1"></a></span>
-<span id="cb36-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-10" tabindex="-1"></a>DFmean <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb36-11"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-11" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span>),</span>
-<span id="cb36-12"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-12" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n], <span class="dv">1</span>, mean), </span>
-<span id="cb36-13"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-13" tabindex="-1"></a>            <span class="fu">apply</span>(fdobjSmootheval[ , (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">2</span> <span class="sc">*</span> n)], <span class="dv">1</span>, mean)),</span>
-<span id="cb36-14"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-14" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">each =</span> <span class="fu">length</span>(t)))</span>
-<span id="cb36-15"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-15" tabindex="-1"></a>)</span>
-<span id="cb36-16"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-16" tabindex="-1"></a></span>
-<span id="cb36-17"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-17" tabindex="-1"></a>DFsmooth <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Smooth, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
-<span id="cb36-18"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-18" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
-<span id="cb36-19"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-19" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb36-20"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-20" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb36-21"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-21" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
-<span id="cb36-22"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-22" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Function&#39;</span>,</span>
-<span id="cb36-23"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-23" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>) <span class="sc">+</span></span>
-<span id="cb36-24"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-24" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>)) <span class="sc">+</span> </span>
-<span id="cb36-25"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-25" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Mean), </span>
-<span id="cb36-26"><a href="vyhlazení-pozorovaných-křivek-2.html#cb36-26" tabindex="-1"></a>            <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">&#39;twodash&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> n_girls <span class="sc">+</span> n_boys</span>
+<span id="cb8-2"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-2" tabindex="-1"></a>DFsmooth <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-3"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-3" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, n),</span>
+<span id="cb8-4"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-4" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> <span class="fu">length</span>(t))),</span>
+<span id="cb8-5"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-5" tabindex="-1"></a>  <span class="at">Smooth =</span> <span class="fu">c</span>(fdobjSmootheval),</span>
+<span id="cb8-6"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-6" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n_girls], <span class="dv">1</span>, mean), n_girls),</span>
+<span id="cb8-7"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-7" tabindex="-1"></a>            <span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , (n_girls <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> n], <span class="dv">1</span>, mean), n_boys)),</span>
+<span id="cb8-8"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-8" tabindex="-1"></a>  <span class="at">Gender =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;girls&#39;</span>, <span class="st">&#39;boys&#39;</span>), <span class="at">each =</span> n <span class="sc">*</span> <span class="fu">length</span>(t)),</span>
+<span id="cb8-9"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-9" tabindex="-1"></a>                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&#39;girls&#39;</span>, <span class="st">&#39;boys&#39;</span>))</span>
+<span id="cb8-10"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-10" tabindex="-1"></a>)</span>
+<span id="cb8-11"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-12" tabindex="-1"></a>DFmean <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-13"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-13" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span>),</span>
+<span id="cb8-14"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-14" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n_girls], <span class="dv">1</span>, mean), </span>
+<span id="cb8-15"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-15" tabindex="-1"></a>            <span class="fu">apply</span>(fdobjSmootheval[ , (n_girls <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> n], <span class="dv">1</span>, mean)),</span>
+<span id="cb8-16"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-16" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;girls&#39;</span>, <span class="st">&#39;boys&#39;</span>), <span class="at">each =</span> <span class="fu">length</span>(t)),</span>
+<span id="cb8-17"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-17" tabindex="-1"></a>                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&#39;girls&#39;</span>, <span class="st">&#39;boys&#39;</span>))</span>
+<span id="cb8-18"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-18" tabindex="-1"></a>)</span>
+<span id="cb8-19"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-19" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-20" tabindex="-1"></a>DFsmooth <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Smooth, <span class="at">color =</span> Gender, <span class="at">group =</span> time)) <span class="sc">+</span> </span>
+<span id="cb8-21"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-21" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb8-22"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-22" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb8-23"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-23" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
+<span id="cb8-24"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-24" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Function&#39;</span>,</span>
+<span id="cb8-25"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-25" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Gender&#39;</span>) <span class="sc">+</span></span>
+<span id="cb8-26"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-26" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;girls&#39;</span>, <span class="st">&#39;boys&#39;</span>)) <span class="sc">+</span> </span>
+<span id="cb8-27"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-27" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Mean), </span>
+<span id="cb8-28"><a href="vyhlazení-pozorovaných-křivek-2.html#cb8-28" tabindex="-1"></a>            <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">&#39;twodash&#39;</span>)</span></code></pre></div>
 </details>
-
 </div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
 <a href="aplikace-na-reálných-datech-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="vlastnosti-metody-rkhs-svm.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="klasifikace-křivek-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

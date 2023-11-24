@@ -24,7 +24,7 @@ Nejprve si načteme data, která představují souřadnice ručně psaných slov
 
 ```{r eval=TRUE, echo=TRUE}
 # nacteni dat 
-samples <- c(4, 5)
+samples <- c(4, 5) + 10
 hand <- handwrit[, samples, ]
 ```
 
@@ -114,8 +114,8 @@ alpha <- matrix(0, nrow = length(handwritTime),
 
 # model
 for(i in 1:length(samples)) {
-  df.svm <- data.frame(x = hand[, i, 1],
-                       y = hand[, i, 2])
+  df.svm <- data.frame(x = handwritTime,
+                       y = hand[, i, 1])
   svm.RKHS <- svm(y ~ x, data = df.svm, 
                   kernel = 'radial',
                   type = 'eps-regression',
@@ -125,15 +125,38 @@ for(i in 1:length(samples)) {
                   tolerance = 0.001,
                   shrinking = TRUE,
                   scale = TRUE)
-  # svm.RKHS <- train(y ~ x, data = df.svm,
-  #                   method = 'svmLinear')
+  # alpha[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
+  svm.RKHS <- train(y ~ x, data = df.svm,
+                    method = 'svmRadial',
+                    metric = "RMSE", 
+                    preProcess = c('center', 'scale'),
+                    # trControl = trainControl(
+                    #   method = "repeatedcv", 
+                    #   number = 5, 
+                    #   repeats = 2, 
+                    #   verboseIter = FALSE
+                    #   )
+                    trControl = trainControl(method = "none"),   
+                    # Telling caret not to re-tune
+                    tuneGrid = data.frame(sigma = 19, C = 1000)   
+                    # Specifying the parameters
+                    )
+  alpha[svm.RKHS$finalModel@alphaindex, i] <- svm.RKHS$finalModel@alpha *
+    svm.RKHS$finalModel@scaling$y.scale$`scaled:scale`
+}
+
   # urceni alpha
   # b <- - svm.RKHS$rho # rho ... the negative intercept
   # betas <- svm.RKHS$coefs
   # alphas <- betas + b #/ Gauss.kernel()
-  alpha[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
-}
+
 ```
+
+```{r}
+plot(handwritTime, svm.RKHS$finalModel@fitted * svm.RKHS$finalModel@scaling$y.scale$`scaled:scale`, type = 'l')
+lines(handwritTime, hand[, i, 1], lwd = 3, col = 3)
+```
+
 
 ```{r}
 # plot(alpha[, 1], type = 'n', ylab = expression(alpha[i]))
@@ -154,7 +177,7 @@ data.frame(alpha = c(alpha[, 1], alpha[, 2]),
 
 ```{r}
 # spocitame matici K
-K <- Kernel.RKHS(hand[, 1, 1], gamma = gamma)
+K <- Kernel.RKHS(handwritTime, gamma = gamma)
 
 # urcime vlastni cisla a vektory
 Eig <- eigen(K)

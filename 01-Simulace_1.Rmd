@@ -304,7 +304,7 @@ table(Y.train) / sum(table(Y.train))
 table(Y.test) / sum(table(Y.test))
 ```
 
-### 1) $K$ nejbližších sousedů
+### $K$ nejbližších sousedů
 
 Začněme neparametrickou klasifikační metodou, a to metodou $K$ nejbližších sousedů.
 Nejprve si vytvoříme potřebné objekty tak, abychom s nimi mohli pomocí funkce `classif.knn()` z knihovny `fda.usc` dále pracovat.
@@ -431,7 +431,7 @@ RESULTS <- data.frame(model = 'KNN',
                       Err.test = 1 - presnost)
 ```
 
-### 2) Lineární diskriminační analýza
+### Lineární diskriminační analýza
 
 Jako druhou metodu pro sestrojení klasifikátoru budeme uvažovat lineární diskriminační analýzu (LDA).
 Jelikož tato metoda nelze aplikovat na funkcionální data, musíme je nejprve diskretizovat, což provedeme pomocí funkcionální analýzy hlavních komponent.
@@ -560,7 +560,7 @@ Res <- data.frame(model = 'LDA',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-### 3) Kvadratická diskriminační analýza
+### Kvadratická diskriminační analýza
 
 Jako další sestrojme klasifikátor pomocí kvadratické diskriminační analýzy (QDA).
 Jedná se o analogický případ jako LDA s tím rozdílem, že nyní připouštíme pro každou ze tříd rozdílnou kovarianční matici normálního rozdělení, ze kterého pocházejí příslušné skóry.
@@ -669,12 +669,12 @@ Res <- data.frame(model = 'QDA',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-### 4) Logistická regrese
+### Logistická regrese
 
 Logistickou regresi můžeme provést dvěma způsoby.
 Jednak použít funkcionální obdobu klasické logistické regrese, druhak klasickou mnohorozměrnou logistickou regresi, kterou provedeme na skórech prvních $p$ hlavních komponent.
 
-#### 4.1) Funkcionální logistická regrese
+#### Funkcionální logistická regrese
 
 Analogicky jako v případě konečné dimenze vstupních dat uvažujeme logistický model ve tvaru:
 
@@ -955,7 +955,7 @@ RESULTS <- rbind(RESULTS, Res)
 fregre.basis.cv(fdataobj = x, y = y, family = binomial, data = ldata, basis.x = basis1)
 ```
 
-#### 4.2) Logistická regrese s analýzou hlavních komponent
+#### Logistická regrese s analýzou hlavních komponent
 
 Abychom mohli sesrojit tento klasifikátor, potřebujeme provést funkcionální analýzu hlavních komponent, určit vhodný počet komponent a spočítat hodnoty skórů pro testovací data.
 To jsme již provedli v části u lineární diskriminační analýzy, proto využijeme tyto výsledky v následující části.
@@ -1062,7 +1062,7 @@ Res <- data.frame(model = 'LR score',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-### 5) Rozhodovací stromy
+### Rozhodovací stromy
 
 V této části se podíváme na velmi odlišný přístup k sestrojení klasifikátoru, než byly například LDA či logistická regrese.
 Rozhodovací stromy jsou velmi oblíbeným nástrojem ke klasifikaci, avšak jako v případě některých předchozích metod nejsou přímo určeny pro funkcionální data.
@@ -1077,7 +1077,7 @@ Můžeme uvažovat následující postupy:
 
 My se nejprve zaměříme na diskretizaci intervalu a následně porovnáme výsledky se zbylými dvěma přístupy k sestrojení rozhodovacího stromu.
 
-#### 5.1) Diskretizace intervalu
+#### Diskretizace intervalu
 
 Nejprve si musíme definovat body z intervalu $I = [0, 1]$, ve kterých funkce vyhodnotíme.
 Následně vytvoříme objekt, ve kterém budou řádky představovat jednotlivé (diskretizované) funkce a sloupce časy.
@@ -1153,7 +1153,7 @@ Res <- data.frame(model = 'Tree - diskr.',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 5.2) Skóre hlavních komponent
+#### Skóre hlavních komponent
 
 Další možností pro sestrojení rozhodovacího stromu je použít skóre hlavních komponent.
 Jelikož jsme již skóre počítali pro předchozí klasifikační metody, využijeme těchto poznatků a sestrojíme rozhodovací strom na skórech prvních `r nharm` hlavních komponent.
@@ -1208,7 +1208,7 @@ Res <- data.frame(model = 'Tree - score',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 5.3) Bázové koeficienty
+#### Bázové koeficienty
 
 Poslední možností, kterou využijeme pro sestrojení rozhodovacího stromu, je použití koeficientů ve vyjádření funkcí v B-splinové bázi.
 
@@ -1276,7 +1276,7 @@ Res <- data.frame(model = 'Tree - Bbasis',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-### 6) Náhodné lesy
+### Náhodné lesy
 
 Klasifikátor sestrojený pomocí metody náhodných lesů spočívá v sestrojení několika jednotlivých rozhodovacích stromů, které se následně zkombinují a vytvoří společný klasifikátor (společným "hlasováním").
 
@@ -1284,7 +1284,7 @@ Tak jako v případě rozhodovacích stromů máme několik možností na to, ja
 Budeme opět uvažovat výše diskutované tři přístupy.
 Datové soubory s příslušnými veličinami pro všechny tři přístupy již máme připravené z minulé sekce, proto můžeme přímo sestrojit dané modely, spočítat charakteristiky daného klasifikátoru a přidat výsledky do souhrnné tabulky.
 
-#### 6.1) Diskretizace intervalu
+#### Diskretizace intervalu
 
 V prvním případě využíváme vyhodnocení funkcí na dané síti bodů intervalu $I = [0, 1]$.
 
@@ -1326,7 +1326,7 @@ Res <- data.frame(model = 'RForest - diskr',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 6.2) Skóre hlavních komponent
+#### Skóre hlavních komponent
 
 V tomto případě využijeme skóre prvních p = `r nharm` hlavních komponent.
 
@@ -1358,7 +1358,7 @@ Res <- data.frame(model = 'RForest - score',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 6.3) Bázové koeficienty
+#### Bázové koeficienty
 
 Nakonec použijeme vyjádření funkcí pomocí B-splinové báze.
 
@@ -1390,7 +1390,7 @@ Res <- data.frame(model = 'RForest - Bbasis',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-### 7) Support Vector Machines
+### Support Vector Machines
 
 Nyní se podívejme na klasifikaci našich nasimulovaných křivek pomocí metody podpůrných vektorů (ang. Support Vector Machines, SVM).
 Výhodou této klasifikační metody je její výpočetní nenáročnost, neboť pro definici hraniční křivky mezi třídami využívá pouze několik (často málo) pozorování.
@@ -1428,7 +1428,7 @@ Složitější úvahou můžeme dospět k několika dalším možnostem, které 
 Jednak můžeme místo klasifikace původní křivky využít její derivaci (případně druhou derivaci, třetí, ...), **druhak můžeme definovat novou jádrovou funkci**, která vezme do úvahy funkcionální podstatu dat.
 To je možné zejména proto, že v definici metody SVM pracujeme s libovolným Hilbertovým prostorem (bez omezení na konečnou dimenzi), tedy připouštíme i Hilbertův prostor funkcionálních dat.
 
-#### 7.1) Diskretizace intervalu
+#### Diskretizace intervalu
 
 Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 1]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
 
@@ -1499,7 +1499,7 @@ Res <- data.frame(model = c('SVM linear - diskr',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 7.2) Skóre hlavních komponent
+#### Skóre hlavních komponent
 
 V tomto případě využijeme skóre prvních p = `r nharm` hlavních komponent.
 
@@ -1638,7 +1638,7 @@ Res <- data.frame(model = c('SVM linear - PCA',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 7.3) Bázové koeficienty
+#### Bázové koeficienty
 
 Nakonec použijeme vyjádření funkcí pomocí B-splinové báze.
 
@@ -1699,7 +1699,7 @@ Res <- data.frame(model = c('SVM linear - Bbasis',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 7.4) Projekce na B-splinovou bázi
+#### Projekce na B-splinovou bázi
 
 Další možností, jak použít klasickou metodu SVM pro funkcionální data, je projektovat původní data na nějaký $d$-dimenzionální podprostor našeho Hilbertova prostoru $\mathcal H$, označme jej $V_d$.
 Předpokládejme, že tento podprostor $V_d$ má ortonormální bázi $\{\Psi_j\}_{j = 1, \dots, d}$.
@@ -1929,7 +1929,7 @@ Na testovacích datech je potom přesnost metody `r 100 * round(Res[1, 3], 4)` %
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### 7.5) RKHS + SVM
+#### RKHS + SVM
 
 V této sekci se podíváme na další možnost, jak využít metodu podpůrných vektorů pro klasifikaci funkcionálních dat.
 V tomto případě půjde opět o již nám známý princip, kdy nejprve funkcionální data vyjádříme jakožto nějaké konečně-rozměrné objekty a na tyto objekty následně aplikujeme klasickou metodu SVM.

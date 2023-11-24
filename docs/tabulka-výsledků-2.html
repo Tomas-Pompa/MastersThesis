@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitola 4 Aplikace na reálných datech 1 | Diplomová práce</title>
-  <meta name="description" content="Kapitola 4 Aplikace na reálných datech 1 | Diplomová práce" />
+  <title>4.3 Tabulka výsledků | Diplomová práce</title>
+  <meta name="description" content="4.3 Tabulka výsledků | Diplomová práce" />
   <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitola 4 Aplikace na reálných datech 1 | Diplomová práce" />
+  <meta property="og:title" content="4.3 Tabulka výsledků | Diplomová práce" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitola 4 Aplikace na reálných datech 1 | Diplomová práce" />
+  <meta name="twitter:title" content="4.3 Tabulka výsledků | Diplomová práce" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="simulační-studie-1.html"/>
-<link rel="next" href="vyhlazení-pozorovaných-křivek-2.html"/>
+<link rel="prev" href="klasifikace-křivek-2.html"/>
+<link rel="next" href="opakování.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -220,46 +220,169 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="aplikace-na-reálných-datech-1" class="section level1 hasAnchor" number="4">
-<h1><span class="header-section-number">Kapitola 4</span> Aplikace na reálných datech 1<a href="aplikace-na-reálných-datech-1.html#aplikace-na-reálných-datech-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Nyní se věnujme aplikaci na reálných datech. Budeme pracovat s daty <code>growth()</code>, které jsou dostupné v knihovně <code>fda</code>.</p>
-<p>Nejprve si data načteme a vykreslíme.</p>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="aplikace-na-reálných-datech-1.html#cb1-1" tabindex="-1"></a><span class="co"># nacteni dat </span></span>
-<span id="cb1-2"><a href="aplikace-na-reálných-datech-1.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(fda)</span>
-<span id="cb1-3"><a href="aplikace-na-reálných-datech-1.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-4"><a href="aplikace-na-reálných-datech-1.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-5"><a href="aplikace-na-reálných-datech-1.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-6"><a href="aplikace-na-reálných-datech-1.html#cb1-6" tabindex="-1"></a>data <span class="ot">&lt;-</span> growth</span></code></pre></div>
-</details>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="aplikace-na-reálných-datech-1.html#cb2-1" tabindex="-1"></a>data.gr <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">data.frame</span>(<span class="at">age =</span> data<span class="sc">$</span>age),</span>
-<span id="cb2-2"><a href="aplikace-na-reálných-datech-1.html#cb2-2" tabindex="-1"></a>                 data<span class="sc">$</span>hgtf,</span>
-<span id="cb2-3"><a href="aplikace-na-reálných-datech-1.html#cb2-3" tabindex="-1"></a>                 data<span class="sc">$</span>hgtm)</span>
-<span id="cb2-4"><a href="aplikace-na-reálných-datech-1.html#cb2-4" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="aplikace-na-reálných-datech-1.html#cb2-5" tabindex="-1"></a>n_girls <span class="ot">&lt;-</span> <span class="dv">54</span></span>
-<span id="cb2-6"><a href="aplikace-na-reálných-datech-1.html#cb2-6" tabindex="-1"></a>n_boys <span class="ot">&lt;-</span> <span class="dv">39</span></span></code></pre></div>
-</details>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="aplikace-na-reálných-datech-1.html#cb3-1" tabindex="-1"></a><span class="fu">pivot_longer</span>(data.gr, <span class="at">cols =</span> girl01<span class="sc">:</span>boy39, <span class="at">names_to =</span> <span class="st">&#39;sample&#39;</span>,</span>
-<span id="cb3-2"><a href="aplikace-na-reálných-datech-1.html#cb3-2" tabindex="-1"></a>                        <span class="at">values_to =</span> <span class="st">&#39;height&#39;</span>, <span class="at">cols_vary =</span> <span class="st">&#39;slowest&#39;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="aplikace-na-reálných-datech-1.html#cb3-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Individual =</span> <span class="fu">as.factor</span>(sample),</span>
-<span id="cb3-4"><a href="aplikace-na-reálných-datech-1.html#cb3-4" tabindex="-1"></a>         <span class="at">Gender =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;girl&#39;</span>, <span class="st">&#39;boy&#39;</span>), <span class="fu">c</span>(n_girls, n_boys)),</span>
-<span id="cb3-5"><a href="aplikace-na-reálných-datech-1.html#cb3-5" tabindex="-1"></a>                             <span class="at">each =</span> <span class="fu">length</span>(data.gr<span class="sc">$</span>age)), </span>
-<span id="cb3-6"><a href="aplikace-na-reálných-datech-1.html#cb3-6" tabindex="-1"></a>                         <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&#39;girl&#39;</span>, <span class="st">&#39;boy&#39;</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb3-7"><a href="aplikace-na-reálných-datech-1.html#cb3-7" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> height, <span class="at">colour =</span> Gender, <span class="at">group =</span> Individual)) <span class="sc">+</span> </span>
-<span id="cb3-8"><a href="aplikace-na-reálných-datech-1.html#cb3-8" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb3-9"><a href="aplikace-na-reálných-datech-1.html#cb3-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
-</details>
-<p><img src="03-Application_1_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div id="tabulka-výsledků-2" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Tabulka výsledků<a href="tabulka-výsledků-2.html#tabulka-výsledků-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<table>
+<caption><span id="tab:unnamed-chunk-114">Tabulka 4.6: </span>Souhrnné výsledky použitých metod na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="center"><span class="math inline">\(\widehat{Err}_{train}\quad\quad\quad\quad\quad\)</span></th>
+<th align="center"><span class="math inline">\(\widehat{Err}_{test}\quad\quad\quad\quad\quad\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">KNN</td>
+<td align="center">0.0154</td>
+<td align="center">0.1429</td>
+</tr>
+<tr class="even">
+<td align="left">LDA</td>
+<td align="center">0.0154</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="odd">
+<td align="left">QDA</td>
+<td align="center">0.0308</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="even">
+<td align="left">LR score</td>
+<td align="center">0.0308</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="odd">
+<td align="left">Tree - diskr.</td>
+<td align="center">0.1231</td>
+<td align="center">0.2143</td>
+</tr>
+<tr class="even">
+<td align="left">Tree - score</td>
+<td align="center">0.0615</td>
+<td align="center">0.1429</td>
+</tr>
+<tr class="odd">
+<td align="left">Tree - Bbasis</td>
+<td align="center">0.1231</td>
+<td align="center">0.2143</td>
+</tr>
+<tr class="even">
+<td align="left">RForest - diskr</td>
+<td align="center">0.0000</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="odd">
+<td align="left">RForest - score</td>
+<td align="center">0.0000</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="even">
+<td align="left">RForest - Bbasis</td>
+<td align="center">0.0154</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM linear - diskr</td>
+<td align="center">0.0154</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="even">
+<td align="left">SVM poly - diskr</td>
+<td align="center">0.2154</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM rbf - diskr</td>
+<td align="center">0.0308</td>
+<td align="center">0.1071</td>
+</tr>
+<tr class="even">
+<td align="left">SVM linear - PCA</td>
+<td align="center">0.0154</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM poly - PCA</td>
+<td align="center">0.0462</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="even">
+<td align="left">SVM rbf - PCA</td>
+<td align="center">0.0154</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM linear - Bbasis</td>
+<td align="center">0.0154</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="even">
+<td align="left">SVM poly - Bbasis</td>
+<td align="center">0.0154</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM rbf - Bbasis</td>
+<td align="center">0.0154</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="even">
+<td align="left">SVM linear - projection</td>
+<td align="center">0.0154</td>
+<td align="center">0.0357</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM poly - projection</td>
+<td align="center">0.0308</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="even">
+<td align="left">SVM rbf - projection</td>
+<td align="center">0.0154</td>
+<td align="center">0.0714</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM linear - RKHS - radial</td>
+<td align="center">0.0154</td>
+<td align="center">0.1429</td>
+</tr>
+<tr class="even">
+<td align="left">SVM poly - RKHS - radial</td>
+<td align="center">0.0462</td>
+<td align="center">0.1429</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM rbf - RKHS - radial</td>
+<td align="center">0.0308</td>
+<td align="center">0.1786</td>
+</tr>
+<tr class="even">
+<td align="left">SVM linear - RKHS - linear</td>
+<td align="center">0.0462</td>
+<td align="center">0.1429</td>
+</tr>
+<tr class="odd">
+<td align="left">SVM poly - RKHS - linear</td>
+<td align="center">0.0308</td>
+<td align="center">0.1786</td>
+</tr>
+<tr class="even">
+<td align="left">SVM rbf - RKHS - linear</td>
+<td align="center">0.0462</td>
+<td align="center">0.1429</td>
+</tr>
+</tbody>
+</table>
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="simulační-studie-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="vyhlazení-pozorovaných-křivek-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="klasifikace-křivek-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="opakování.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
