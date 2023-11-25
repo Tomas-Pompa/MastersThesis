@@ -1,4 +1,4 @@
-# Vlastnosti metody RKHS + SVM
+# Aplikace na reálných datech 2
 
 V této části se podíváme podrobněji na klasifikaci pomocí postupu, při kterém nejprve data projektujeme na Reproducing Kernel Hilbert Space definovaný jádrem $K$ a následně pomocí koeficientů této projekce klasifikujeme data pomocí metody SVM. K získání koeficientů projekce se také využívá metoda SVM, avšak její analogie pro řešení regresních preblémů (SVM for regression). Tento postup je podrobněji popsán ve článku[^k], jehož autory jsou Muñoz a González.
 

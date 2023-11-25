@@ -1,3 +1,5 @@
+# (PART\*) Simulační studie {-}
+
 # Simulace 1
 
 ## Simulace funkcionálních dat
@@ -2354,7 +2356,7 @@ for (n_method in 1:length(CV.results)) {
 gamma.opt <- c(which.min(CV.results$SVM.l) %% length(gamma.cv), 
                which.min(CV.results$SVM.p) %% length(gamma.cv), 
                which.min(CV.results$SVM.r) %% length(gamma.cv))
-gamma.opt[gamma.opt == 0] <- length(gamma.opt)
+gamma.opt[gamma.opt == 0] <- length(gamma.cv)
 gamma.opt <- gamma.cv[gamma.opt]
 
 d.opt <- c(which.min(t(CV.results$SVM.l)) %% length(dimensions), 
@@ -2660,7 +2662,7 @@ for (n_method in 1:length(CV.results)) {
 poly.opt <- c(which.min(CV.results$SVM.l) %% length(poly.cv), 
                which.min(CV.results$SVM.p) %% length(poly.cv), 
                which.min(CV.results$SVM.r) %% length(poly.cv))
-poly.opt[poly.opt == 0] <- length(poly.opt)
+poly.opt[poly.opt == 0] <- length(poly.cv)
 poly.opt <- poly.cv[poly.opt]
 
 d.opt <- c(which.min(t(CV.results$SVM.l)) %% length(dimensions), 
@@ -3082,8 +3084,11 @@ Výsledky si budeme ukládat do tabulky a nakonec spočítáme průměrné chara
 Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 50$.
 
 ```{r eval=T}
+# nastaveni generatoru pseudonahodnych cisel
+set.seed(42)
+
 # pocet simulaci
-n.sim <- 50
+n.sim <- 1#50
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody
@@ -4025,7 +4030,7 @@ for(sim in 1:n.sim) {
   gamma.opt <- c(which.min(CV.results$SVM.l) %% length(gamma.cv), 
                  which.min(CV.results$SVM.p) %% length(gamma.cv), 
                  which.min(CV.results$SVM.r) %% length(gamma.cv))
-  gamma.opt[gamma.opt == 0] <- length(gamma.opt)
+  gamma.opt[gamma.opt == 0] <- length(gamma.cv)
   gamma.opt <- gamma.cv[gamma.opt]
   
   d.opt <- c(which.min(t(CV.results$SVM.l)) %% length(dimensions), 
@@ -4255,7 +4260,7 @@ for(sim in 1:n.sim) {
   poly.opt <- c(which.min(CV.results$SVM.l) %% length(poly.cv), 
                  which.min(CV.results$SVM.p) %% length(poly.cv), 
                  which.min(CV.results$SVM.r) %% length(poly.cv))
-  poly.opt[poly.opt == 0] <- length(poly.opt)
+  poly.opt[poly.opt == 0] <- length(poly.cv)
   poly.opt <- poly.cv[poly.opt]
   
   d.opt <- c(which.min(t(CV.results$SVM.l)) %% length(dimensions), 

@@ -1,11 +1,13 @@
 bookdown::gitbook:
   highlight: tango
+  #includes:
+  #  in_header: header.html
   clean: FALSE
   css: style.css
   code_folding: hide
   fig_caption: true
   number_sections: true
-  split_by: section
+  split_by: chapter
   config:
     toc:
       collapse: subsection

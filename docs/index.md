@@ -1,11 +1,11 @@
 --- 
 title: "Diplomová práce"
 author: "Tomáš Pompa"
-date: "04. 11. 2023"
+date: "25. 11. 2023"
 site: bookdown::bookdown_site
 ---
 
-# Metoda podpůrných vektorů pro funkcionální data
+# SVM pro funkcionální data {-}
 
 Cílem bude aplikovat poznatky o metodě podpůrných vektorů (SVM) pro mnohorozměrná data na data funkcionálního typu, tedy nekonečně-rozměrné objekty.
 K tomu využijeme jednak převod (redukci) objektů z nekonečné dimenze na objekty konečné dimenze a následným využitím známých postupů a také modifikaci SVM přímo pro funkcionální data, k čemuž využijeme poznatky o Hilbertových prostorech a skalárním součinu.

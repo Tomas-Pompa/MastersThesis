@@ -1,9 +1,14 @@
-p.caption {
-  color: #777;
-  margin-top: 7px;
+@import url('https://fonts.googleapis.com/css?family=Muli:400,400i,700&display=swap');
+
+/* Figure caption */
+p.caption {   
+  color: #616161;
+  margin-top: 8px;
 }
+
 p code {
   white-space: inherit;
+  
 }
 pre {
   word-break: normal;
@@ -13,23 +18,119 @@ pre code {
   white-space: inherit;
 }
 
+/* LOGO */
 .toc-logo {
-  width: 200px !important;
+  width: 110px !important;
   object-fit: contain;
-  margin: 0 auto;
+  margin: 1 auto;
   display: block;
 }
 
 .toc-logo img {
   max-width: 50%;
-  margin-bottom: 1px;
+  margin-bottom: 10px;
 }
 
-.summary > li:first-child {
-  height: auto !important; 
-}
-
+/* Toc */
 .book .book-summary {
-  background: #C2E7F1;
-  border-right: 2px #679DAC solid;
+  background: #E3F2FD;
+  border-right: 1px #BBDEFB solid;
+}
+.book .book-summary ul.summary li a, 
+.book .book-summary ul.summary li span {
+  padding-top: 6px;
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #1565C0;
+}
+.summary{
+font-family: 'Muli', sans-serif;
+}
+.summary a:hover {
+  color: #0D47A1 !important;
+} 
+.book .book-summary ul.summary li.active>a { /*active TOC links*/
+  color: #1A237E !important;
+  border-left: solid 4px;
+  border-color: #1A237E;
+  padding-left: 11px !important;
+}  
+
+/* Parts and appendix titles in toc */
+li.appendix span, li.part span { /* for TOC part names */
+  margin-top: 1em;
+  color: #1A237E !important;
+  opacity: 1 !important;
+  text-transform: uppercase;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: 'Muli', sans-serif;
+  color: #1A237E;
+}
+
+/* Title */
+.title {
+  font-family: 'Muli', sans-serif;
+  font-size: 3em !important;
+  color: #1A237E;
+ }
+ 
+/* Body and header text */
+.book.font-family-1 {
+  font-family: 'Muli', sans-serif;
+ }
+
+/* Body Links */
+.book .book-body .page-wrapper .page-inner section.normal a {
+  color: #1565C0;
+}
+.book .book-body .page-wrapper .page-inner section.normal a:hover {
+color: #0D47A1; /* darker color when hovering */
+text-decoration: none;
+}
+
+/* Section anchor links */
+.book .book-body .page-wrapper .page-inner section.normal {
+  overflow: visible !important; /*so anchor link doesnt get cut off */
+}
+a.anchor {
+  margin-left: -30px;
+  padding-right: 3px;
+  display:inline-block;
+  width: 30px;
+  height: 30px;
+  background-image: url(https://image.flaticon.com/icons/svg/34/34735.svg) !important;
+  background-repeat: no-repeat !important;
+  background-size: 20px 20px !important;
+  background-position: center bottom !important;
+  opacity: 0;
+}
+.hasAnchor:hover a.anchor, a.anchor:hover {
+  opacity: 0.6;
+}
+@media (max-width: 1144px) { /* dont show anchor link on small screens */
+  .hasAnchor:hover a.anchor {
+visibility: hidden;
+  }
+}
+
+/* Code Chunks - pre and post spacing */
+.sourceCode pre {
+  margin: 0 !important; /* makes space above and below symmetrical*/
+}
+.sourceCode {
+  margin-bottom: 0.85em; /* adds same amount of margin as a <p> would */
+}
+
+/* Align toolbar and toc line */
+.summary > li:first-child {
+    height: 50px;
+    padding-top: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.07);
+}
+.book .book-summary ul.summary li.divider {
+    height: 0px;
 }

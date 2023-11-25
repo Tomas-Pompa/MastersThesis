@@ -1,3 +1,5 @@
+# (PART\*) Aplikace na datech {-}
+
 # Aplikace na reálných datech 1
 
 Nyní se věnujme aplikaci na reálných datech. Budeme pracovat s daty `growth()`, které jsou dostupné v knihovně `fda`.
@@ -10,6 +12,7 @@ library(fda)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+
 data <- growth
 ```
 
@@ -2938,7 +2941,7 @@ Na testovacích datech je potom přesnost metody `r 100 * round(Res[1, 3], 4)` %
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-## Tabulka výsledků
+### Tabulka výsledků
 
 ```{r echo=FALSE}
 knitr::kable(RESULTS,
@@ -2950,11 +2953,14 @@ knitr::kable(RESULTS,
              format = 'simple')
 ```
 
-# Opakování
+## Opakování
 
 ```{r eval=T}
+# nastaveni generatoru pseudonahodnych cisel
+set.seed(42)
+
 # pocet simulaci
-n.sim <- 100
+n.sim <- 1#00
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody
