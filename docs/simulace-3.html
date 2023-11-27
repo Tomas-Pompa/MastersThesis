@@ -295,26 +295,12 @@ Funkce budeme uvažovat na intervalu <span class="math inline">\(I = [0, 6]\)</s
 <p>Nyní vytvoříme funkce pomocí interpolačních polynomů. Nejprve si definujeme body, kterými má procházet naše křivka, a následně jimi proložíme interpolační polynom, který použijeme pro generování křivek pro klasifikaci.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="simulace-3.html#cb2-1" tabindex="-1"></a><span class="co"># definujici body pro tridu 0</span></span>
-<span id="cb2-2"><a href="simulace-3.html#cb2-2" tabindex="-1"></a>x<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.35</span>, <span class="sc">-</span><span class="fl">1.06</span>, <span class="sc">-</span><span class="fl">0.58</span>, <span class="fl">0.26</span>, <span class="fl">0.84</span>, <span class="fl">1.73</span>, <span class="fl">2.5</span>, <span class="fl">3.2</span>, <span class="fl">3.43</span>, <span class="dv">4</span>) <span class="sc">+</span> <span class="dv">2</span></span>
-<span id="cb2-3"><a href="simulace-3.html#cb2-3" tabindex="-1"></a>y<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.86</span>, <span class="fl">1.49</span>, <span class="fl">1.1</span>, <span class="fl">0.15</span>, <span class="sc">-</span><span class="fl">0.11</span>, <span class="sc">-</span><span class="fl">0.36</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.23</span>, <span class="dv">0</span>)</span>
+<span id="cb2-2"><a href="simulace-3.html#cb2-2" tabindex="-1"></a>x<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.35</span>, <span class="sc">-</span><span class="fl">1.06</span>, <span class="sc">-</span><span class="fl">0.58</span>, <span class="fl">0.26</span>, <span class="fl">0.84</span>, <span class="fl">1.73</span>, <span class="fl">2.5</span>, <span class="fl">3.43</span>, <span class="dv">4</span>) <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb2-3"><a href="simulace-3.html#cb2-3" tabindex="-1"></a>y<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.86</span>, <span class="fl">1.49</span>, <span class="fl">1.1</span>, <span class="fl">0.15</span>, <span class="sc">-</span><span class="fl">0.11</span>, <span class="sc">-</span><span class="fl">0.36</span>, <span class="fl">0.23</span>, <span class="dv">0</span>)</span>
 <span id="cb2-4"><a href="simulace-3.html#cb2-4" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="simulace-3.html#cb2-5" tabindex="-1"></a><span class="co"># definujici body pro tridu 1</span></span>
-<span id="cb2-6"><a href="simulace-3.html#cb2-6" tabindex="-1"></a>x<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.8</span>, <span class="sc">-</span><span class="fl">1.3</span>, <span class="sc">-</span><span class="fl">1.09</span>, <span class="sc">-</span><span class="fl">0.75</span>, <span class="sc">-</span><span class="fl">0.49</span>, <span class="fl">0.14</span>, <span class="fl">0.43</span>, <span class="fl">0.96</span>, <span class="fl">1.7</span>, <span class="fl">2.1</span>, <span class="fl">2.6</span>, <span class="dv">3</span>, <span class="fl">3.43</span>, <span class="fl">3.7</span>, <span class="dv">4</span>) <span class="sc">+</span> <span class="dv">2</span></span>
-<span id="cb2-7"><a href="simulace-3.html#cb2-7" tabindex="-1"></a>y<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.45</span>, <span class="fl">0.4</span>, <span class="fl">0.71</span>, <span class="fl">1.08</span>, <span class="fl">1.47</span>, <span class="fl">1.39</span>, <span class="fl">0.81</span>, <span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.1</span>,<span class="sc">-</span><span class="fl">0.12</span>, <span class="sc">-</span><span class="fl">0.4</span>, <span class="sc">-</span><span class="fl">0.35</span>, <span class="fl">0.25</span>, <span class="fl">0.4</span>, <span class="dv">0</span>)</span>
-<span id="cb2-8"><a href="simulace-3.html#cb2-8" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="simulace-3.html#cb2-9" tabindex="-1"></a><span class="co"># {{0,0},{0.65,0.25},{0.94,0.76},{1.42,1.2},{2.26,0.94},{2.84,0.1},{3.73,-0.01},{4.5,-0.1},{5.2, -0.1},{5.43,0.23},{6,0}}</span></span>
-<span id="cb2-10"><a href="simulace-3.html#cb2-10" tabindex="-1"></a>x<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.65</span>, <span class="fl">0.94</span>, <span class="fl">1.42</span>, <span class="fl">2.26</span>, <span class="fl">2.84</span>, <span class="fl">3.73</span>, <span class="fl">4.5</span>, <span class="fl">5.2</span>, <span class="fl">5.43</span>, <span class="dv">6</span>)</span>
-<span id="cb2-11"><a href="simulace-3.html#cb2-11" tabindex="-1"></a>y<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.76</span>, <span class="fl">1.2</span>, <span class="fl">0.94</span>, <span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.01</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.23</span>, <span class="dv">0</span>)</span>
-<span id="cb2-12"><a href="simulace-3.html#cb2-12" tabindex="-1"></a><span class="co"># h(x)=-9.1 x+37.2709 x^(2)-61.2594 x^(3)+58.0332 x^(4)-34.0338 x^(5)+12.5556 x^(6)-2.90164 x^(7)+0.406575 x^(8)-0.0315332 x^(9)+0.00103781 x^(10)</span></span>
-<span id="cb2-13"><a href="simulace-3.html#cb2-13" tabindex="-1"></a><span class="co"># f(x)=-10.3075 x+43.5046 x^(2)+x^(3) (-72.7162)+67.8866 x^(4)+x^(5) (-38.5902)+13.7339 x^(6)+x^(7) (-3.06169)+0.41432 x^(8)+x^(9) (-0.0310725)+0.000989789 x^(10)</span></span>
-<span id="cb2-14"><a href="simulace-3.html#cb2-14" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="simulace-3.html#cb2-15" tabindex="-1"></a><span class="co"># definujici body pro tridu 0</span></span>
-<span id="cb2-16"><a href="simulace-3.html#cb2-16" tabindex="-1"></a>x<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.35</span>, <span class="sc">-</span><span class="fl">1.06</span>, <span class="sc">-</span><span class="fl">0.58</span>, <span class="fl">0.26</span>, <span class="fl">0.84</span>, <span class="fl">1.73</span>, <span class="fl">2.5</span>, <span class="fl">3.43</span>, <span class="dv">4</span>) <span class="sc">+</span> <span class="dv">2</span></span>
-<span id="cb2-17"><a href="simulace-3.html#cb2-17" tabindex="-1"></a>y<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.86</span>, <span class="fl">1.49</span>, <span class="fl">1.1</span>, <span class="fl">0.15</span>, <span class="sc">-</span><span class="fl">0.11</span>, <span class="sc">-</span><span class="fl">0.36</span>, <span class="fl">0.23</span>, <span class="dv">0</span>)</span>
-<span id="cb2-18"><a href="simulace-3.html#cb2-18" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="simulace-3.html#cb2-19" tabindex="-1"></a><span class="co"># definujici body pro tridu 1</span></span>
-<span id="cb2-20"><a href="simulace-3.html#cb2-20" tabindex="-1"></a>x<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.49</span>, <span class="sc">-</span><span class="fl">1.09</span>, <span class="sc">-</span><span class="fl">0.75</span>, <span class="sc">-</span><span class="fl">0.49</span>, <span class="fl">0.14</span>, <span class="fl">0.43</span>, <span class="fl">0.96</span>, <span class="fl">1.7</span>, <span class="fl">2.6</span>, <span class="fl">3.25</span>, <span class="fl">3.67</span>, <span class="dv">4</span>) <span class="sc">+</span> <span class="dv">2</span></span>
-<span id="cb2-21"><a href="simulace-3.html#cb2-21" tabindex="-1"></a>y<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.4</span>, <span class="fl">0.71</span>, <span class="fl">1.08</span>, <span class="fl">1.47</span>, <span class="fl">1.39</span>, <span class="fl">0.81</span>, <span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.37</span>, <span class="dv">0</span>)</span></code></pre></div>
+<span id="cb2-6"><a href="simulace-3.html#cb2-6" tabindex="-1"></a>x<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.49</span>, <span class="sc">-</span><span class="fl">1.09</span>, <span class="sc">-</span><span class="fl">0.75</span>, <span class="sc">-</span><span class="fl">0.49</span>, <span class="fl">0.14</span>, <span class="fl">0.43</span>, <span class="fl">0.96</span>, <span class="fl">1.7</span>, <span class="fl">2.6</span>, <span class="fl">3.25</span>, <span class="fl">3.67</span>, <span class="dv">4</span>) <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb2-7"><a href="simulace-3.html#cb2-7" tabindex="-1"></a>y<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.4</span>, <span class="fl">0.71</span>, <span class="fl">1.08</span>, <span class="fl">1.47</span>, <span class="fl">1.39</span>, <span class="fl">0.81</span>, <span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.37</span>, <span class="dv">0</span>)</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="simulace-3.html#cb3-1" tabindex="-1"></a><span class="co"># graf bodu</span></span>
@@ -327,7 +313,7 @@ Funkce budeme uvažovat na intervalu <span class="math inline">\(I = [0, 6]\)</s
 <span id="cb3-8"><a href="simulace-3.html#cb3-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span> </span>
 <span id="cb3-9"><a href="simulace-3.html#cb3-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 </details>
-<p><img src="03-Simulace_3_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="03-Simulace_3_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Pro výpočet interpolačních polynomů využijeme funkci <code>poly.calc()</code> z knihovny <code>polynom</code>.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="simulace-3.html#cb4-1" tabindex="-1"></a><span class="co"># vypocet polynomu</span></span>
@@ -369,7 +355,7 @@ Funkce budeme uvažovat na intervalu <span class="math inline">\(I = [0, 6]\)</s
 <span id="cb6-14"><a href="simulace-3.html#cb6-14" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dat_poly_plot,</span>
 <span id="cb6-15"><a href="simulace-3.html#cb6-15" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Class))</span></code></pre></div>
 </details>
-<p><img src="03-Simulace_3_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="03-Simulace_3_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Pro třídu <span class="math inline">\(Y = 0\)</span> a <span class="math inline">\(Y = 1\)</span> uvažujme funkce</p>
 <p><span class="math display">\[
 f_0(x) = 2 \cdot \sin\left(\frac{\pi x}{2}\right) + x^2 + \frac{1}{2},
@@ -397,8 +383,8 @@ f_1(x) = 3 \cdot \sin\left(\frac{\pi x}{2}\right) + \frac{1}{2} x.
 <span id="cb8-10"><a href="simulace-3.html#cb8-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb8-11"><a href="simulace-3.html#cb8-11" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-8-1.png" alt="Znázornění dvou funkcí na intervalu $[0, 1]$, ze kterých generujeme pozorování ze tříd 0 a 1." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-9-1.png" alt="Znázornění dvou funkcí na intervalu $[0, 1]$, ze kterých generujeme pozorování ze tříd 0 a 1." width="672" />
 <p class="caption">
 Obrázek 3.1: Znázornění dvou funkcí na intervalu <span class="math inline">\([0, 1]\)</span>, ze kterých generujeme pozorování ze tříd 0 a 1.
 </p>
@@ -475,8 +461,8 @@ V každé ze dvou tříd budeme uvažovat 100 pozorování, tedy <code>n = 100</
 <span id="cb11-30"><a href="simulace-3.html#cb11-30" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>) <span class="sc">+</span></span>
 <span id="cb11-31"><a href="simulace-3.html#cb11-31" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-11"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-11-1.png" alt="Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-12"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-12-1.png" alt="Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená." width="672" />
 <p class="caption">
 Obrázek 3.2: Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená.
 </p>
@@ -533,8 +519,8 @@ Hodnotu <span class="math inline">\(\lambda\)</span> budeme uvažovat pro obě k
 <span id="cb14-7"><a href="simulace-3.html#cb14-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">GCV</span>(lambda))) <span class="sc">+</span> </span>
 <span id="cb14-8"><a href="simulace-3.html#cb14-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log10</span>(lambda.opt), <span class="at">y =</span> <span class="fu">min</span>(gcv)), <span class="at">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-14"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-14-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-15-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
 <p class="caption">
 Obrázek 3.3: Průběh <span class="math inline">\(GCV(\lambda)\)</span> pro zvolený vektor <span class="math inline">\(\boldsymbol\lambda\)</span>. Na ose <span class="math inline">\(x\)</span> jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru <span class="math inline">\(\lambda_{optimal}\)</span>.
 </p>
@@ -558,8 +544,8 @@ Obrázek 3.3: Průběh <span class="math inline">\(GCV(\lambda)\)</span> pro zvo
 <span id="cb15-15"><a href="simulace-3.html#cb15-15" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Group&#39;</span>) <span class="sc">+</span></span>
 <span id="cb15-16"><a href="simulace-3.html#cb15-16" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-15-1.png" alt="Prvních 10 vyhlazených křivek z každé klasifikační třídy." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-16-1.png" alt="Prvních 10 vyhlazených křivek z každé klasifikační třídy." width="672" />
 <p class="caption">
 Obrázek 3.4: Prvních 10 vyhlazených křivek z každé klasifikační třídy.
 </p>
@@ -593,8 +579,8 @@ Obrázek 3.4: Prvních 10 vyhlazených křivek z každé klasifikační třídy.
 <span id="cb16-25"><a href="simulace-3.html#cb16-25" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Mean), </span>
 <span id="cb16-26"><a href="simulace-3.html#cb16-26" tabindex="-1"></a>            <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">&#39;twodash&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-16-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-17"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-17-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
 <p class="caption">
 Obrázek 3.5: Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.
 </p>
@@ -709,7 +695,7 @@ Vzhledem k výpočetní náročnosti a rozsahu souboru zvolíme <span class="mat
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="simulace-3.html#cb30-1" tabindex="-1"></a><span class="fu">plot</span>(neighb.model<span class="sc">$</span>gcv, <span class="at">pch =</span> <span class="dv">16</span>) <span class="co"># vykresleni zavislosti GCV na poctu sousedu K</span></span></code></pre></div>
 </details>
-<p><img src="03-Simulace_3_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="03-Simulace_3_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="simulace-3.html#cb31-1" tabindex="-1"></a>neighb.model<span class="sc">$</span>max.prob <span class="co"># maximalni presnost</span></span></code></pre></div>
 </details>
@@ -787,8 +773,8 @@ Pro přehlednost si ještě vykresleme průběh validační chybovosti v závisl
 <span id="cb37-9"><a href="simulace-3.html#cb37-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Validační chybovost&#39;</span>) <span class="sc">+</span> </span>
 <span id="cb37-10"><a href="simulace-3.html#cb37-10" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> neighbours)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-23"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-23-1.png" alt="Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-24"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-24-1.png" alt="Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů." width="672" />
 <p class="caption">
 Obrázek 3.6: Závislost validační chybovosti na hodnotě <span class="math inline">\(K\)</span>, tedy na počtu sousedů.
 </p>
@@ -875,8 +861,8 @@ Graficky si můžeme zobrazit hodnoty skórů prvních dvou hlavních komponent,
 <span id="cb44-8"><a href="simulace-3.html#cb44-8" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>)) <span class="sc">+</span></span>
 <span id="cb44-9"><a href="simulace-3.html#cb44-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-27"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-27-1.png" alt="Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-28"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-28-1.png" alt="Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
 <p class="caption">
 Obrázek 3.7: Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.
 </p>
@@ -955,8 +941,8 @@ Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce <
 <span id="cb47-34"><a href="simulace-3.html#cb47-34" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb47-35"><a href="simulace-3.html#cb47-35" tabindex="-1"></a>  <span class="fu">geom_contour</span>(<span class="at">data =</span> nd, <span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">z =</span> prd), <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-30"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-30-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-31"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-31-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA." width="672" />
 <p class="caption">
 Obrázek 3.8: Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA.
 </p>
@@ -1011,8 +997,8 @@ Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce <
 <span id="cb50-11"><a href="simulace-3.html#cb50-11" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb50-12"><a href="simulace-3.html#cb50-12" tabindex="-1"></a>  <span class="fu">geom_contour</span>(<span class="at">data =</span> nd, <span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">z =</span> prd), <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-36"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-36-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-37"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-37-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA." width="672" />
 <p class="caption">
 Obrázek 3.9: Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA.
 </p>
@@ -1121,8 +1107,8 @@ Připomeňme, že k výběru vhodného počtu bází nemůžeme využít stejná
 <span id="cb54-14"><a href="simulace-3.html#cb54-14" tabindex="-1"></a>                        n[optimal] <span class="sc">==</span> .(n.basis.beta.opt))),</span>
 <span id="cb54-15"><a href="simulace-3.html#cb54-15" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">&#39;Chybovost&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-40"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-40-1.png" alt="Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro $\beta$. Červeným bodem je znázorněn optimální počet $n_{optimal}$ zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-41"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-41-1.png" alt="Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro $\beta$. Červeným bodem je znázorněn optimální počet $n_{optimal}$ zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti." width="672" />
 <p class="caption">
 Obrázek 3.10: Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro <span class="math inline">\(\beta\)</span>. Červeným bodem je znázorněn optimální počet <span class="math inline">\(n_{optimal}\)</span> zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti.
 </p>
@@ -1223,8 +1209,8 @@ Následně určíme průměr a jako optimální <span class="math inline">\(n\)<
 <span id="cb58-9"><a href="simulace-3.html#cb58-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Validační chybovost&#39;</span>) <span class="sc">+</span> </span>
 <span id="cb58-10"><a href="simulace-3.html#cb58-10" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> n.basis)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-43"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-43-1.png" alt="Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-44"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-44-1.png" alt="Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází." width="672" />
 <p class="caption">
 Obrázek 3.11: Závislost validační chybovosti na hodnotě <span class="math inline">\(n_{basis}\)</span>, tedy na počtu bází.
 </p>
@@ -1274,8 +1260,8 @@ Pro lepší představu si ještě můžeme vykreslit hodnoty odhadnutých pravd�
 <span id="cb60-11"><a href="simulace-3.html#cb60-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Odhadnuté pravděpodobnosti Pr(Y = 1|X = x)&#39;</span>,</span>
 <span id="cb60-12"><a href="simulace-3.html#cb60-12" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Třída&#39;</span>) </span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-45"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-45-1.png" alt="Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-46"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-46-1.png" alt="Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
 <p class="caption">
 Obrázek 3.12: Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.
 </p>
@@ -1295,8 +1281,8 @@ Obrázek 3.12: Závoslost odhadnutých pravděpodobností na hodnotách lineárn
 <span id="cb61-11"><a href="simulace-3.html#cb61-11" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="fu">aes</span>(<span class="at">slope =</span> <span class="dv">0</span>, <span class="at">intercept =</span> <span class="dv">0</span>), <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, </span>
 <span id="cb61-12"><a href="simulace-3.html#cb61-12" tabindex="-1"></a>              <span class="at">linewidth =</span> <span class="fl">0.5</span>, <span class="at">colour =</span> <span class="st">&#39;grey&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-46"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-46-1.png" alt="Průběh odhadu parametrické funkce $\beta(t), t \in [0, 1]$." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-47"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-47-1.png" alt="Průběh odhadu parametrické funkce $\beta(t), t \in [0, 1]$." width="672" />
 <p class="caption">
 Obrázek 3.13: Průběh odhadu parametrické funkce <span class="math inline">\(\beta(t), t \in [0, 1]\)</span>.
 </p>
@@ -1352,8 +1338,8 @@ Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce <
 <span id="cb64-13"><a href="simulace-3.html#cb64-13" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb64-14"><a href="simulace-3.html#cb64-14" tabindex="-1"></a>  <span class="fu">geom_contour</span>(<span class="at">data =</span> nd, <span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">z =</span> prd), <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-53"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-53-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-54"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-54-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese." width="672" />
 <p class="caption">
 Obrázek 3.14: Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese.
 </p>
@@ -1427,8 +1413,8 @@ Jedná se o neprořezaný strom.</p>
 <span id="cb68-2"><a href="simulace-3.html#cb68-2" tabindex="-1"></a><span class="fu">fancyRpartPlot</span>(<span class="fu">rpart</span>(Y <span class="sc">~</span> ., <span class="at">data =</span> grid.data, <span class="at">method =</span> <span class="st">&quot;class&quot;</span>),</span>
 <span id="cb68-3"><a href="simulace-3.html#cb68-3" tabindex="-1"></a>               <span class="at">sub =</span> <span class="st">&#39;&#39;</span>, <span class="at">palettes =</span> <span class="fu">c</span>(<span class="st">&#39;Reds&#39;</span>, <span class="st">&#39;Blues&#39;</span>)) </span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-57"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-57-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-58"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-58-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
 <p class="caption">
 Obrázek 3.15: Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.
 </p>
@@ -1444,8 +1430,8 @@ Obrázek 3.15: Grafické znázornění neprořezaného rozhodovacího stromu. Mo
 <span id="cb69-7"><a href="simulace-3.html#cb69-7" tabindex="-1"></a>                       <span class="at">under =</span> <span class="cn">FALSE</span>, </span>
 <span id="cb69-8"><a href="simulace-3.html#cb69-8" tabindex="-1"></a>                       <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-58"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-58-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-59"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-59-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
 <p class="caption">
 Obrázek 3.16: Finální prořezaný rozhodovací strom.
 </p>
@@ -1488,8 +1474,8 @@ Jedná se o neprořezaný strom.</p>
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="simulace-3.html#cb72-1" tabindex="-1"></a><span class="fu">fancyRpartPlot</span>(<span class="fu">rpart</span>(Y <span class="sc">~</span> ., <span class="at">data =</span> data.PCA.train, <span class="at">method =</span> <span class="st">&quot;class&quot;</span>),</span>
 <span id="cb72-2"><a href="simulace-3.html#cb72-2" tabindex="-1"></a>               <span class="at">sub =</span> <span class="st">&#39;&#39;</span>, <span class="at">palettes =</span> <span class="fu">c</span>(<span class="st">&#39;Reds&#39;</span>, <span class="st">&#39;Blues&#39;</span>)) </span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-61"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-61-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-62"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-62-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
 <p class="caption">
 Obrázek 3.17: Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.
 </p>
@@ -1503,8 +1489,8 @@ Obrázek 3.17: Grafické znázornění neprořezaného rozhodovacího stromu ses
 <span id="cb73-5"><a href="simulace-3.html#cb73-5" tabindex="-1"></a>                       <span class="at">shadow.col =</span> <span class="dv">0</span>, <span class="co"># shadows under the node boxes</span></span>
 <span id="cb73-6"><a href="simulace-3.html#cb73-6" tabindex="-1"></a>                       <span class="at">nn =</span> <span class="cn">FALSE</span>, <span class="at">under =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-62"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-62-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-63"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-63-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
 <p class="caption">
 Obrázek 3.18: Finální prořezaný rozhodovací strom.
 </p>
@@ -1557,8 +1543,8 @@ Jedná se o neprořezaný strom.</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="simulace-3.html#cb77-1" tabindex="-1"></a><span class="fu">fancyRpartPlot</span>(<span class="fu">rpart</span>(Y <span class="sc">~</span> ., <span class="at">data =</span> data.Bbasis.train, <span class="at">method =</span> <span class="st">&quot;class&quot;</span>),</span>
 <span id="cb77-2"><a href="simulace-3.html#cb77-2" tabindex="-1"></a>               <span class="at">sub =</span> <span class="st">&#39;&#39;</span>, <span class="at">palettes =</span> <span class="fu">c</span>(<span class="st">&#39;Reds&#39;</span>, <span class="st">&#39;Blues&#39;</span>)) </span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-66"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-66-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-67"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-67-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
 <p class="caption">
 Obrázek 3.19: Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.
 </p>
@@ -1572,8 +1558,8 @@ Obrázek 3.19: Grafické znázornění neprořezaného rozhodovacího stromu ses
 <span id="cb78-5"><a href="simulace-3.html#cb78-5" tabindex="-1"></a>                       <span class="at">shadow.col =</span> <span class="dv">0</span>, <span class="co"># shadows under the node boxes</span></span>
 <span id="cb78-6"><a href="simulace-3.html#cb78-6" tabindex="-1"></a>                       <span class="at">nn =</span> <span class="cn">FALSE</span>, <span class="at">under =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-67"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-67-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-68"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-68-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
 <p class="caption">
 Obrázek 3.20: Finální prořezaný rozhodovací strom.
 </p>
@@ -1848,8 +1834,8 @@ Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce <
 <span id="cb89-24"><a href="simulace-3.html#cb89-24" tabindex="-1"></a> <span class="fu">geom_contour</span>(<span class="at">data =</span> nd, <span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">z =</span> prd, <span class="at">linetype =</span> kernel),</span>
 <span id="cb89-25"><a href="simulace-3.html#cb89-25" tabindex="-1"></a>              <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-82"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-82-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-83"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-83-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM." width="672" />
 <p class="caption">
 Obrázek 3.21: Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM.
 </p>
@@ -2074,8 +2060,8 @@ Pro přehlednost si ještě vykresleme průběh validačních chybovostí v záv
 <span id="cb95-16"><a href="simulace-3.html#cb95-16" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span> </span>
 <span id="cb95-17"><a href="simulace-3.html#cb95-17" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> dimensions)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-87"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-87-1.png" alt="Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-88"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-88-1.png" alt="Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce." width="672" />
 <p class="caption">
 Obrázek 3.22: Závislost validační chybovosti na dimenzi podprostoru <span class="math inline">\(V_d\)</span>, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze <span class="math inline">\(V_d\)</span> pro jednotlivé jádrové funkce.
 </p>
@@ -2391,7 +2377,7 @@ Tyto vektory nyní využijeme jakožto reprezentaci daných křivek a klasifikuj
 <span id="cb102-40"><a href="simulace-3.html#cb102-40" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-95">Tabulka 3.1: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-96">Tabulka 3.1: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th align="left">Model</th>
@@ -2552,7 +2538,7 @@ Je zřejmé, že došlo k overfittingu, proto využijeme cross-validaci, abychom
 <span id="cb105-23"><a href="simulace-3.html#cb105-23" tabindex="-1"></a>           <span class="at">row.names =</span> <span class="fu">c</span>(<span class="st">&#39;linear&#39;</span>, <span class="st">&#39;poly&#39;</span>, <span class="st">&#39;radial&#39;</span>))</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-98">Tabulka 3.2: </span>Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-99">Tabulka 3.2: </span>Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -2609,8 +2595,8 @@ Pro zajímavost si ještě vykresleme funkci validační chybovosti v závislost
 <span id="cb106-18"><a href="simulace-3.html#cb106-18" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> df.RKHS.res, <span class="fu">aes</span>(<span class="at">x =</span> d, <span class="at">y =</span> gamma),</span>
 <span id="cb106-19"><a href="simulace-3.html#cb106-19" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">5</span>, <span class="at">pch =</span> <span class="st">&#39;+&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-99"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-99-1.png" alt="Závislost validační chybovosti na volbě hyperparametrů $d$ a $\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-100"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-100-1.png" alt="Závislost validační chybovosti na volbě hyperparametrů $d$ a $\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM." width="672" />
 <p class="caption">
 Obrázek 3.23: Závislost validační chybovosti na volbě hyperparametrů <span class="math inline">\(d\)</span> a <span class="math inline">\(\gamma\)</span>, zvlášť pro všechna tři uvažovaná jádra v metodě SVM.
 </p>
@@ -2706,7 +2692,7 @@ Toto chování je nejlépe patrné u Gaussova jádra.</p>
 <span id="cb108-77"><a href="simulace-3.html#cb108-77" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-102">Tabulka 3.3: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-103">Tabulka 3.3: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th align="left">Model</th>
@@ -2894,7 +2880,7 @@ Na testovacích datech je potom přesnost metody 15 % pro lineární jádro, 16.
 <span id="cb113-23"><a href="simulace-3.html#cb113-23" tabindex="-1"></a>           <span class="at">row.names =</span> <span class="fu">c</span>(<span class="st">&#39;linear&#39;</span>, <span class="st">&#39;poly&#39;</span>, <span class="st">&#39;radial&#39;</span>))</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-107">Tabulka 3.4: </span>Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-108">Tabulka 3.4: </span>Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -3016,7 +3002,7 @@ Na testovacích datech je potom přesnost metody 15 % pro lineární jádro, 16.
 <span id="cb115-77"><a href="simulace-3.html#cb115-77" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-110">Tabulka 3.5: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-111">Tabulka 3.5: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th align="left">Model</th>
@@ -3190,7 +3176,7 @@ Na testovacích datech je potom přesnost metody 38.33 % pro lineární jádro, 
 <span id="cb120-17"><a href="simulace-3.html#cb120-17" tabindex="-1"></a>           <span class="at">row.names =</span> <span class="fu">c</span>(<span class="st">&#39;linear&#39;</span>, <span class="st">&#39;poly&#39;</span>, <span class="st">&#39;radial&#39;</span>))</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-115">Tabulka 3.6: </span>Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-116">Tabulka 3.6: </span>Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -3306,7 +3292,7 @@ Na testovacích datech je potom přesnost metody 38.33 % pro lineární jádro, 
 <span id="cb122-75"><a href="simulace-3.html#cb122-75" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <table>
-<caption><span id="tab:unnamed-chunk-118">Tabulka 3.7: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-119">Tabulka 3.7: </span>Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th align="left">Model</th>
@@ -3345,7 +3331,7 @@ Na testovacích datech je potom přesnost metody 30 % pro lineární jádro, 50 
 <div id="tabulka-výsledků-2" class="section level2 hasAnchor" number="3.4">
 <h2><span class="header-section-number">3.4</span> Tabulka výsledků<a href="simulace-3.html#tabulka-výsledků-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <table>
-<caption><span id="tab:unnamed-chunk-120">Tabulka 3.8: </span>Souhrnné výsledky použitých metod na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
+<caption><span id="tab:unnamed-chunk-121">Tabulka 3.8: </span>Souhrnné výsledky použitých metod na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti a <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti.</caption>
 <thead>
 <tr class="header">
 <th align="left">Model</th>
@@ -3531,7 +3517,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování <span 
 <span id="cb124-2"><a href="simulace-3.html#cb124-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb124-3"><a href="simulace-3.html#cb124-3" tabindex="-1"></a></span>
 <span id="cb124-4"><a href="simulace-3.html#cb124-4" tabindex="-1"></a><span class="co"># pocet simulaci</span></span>
-<span id="cb124-5"><a href="simulace-3.html#cb124-5" tabindex="-1"></a>n.sim <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb124-5"><a href="simulace-3.html#cb124-5" tabindex="-1"></a>n.sim <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb124-6"><a href="simulace-3.html#cb124-6" tabindex="-1"></a></span>
 <span id="cb124-7"><a href="simulace-3.html#cb124-7" tabindex="-1"></a><span class="do">## list, do ktereho budeme ukladat hodnoty chybovosti</span></span>
 <span id="cb124-8"><a href="simulace-3.html#cb124-8" tabindex="-1"></a><span class="co"># ve sloupcich budou metody</span></span>
@@ -5023,842 +5009,19 @@ Do datové tabulky <code>CV_RESULTS</code> si potom budeme ukládat hodnoty opti
 <span id="cb125-1460"><a href="simulace-3.html#cb125-1460" tabindex="-1"></a>  SIMULACE<span class="sc">$</span>test[sim, ] <span class="ot">&lt;-</span> RESULTS<span class="sc">$</span>Err.test</span>
 <span id="cb125-1461"><a href="simulace-3.html#cb125-1461" tabindex="-1"></a>}</span></code></pre></div>
 </details>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <p>Nyní spočítáme průměrné testovací a trénovací chybovosti pro jednotlivé klasifikační metody.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="simulace-3.html#cb849-1" tabindex="-1"></a><span class="co"># dame do vysledne tabulky</span></span>
-<span id="cb849-2"><a href="simulace-3.html#cb849-2" tabindex="-1"></a></span>
-<span id="cb849-3"><a href="simulace-3.html#cb849-3" tabindex="-1"></a>SIMULACE.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Err.train =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>train, <span class="dv">2</span>, mean),</span>
-<span id="cb849-4"><a href="simulace-3.html#cb849-4" tabindex="-1"></a>                          <span class="at">Err.test =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>test, <span class="dv">2</span>, mean),</span>
-<span id="cb849-5"><a href="simulace-3.html#cb849-5" tabindex="-1"></a>                          <span class="at">SD.train =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>train, <span class="dv">2</span>, sd),</span>
-<span id="cb849-6"><a href="simulace-3.html#cb849-6" tabindex="-1"></a>                          <span class="at">SD.test =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>test, <span class="dv">2</span>, sd))</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="simulace-3.html#cb126-1" tabindex="-1"></a><span class="co"># dame do vysledne tabulky</span></span>
+<span id="cb126-2"><a href="simulace-3.html#cb126-2" tabindex="-1"></a></span>
+<span id="cb126-3"><a href="simulace-3.html#cb126-3" tabindex="-1"></a>SIMULACE.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Err.train =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>train, <span class="dv">2</span>, mean),</span>
+<span id="cb126-4"><a href="simulace-3.html#cb126-4" tabindex="-1"></a>                          <span class="at">Err.test =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>test, <span class="dv">2</span>, mean),</span>
+<span id="cb126-5"><a href="simulace-3.html#cb126-5" tabindex="-1"></a>                          <span class="at">SD.train =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>train, <span class="dv">2</span>, sd),</span>
+<span id="cb126-6"><a href="simulace-3.html#cb126-6" tabindex="-1"></a>                          <span class="at">SD.test =</span> <span class="fu">apply</span>(SIMULACE<span class="sc">$</span>test, <span class="dv">2</span>, sd))</span></code></pre></div>
 </details>
 <div id="výsledky-2" class="section level3 hasAnchor" number="3.5.1">
 <h3><span class="header-section-number">3.5.1</span> Výsledky<a href="simulace-3.html#výsledky-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <table>
-<caption><span id="tab:unnamed-chunk-124">Tabulka 3.9: </span>Souhrnné výsledky použitých metod na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti, <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti, <span class="math inline">\(\widehat{SD}_{train}\)</span> odhad směrodatné odchylky trénovacích chybovostí a <span class="math inline">\(\widehat{SD}_{test}\)</span> je odhad směrodatné odchylky testovacích chybovostí.</caption>
+<caption><span id="tab:unnamed-chunk-125">Tabulka 3.9: </span>Souhrnné výsledky použitých metod na simulovaných datech. <span class="math inline">\(\widehat{Err}_{train}\)</span> značí odhad trénovací chybovosti, <span class="math inline">\(\widehat{Err}_{test}\)</span> testovací chybovosti, <span class="math inline">\(\widehat{SD}_{train}\)</span> odhad směrodatné odchylky trénovacích chybovostí a <span class="math inline">\(\widehat{SD}_{test}\)</span> je odhad směrodatné odchylky testovacích chybovostí.</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -5871,227 +5034,227 @@ Do datové tabulky <code>CV_RESULTS</code> si potom budeme ukládat hodnoty opti
 <tbody>
 <tr class="odd">
 <td>KNN</td>
-<td align="right">0.1976</td>
-<td align="right">0.2111</td>
-<td align="right">0.0251</td>
-<td align="right">0.0347</td>
+<td align="right">0.2150</td>
+<td align="right">0.2267</td>
+<td align="right">0.0565</td>
+<td align="right">0.0353</td>
 </tr>
 <tr class="even">
 <td>LDA</td>
-<td align="right">0.1619</td>
-<td align="right">0.1889</td>
-<td align="right">0.0360</td>
-<td align="right">0.0694</td>
+<td align="right">0.1800</td>
+<td align="right">0.1900</td>
+<td align="right">0.0470</td>
+<td align="right">0.0446</td>
 </tr>
 <tr class="odd">
 <td>QDA</td>
-<td align="right">0.1595</td>
-<td align="right">0.1944</td>
-<td align="right">0.0352</td>
-<td align="right">0.0674</td>
+<td align="right">0.1643</td>
+<td align="right">0.2067</td>
+<td align="right">0.0483</td>
+<td align="right">0.0573</td>
 </tr>
 <tr class="even">
 <td>LR_functional</td>
-<td align="right">0.0333</td>
-<td align="right">0.0944</td>
-<td align="right">0.0289</td>
-<td align="right">0.0255</td>
+<td align="right">0.0336</td>
+<td align="right">0.1267</td>
+<td align="right">0.0303</td>
+<td align="right">0.0466</td>
 </tr>
 <tr class="odd">
 <td>LR_score</td>
-<td align="right">0.1667</td>
-<td align="right">0.2056</td>
+<td align="right">0.1779</td>
+<td align="right">0.1967</td>
+<td align="right">0.0414</td>
 <td align="right">0.0367</td>
-<td align="right">0.0536</td>
 </tr>
 <tr class="even">
 <td>Tree_discr</td>
-<td align="right">0.1905</td>
-<td align="right">0.2333</td>
-<td align="right">0.0367</td>
-<td align="right">0.0866</td>
+<td align="right">0.2036</td>
+<td align="right">0.2717</td>
+<td align="right">0.0420</td>
+<td align="right">0.0754</td>
 </tr>
 <tr class="odd">
 <td>Tree_score</td>
-<td align="right">0.2333</td>
-<td align="right">0.3167</td>
-<td align="right">0.0322</td>
-<td align="right">0.0333</td>
+<td align="right">0.2364</td>
+<td align="right">0.3267</td>
+<td align="right">0.0374</td>
+<td align="right">0.0522</td>
 </tr>
 <tr class="even">
 <td>Tree_Bbasis</td>
-<td align="right">0.1881</td>
-<td align="right">0.2333</td>
-<td align="right">0.0393</td>
-<td align="right">0.0928</td>
+<td align="right">0.1936</td>
+<td align="right">0.2650</td>
+<td align="right">0.0554</td>
+<td align="right">0.0722</td>
 </tr>
 <tr class="odd">
 <td>RF_discr</td>
-<td align="right">0.0071</td>
-<td align="right">0.1722</td>
-<td align="right">0.0071</td>
-<td align="right">0.0347</td>
+<td align="right">0.0036</td>
+<td align="right">0.2017</td>
+<td align="right">0.0051</td>
+<td align="right">0.0319</td>
 </tr>
 <tr class="even">
 <td>RF_score</td>
-<td align="right">0.0119</td>
-<td align="right">0.2333</td>
-<td align="right">0.0082</td>
-<td align="right">0.0667</td>
+<td align="right">0.0100</td>
+<td align="right">0.2367</td>
+<td align="right">0.0069</td>
+<td align="right">0.0436</td>
 </tr>
 <tr class="odd">
 <td>RF_Bbasis</td>
-<td align="right">0.0048</td>
-<td align="right">0.1778</td>
-<td align="right">0.0082</td>
-<td align="right">0.0255</td>
+<td align="right">0.0036</td>
+<td align="right">0.1983</td>
+<td align="right">0.0051</td>
+<td align="right">0.0277</td>
 </tr>
 <tr class="even">
 <td>SVM linear - diskr</td>
-<td align="right">0.0476</td>
-<td align="right">0.1111</td>
-<td align="right">0.0041</td>
-<td align="right">0.0096</td>
+<td align="right">0.0614</td>
+<td align="right">0.1133</td>
+<td align="right">0.0252</td>
+<td align="right">0.0312</td>
 </tr>
 <tr class="odd">
 <td>SVM poly - diskr</td>
-<td align="right">0.1143</td>
-<td align="right">0.2056</td>
-<td align="right">0.0143</td>
-<td align="right">0.0347</td>
+<td align="right">0.1129</td>
+<td align="right">0.2333</td>
+<td align="right">0.0299</td>
+<td align="right">0.0648</td>
 </tr>
 <tr class="even">
 <td>SVM rbf - diskr</td>
-<td align="right">0.0810</td>
-<td align="right">0.1944</td>
-<td align="right">0.0041</td>
-<td align="right">0.0694</td>
+<td align="right">0.0821</td>
+<td align="right">0.2100</td>
+<td align="right">0.0330</td>
+<td align="right">0.0510</td>
 </tr>
 <tr class="odd">
 <td>SVM linear - PCA</td>
-<td align="right">0.1643</td>
-<td align="right">0.2000</td>
-<td align="right">0.0327</td>
-<td align="right">0.0577</td>
+<td align="right">0.1743</td>
+<td align="right">0.1950</td>
+<td align="right">0.0466</td>
+<td align="right">0.0409</td>
 </tr>
 <tr class="even">
 <td>SVM poly - PCA</td>
-<td align="right">0.1476</td>
-<td align="right">0.2389</td>
-<td align="right">0.0393</td>
-<td align="right">0.0962</td>
+<td align="right">0.1457</td>
+<td align="right">0.2567</td>
+<td align="right">0.0325</td>
+<td align="right">0.0817</td>
 </tr>
 <tr class="odd">
 <td>SVM rbf - PCA</td>
-<td align="right">0.1214</td>
-<td align="right">0.2111</td>
-<td align="right">0.0357</td>
-<td align="right">0.0674</td>
+<td align="right">0.1279</td>
+<td align="right">0.2217</td>
+<td align="right">0.0395</td>
+<td align="right">0.0516</td>
 </tr>
 <tr class="even">
 <td>SVM linear - Bbasis</td>
-<td align="right">0.0524</td>
-<td align="right">0.1111</td>
-<td align="right">0.0165</td>
-<td align="right">0.0096</td>
+<td align="right">0.0679</td>
+<td align="right">0.1150</td>
+<td align="right">0.0261</td>
+<td align="right">0.0346</td>
 </tr>
 <tr class="odd">
 <td>SVM poly - Bbasis</td>
-<td align="right">0.1071</td>
-<td align="right">0.2056</td>
-<td align="right">0.0247</td>
-<td align="right">0.0347</td>
+<td align="right">0.1086</td>
+<td align="right">0.2267</td>
+<td align="right">0.0323</td>
+<td align="right">0.0681</td>
 </tr>
 <tr class="even">
 <td>SVM rbf - Bbasis</td>
-<td align="right">0.0786</td>
-<td align="right">0.1833</td>
-<td align="right">0.0071</td>
-<td align="right">0.0577</td>
+<td align="right">0.0814</td>
+<td align="right">0.2067</td>
+<td align="right">0.0372</td>
+<td align="right">0.0479</td>
 </tr>
 <tr class="odd">
 <td>SVM linear - projection</td>
-<td align="right">0.0405</td>
-<td align="right">0.0556</td>
-<td align="right">0.0206</td>
-<td align="right">0.0347</td>
+<td align="right">0.0379</td>
+<td align="right">0.0967</td>
+<td align="right">0.0228</td>
+<td align="right">0.0436</td>
 </tr>
 <tr class="even">
 <td>SVM poly - projection</td>
-<td align="right">0.0357</td>
-<td align="right">0.1111</td>
-<td align="right">0.0143</td>
-<td align="right">0.0347</td>
+<td align="right">0.0321</td>
+<td align="right">0.1183</td>
+<td align="right">0.0113</td>
+<td align="right">0.0288</td>
 </tr>
 <tr class="odd">
 <td>SVM rbf - projection</td>
-<td align="right">0.0238</td>
-<td align="right">0.0778</td>
-<td align="right">0.0082</td>
-<td align="right">0.0347</td>
+<td align="right">0.0207</td>
+<td align="right">0.1017</td>
+<td align="right">0.0063</td>
+<td align="right">0.0277</td>
 </tr>
 <tr class="even">
 <td>SVM linear - RKHS - radial</td>
-<td align="right">0.0619</td>
-<td align="right">0.1056</td>
-<td align="right">0.0206</td>
-<td align="right">0.0347</td>
+<td align="right">0.0500</td>
+<td align="right">0.1483</td>
+<td align="right">0.0210</td>
+<td align="right">0.0461</td>
 </tr>
 <tr class="odd">
 <td>SVM poly - RKHS - radial</td>
-<td align="right">0.0571</td>
-<td align="right">0.1444</td>
-<td align="right">0.0258</td>
-<td align="right">0.0347</td>
+<td align="right">0.0614</td>
+<td align="right">0.1550</td>
+<td align="right">0.0294</td>
+<td align="right">0.0273</td>
 </tr>
 <tr class="even">
 <td>SVM rbf - RKHS - radial</td>
-<td align="right">0.0476</td>
-<td align="right">0.1389</td>
-<td align="right">0.0109</td>
-<td align="right">0.0509</td>
+<td align="right">0.0407</td>
+<td align="right">0.1683</td>
+<td align="right">0.0169</td>
+<td align="right">0.0481</td>
 </tr>
 <tr class="odd">
 <td>SVM linear - RKHS - poly</td>
-<td align="right">0.2048</td>
-<td align="right">0.3167</td>
-<td align="right">0.0041</td>
-<td align="right">0.0333</td>
+<td align="right">0.2000</td>
+<td align="right">0.2967</td>
+<td align="right">0.0553</td>
+<td align="right">0.0537</td>
 </tr>
 <tr class="even">
 <td>SVM poly - RKHS - poly</td>
-<td align="right">0.2214</td>
-<td align="right">0.2833</td>
-<td align="right">0.0311</td>
-<td align="right">0.0289</td>
+<td align="right">0.2279</td>
+<td align="right">0.3033</td>
+<td align="right">0.0474</td>
+<td align="right">0.0532</td>
 </tr>
 <tr class="odd">
 <td>SVM rbf - RKHS - poly</td>
-<td align="right">0.1976</td>
-<td align="right">0.2722</td>
-<td align="right">0.0251</td>
-<td align="right">0.0509</td>
+<td align="right">0.1814</td>
+<td align="right">0.2817</td>
+<td align="right">0.0500</td>
+<td align="right">0.0454</td>
 </tr>
 <tr class="even">
 <td>SVM linear - RKHS - linear</td>
-<td align="right">0.3262</td>
-<td align="right">0.4111</td>
-<td align="right">0.0230</td>
-<td align="right">0.0255</td>
+<td align="right">0.2721</td>
+<td align="right">0.3833</td>
+<td align="right">0.0523</td>
+<td align="right">0.0577</td>
 </tr>
 <tr class="odd">
 <td>SVM poly - RKHS - linear</td>
-<td align="right">0.2786</td>
-<td align="right">0.4056</td>
-<td align="right">0.0258</td>
-<td align="right">0.0536</td>
+<td align="right">0.3014</td>
+<td align="right">0.4333</td>
+<td align="right">0.0401</td>
+<td align="right">0.0676</td>
 </tr>
 <tr class="even">
 <td>SVM rbf - RKHS - linear</td>
-<td align="right">0.2429</td>
-<td align="right">0.3667</td>
-<td align="right">0.0247</td>
-<td align="right">0.0167</td>
+<td align="right">0.2393</td>
+<td align="right">0.3700</td>
+<td align="right">0.0467</td>
+<td align="right">0.0773</td>
 </tr>
 </tbody>
 </table>
@@ -6099,62 +5262,62 @@ Do datové tabulky <code>CV_RESULTS</code> si potom budeme ukládat hodnoty opti
 Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi stálost či míru variability jednotlivých metod.</p>
 <p>Nakonec ještě můžeme graficky zobrazit vypočtené hodnoty ze simulace pro jednotlivé klasifikační metody pomocí krabicových diagramů, zvlášť pro testovací a trénovací chybovosti.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb850-1"><a href="simulace-3.html#cb850-1" tabindex="-1"></a><span class="co"># pro trenovaci data</span></span>
-<span id="cb850-2"><a href="simulace-3.html#cb850-2" tabindex="-1"></a>SIMULACE<span class="sc">$</span>train <span class="sc">|&gt;</span> </span>
-<span id="cb850-3"><a href="simulace-3.html#cb850-3" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> methods, <span class="at">names_to =</span> <span class="st">&#39;method&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;Err&#39;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb850-4"><a href="simulace-3.html#cb850-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">method =</span> <span class="fu">factor</span>(method, <span class="at">levels =</span> methods, <span class="at">labels =</span> methods, <span class="at">ordered =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb850-5"><a href="simulace-3.html#cb850-5" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
-<span id="cb850-6"><a href="simulace-3.html#cb850-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> Err, <span class="at">fill =</span> method, <span class="at">colour =</span> method, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">+</span> </span>
-<span id="cb850-7"><a href="simulace-3.html#cb850-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">outlier.shape =</span> <span class="dv">16</span>, <span class="at">outlier.size =</span> <span class="dv">0</span>, </span>
-<span id="cb850-8"><a href="simulace-3.html#cb850-8" tabindex="-1"></a>               <span class="at">notch =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span> </span>
-<span id="cb850-9"><a href="simulace-3.html#cb850-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb850-10"><a href="simulace-3.html#cb850-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Klasifikační metoda&#39;</span>,</span>
-<span id="cb850-11"><a href="simulace-3.html#cb850-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(Err)[train])) <span class="sc">+</span> </span>
-<span id="cb850-12"><a href="simulace-3.html#cb850-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>,</span>
-<span id="cb850-13"><a href="simulace-3.html#cb850-13" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb850-14"><a href="simulace-3.html#cb850-14" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.15</span>), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">21</span>,</span>
-<span id="cb850-15"><a href="simulace-3.html#cb850-15" tabindex="-1"></a>              <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span></span>
-<span id="cb850-16"><a href="simulace-3.html#cb850-16" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">shape =</span> <span class="st">&#39;+&#39;</span>,</span>
-<span id="cb850-17"><a href="simulace-3.html#cb850-17" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>)<span class="sc">+</span> </span>
-<span id="cb850-18"><a href="simulace-3.html#cb850-18" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">min</span>(SIMULACE.df<span class="sc">$</span>Err.train), </span>
-<span id="cb850-19"><a href="simulace-3.html#cb850-19" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="at">colour =</span> <span class="st">&#39;grey&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="simulace-3.html#cb127-1" tabindex="-1"></a><span class="co"># pro trenovaci data</span></span>
+<span id="cb127-2"><a href="simulace-3.html#cb127-2" tabindex="-1"></a>SIMULACE<span class="sc">$</span>train <span class="sc">|&gt;</span> </span>
+<span id="cb127-3"><a href="simulace-3.html#cb127-3" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> methods, <span class="at">names_to =</span> <span class="st">&#39;method&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;Err&#39;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb127-4"><a href="simulace-3.html#cb127-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">method =</span> <span class="fu">factor</span>(method, <span class="at">levels =</span> methods, <span class="at">labels =</span> methods, <span class="at">ordered =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb127-5"><a href="simulace-3.html#cb127-5" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb127-6"><a href="simulace-3.html#cb127-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> Err, <span class="at">fill =</span> method, <span class="at">colour =</span> method, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">+</span> </span>
+<span id="cb127-7"><a href="simulace-3.html#cb127-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">outlier.shape =</span> <span class="dv">16</span>, <span class="at">outlier.size =</span> <span class="dv">0</span>, </span>
+<span id="cb127-8"><a href="simulace-3.html#cb127-8" tabindex="-1"></a>               <span class="at">notch =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb127-9"><a href="simulace-3.html#cb127-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb127-10"><a href="simulace-3.html#cb127-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Klasifikační metoda&#39;</span>,</span>
+<span id="cb127-11"><a href="simulace-3.html#cb127-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(Err)[train])) <span class="sc">+</span> </span>
+<span id="cb127-12"><a href="simulace-3.html#cb127-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>,</span>
+<span id="cb127-13"><a href="simulace-3.html#cb127-13" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb127-14"><a href="simulace-3.html#cb127-14" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.15</span>), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">21</span>,</span>
+<span id="cb127-15"><a href="simulace-3.html#cb127-15" tabindex="-1"></a>              <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span></span>
+<span id="cb127-16"><a href="simulace-3.html#cb127-16" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">shape =</span> <span class="st">&#39;+&#39;</span>,</span>
+<span id="cb127-17"><a href="simulace-3.html#cb127-17" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>)<span class="sc">+</span> </span>
+<span id="cb127-18"><a href="simulace-3.html#cb127-18" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">min</span>(SIMULACE.df<span class="sc">$</span>Err.train), </span>
+<span id="cb127-19"><a href="simulace-3.html#cb127-19" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="at">colour =</span> <span class="st">&#39;grey&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-125"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-125-1.png" alt="Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-126"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-126-1.png" alt="Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
 <p class="caption">
 Obrázek 3.24: Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly <span class="math inline">\(+\)</span> jsou vyznačeny průměry.
 </p>
 </div>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="simulace-3.html#cb851-1" tabindex="-1"></a><span class="co"># pro testovaci data</span></span>
-<span id="cb851-2"><a href="simulace-3.html#cb851-2" tabindex="-1"></a>SIMULACE<span class="sc">$</span>test <span class="sc">|&gt;</span> </span>
-<span id="cb851-3"><a href="simulace-3.html#cb851-3" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> methods, <span class="at">names_to =</span> <span class="st">&#39;method&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;Err&#39;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb851-4"><a href="simulace-3.html#cb851-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">method =</span> <span class="fu">factor</span>(method, <span class="at">levels =</span> methods, <span class="at">labels =</span> methods, <span class="at">ordered =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb851-5"><a href="simulace-3.html#cb851-5" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
-<span id="cb851-6"><a href="simulace-3.html#cb851-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> Err, <span class="at">fill =</span> method, <span class="at">colour =</span> method, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">+</span> </span>
-<span id="cb851-7"><a href="simulace-3.html#cb851-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">outlier.shape =</span> <span class="dv">16</span>, <span class="at">outlier.size =</span> <span class="dv">0</span>, </span>
-<span id="cb851-8"><a href="simulace-3.html#cb851-8" tabindex="-1"></a>               <span class="at">notch =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span> </span>
-<span id="cb851-9"><a href="simulace-3.html#cb851-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb851-10"><a href="simulace-3.html#cb851-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Klasifikační metoda&#39;</span>,</span>
-<span id="cb851-11"><a href="simulace-3.html#cb851-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(Err)[test])) <span class="sc">+</span> </span>
-<span id="cb851-12"><a href="simulace-3.html#cb851-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>,</span>
-<span id="cb851-13"><a href="simulace-3.html#cb851-13" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb851-14"><a href="simulace-3.html#cb851-14" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.15</span>), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">21</span>,</span>
-<span id="cb851-15"><a href="simulace-3.html#cb851-15" tabindex="-1"></a>              <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span></span>
-<span id="cb851-16"><a href="simulace-3.html#cb851-16" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">shape =</span> <span class="st">&#39;+&#39;</span>,</span>
-<span id="cb851-17"><a href="simulace-3.html#cb851-17" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span> </span>
-<span id="cb851-18"><a href="simulace-3.html#cb851-18" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">min</span>(SIMULACE.df<span class="sc">$</span>Err.test), </span>
-<span id="cb851-19"><a href="simulace-3.html#cb851-19" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="at">colour =</span> <span class="st">&#39;grey&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="simulace-3.html#cb128-1" tabindex="-1"></a><span class="co"># pro testovaci data</span></span>
+<span id="cb128-2"><a href="simulace-3.html#cb128-2" tabindex="-1"></a>SIMULACE<span class="sc">$</span>test <span class="sc">|&gt;</span> </span>
+<span id="cb128-3"><a href="simulace-3.html#cb128-3" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> methods, <span class="at">names_to =</span> <span class="st">&#39;method&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;Err&#39;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb128-4"><a href="simulace-3.html#cb128-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">method =</span> <span class="fu">factor</span>(method, <span class="at">levels =</span> methods, <span class="at">labels =</span> methods, <span class="at">ordered =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb128-5"><a href="simulace-3.html#cb128-5" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb128-6"><a href="simulace-3.html#cb128-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> Err, <span class="at">fill =</span> method, <span class="at">colour =</span> method, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">+</span> </span>
+<span id="cb128-7"><a href="simulace-3.html#cb128-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">outlier.shape =</span> <span class="dv">16</span>, <span class="at">outlier.size =</span> <span class="dv">0</span>, </span>
+<span id="cb128-8"><a href="simulace-3.html#cb128-8" tabindex="-1"></a>               <span class="at">notch =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb128-9"><a href="simulace-3.html#cb128-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb128-10"><a href="simulace-3.html#cb128-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Klasifikační metoda&#39;</span>,</span>
+<span id="cb128-11"><a href="simulace-3.html#cb128-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(Err)[test])) <span class="sc">+</span> </span>
+<span id="cb128-12"><a href="simulace-3.html#cb128-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>,</span>
+<span id="cb128-13"><a href="simulace-3.html#cb128-13" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb128-14"><a href="simulace-3.html#cb128-14" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.15</span>), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">21</span>,</span>
+<span id="cb128-15"><a href="simulace-3.html#cb128-15" tabindex="-1"></a>              <span class="at">colour =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span></span>
+<span id="cb128-16"><a href="simulace-3.html#cb128-16" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">shape =</span> <span class="st">&#39;+&#39;</span>,</span>
+<span id="cb128-17"><a href="simulace-3.html#cb128-17" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span> </span>
+<span id="cb128-18"><a href="simulace-3.html#cb128-18" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">min</span>(SIMULACE.df<span class="sc">$</span>Err.test), </span>
+<span id="cb128-19"><a href="simulace-3.html#cb128-19" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="at">colour =</span> <span class="st">&#39;grey&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-127"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-127-1.png" alt="Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-128"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-128-1.png" alt="Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
 <p class="caption">
 Obrázek 3.25: Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly <span class="math inline">\(+\)</span> jsou vyznačeny průměry.
 </p>
 </div>
 <p>Nakonec se podívejme, jaké hodnoty hyperparametrů byly nejčastější volbou.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-129">Tabulka 3.10: </span>Mediány hodnot hyperparametrů pro vybrané metody, u nichž se určoval nějaký hyperparametr pomocí cross-validace.</caption>
+<caption><span id="tab:unnamed-chunk-130">Tabulka 3.10: </span>Mediány hodnot hyperparametrů pro vybrané metody, u nichž se určoval nějaký hyperparametr pomocí cross-validace.</caption>
 <thead>
 <tr class="header">
 <th align="center"><span class="math inline">\(K\)</span> pro KNN</th>
@@ -6165,31 +5328,31 @@ Obrázek 3.25: Krabicové diagramy testovacích chybovostí pro 100 simulací zv
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">23</td>
-<td align="right">15</td>
-<td align="center">10</td>
+<td align="center">15.5</td>
 <td align="right">13</td>
+<td align="center">11.5</td>
+<td align="right">13.5</td>
 </tr>
 </tbody>
 </table>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb852"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb852-1"><a href="simulace-3.html#cb852-1" tabindex="-1"></a>CV_RESULTS <span class="sc">|&gt;</span> </span>
-<span id="cb852-2"><a href="simulace-3.html#cb852-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> CV_RESULTS <span class="sc">|&gt;</span> <span class="fu">colnames</span>(), <span class="at">names_to =</span> <span class="st">&#39;method&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;hyperparameter&#39;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb852-3"><a href="simulace-3.html#cb852-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">method =</span> <span class="fu">factor</span>(method, </span>
-<span id="cb852-4"><a href="simulace-3.html#cb852-4" tabindex="-1"></a>                         <span class="at">levels =</span> CV_RESULTS <span class="sc">|&gt;</span> <span class="fu">colnames</span>(), </span>
-<span id="cb852-5"><a href="simulace-3.html#cb852-5" tabindex="-1"></a>                         <span class="at">labels =</span> CV_RESULTS <span class="sc">|&gt;</span> <span class="fu">colnames</span>(), <span class="at">ordered =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb852-6"><a href="simulace-3.html#cb852-6" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
-<span id="cb852-7"><a href="simulace-3.html#cb852-7" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hyperparameter, <span class="co">#y = after_stat(density),</span></span>
-<span id="cb852-8"><a href="simulace-3.html#cb852-8" tabindex="-1"></a>             <span class="at">fill =</span> method, <span class="at">colour =</span> method)) <span class="sc">+</span> </span>
-<span id="cb852-9"><a href="simulace-3.html#cb852-9" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb852-10"><a href="simulace-3.html#cb852-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb852-11"><a href="simulace-3.html#cb852-11" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>method, <span class="at">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="sc">+</span></span>
-<span id="cb852-12"><a href="simulace-3.html#cb852-12" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Hodnoty hyperparametru&#39;</span>,</span>
-<span id="cb852-13"><a href="simulace-3.html#cb852-13" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Absolutní počet&#39;</span>) <span class="sc">+</span> </span>
-<span id="cb852-14"><a href="simulace-3.html#cb852-14" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="simulace-3.html#cb129-1" tabindex="-1"></a>CV_RESULTS <span class="sc">|&gt;</span> </span>
+<span id="cb129-2"><a href="simulace-3.html#cb129-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> CV_RESULTS <span class="sc">|&gt;</span> <span class="fu">colnames</span>(), <span class="at">names_to =</span> <span class="st">&#39;method&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;hyperparameter&#39;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb129-3"><a href="simulace-3.html#cb129-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">method =</span> <span class="fu">factor</span>(method, </span>
+<span id="cb129-4"><a href="simulace-3.html#cb129-4" tabindex="-1"></a>                         <span class="at">levels =</span> CV_RESULTS <span class="sc">|&gt;</span> <span class="fu">colnames</span>(), </span>
+<span id="cb129-5"><a href="simulace-3.html#cb129-5" tabindex="-1"></a>                         <span class="at">labels =</span> CV_RESULTS <span class="sc">|&gt;</span> <span class="fu">colnames</span>(), <span class="at">ordered =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb129-6"><a href="simulace-3.html#cb129-6" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb129-7"><a href="simulace-3.html#cb129-7" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hyperparameter, <span class="co">#y = after_stat(density),</span></span>
+<span id="cb129-8"><a href="simulace-3.html#cb129-8" tabindex="-1"></a>             <span class="at">fill =</span> method, <span class="at">colour =</span> method)) <span class="sc">+</span> </span>
+<span id="cb129-9"><a href="simulace-3.html#cb129-9" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
+<span id="cb129-10"><a href="simulace-3.html#cb129-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb129-11"><a href="simulace-3.html#cb129-11" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>method, <span class="at">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="sc">+</span></span>
+<span id="cb129-12"><a href="simulace-3.html#cb129-12" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Hodnoty hyperparametru&#39;</span>,</span>
+<span id="cb129-13"><a href="simulace-3.html#cb129-13" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Absolutní počet&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb129-14"><a href="simulace-3.html#cb129-14" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)</span></code></pre></div>
 </details>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-130"></span>
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-130-1.png" alt="Krabicové diagramy hodnot hyperparametrů." width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-131"></span>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-131-1.png" alt="Krabicové diagramy hodnot hyperparametrů." width="672" />
 <p class="caption">
 Obrázek 3.26: Krabicové diagramy hodnot hyperparametrů.
 </p>
