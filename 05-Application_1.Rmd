@@ -2960,7 +2960,7 @@ knitr::kable(RESULTS,
 set.seed(42)
 
 # pocet simulaci
-n.sim <- 1#00
+n.sim <- 100
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody

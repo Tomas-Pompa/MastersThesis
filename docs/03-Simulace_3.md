@@ -25,7 +25,7 @@ library(tidyr)
 library(ddalpha)
 library(polynom)
 
-# set.seed(42)
+set.seed(42)
 ```
 
 Uvažujme tedy dvě klasifikační třídy, $Y \in \{0, 1\}$, pro každou ze tříd stejný počet `n` generovaných funkcí.
@@ -36,6 +36,20 @@ Nyní vytvoříme funkce pomocí interpolačních polynomů. Nejprve si definuje
 
 
 ```r
+# definujici body pro tridu 0
+x.0 <- c(-2, -1.35, -1.06, -0.58, 0.26, 0.84, 1.73, 2.5, 3.2, 3.43, 4) + 2
+y.0 <- c(0, 0.25, 0.86, 1.49, 1.1, 0.15, -0.11, -0.36, -0.1, 0.23, 0)
+
+# definujici body pro tridu 1
+x.1 <- c(-2, -1.8, -1.3, -1.09, -0.75, -0.49, 0.14, 0.43, 0.96, 1.7, 2.1, 2.6, 3, 3.43, 3.7, 4) + 2
+y.1 <- c(0.1, -0.45, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1,-0.12, -0.4, -0.35, 0.25, 0.4, 0)
+
+# {{0,0},{0.65,0.25},{0.94,0.76},{1.42,1.2},{2.26,0.94},{2.84,0.1},{3.73,-0.01},{4.5,-0.1},{5.2, -0.1},{5.43,0.23},{6,0}}
+x.1 <- c(0, 0.65, 0.94, 1.42, 2.26, 2.84, 3.73, 4.5, 5.2, 5.43, 6)
+y.1 <- c(0, 0.25, 0.76, 1.2, 0.94, 0.1, -0.01, -0.1, -0.1, 0.23, 0)
+# h(x)=-9.1 x+37.2709 x^(2)-61.2594 x^(3)+58.0332 x^(4)-34.0338 x^(5)+12.5556 x^(6)-2.90164 x^(7)+0.406575 x^(8)-0.0315332 x^(9)+0.00103781 x^(10)
+# f(x)=-10.3075 x+43.5046 x^(2)+x^(3) (-72.7162)+67.8866 x^(4)+x^(5) (-38.5902)+13.7339 x^(6)+x^(7) (-3.06169)+0.41432 x^(8)+x^(9) (-0.0310725)+0.000989789 x^(10)
+
 # definujici body pro tridu 0
 x.0 <- c(-2, -1.35, -1.06, -0.58, 0.26, 0.84, 1.73, 2.5, 3.43, 4) + 2
 y.0 <- c(0, 0.25, 0.86, 1.49, 1.1, 0.15, -0.11, -0.36, 0.23, 0)
@@ -66,22 +80,28 @@ Pro výpočet interpolačních polynomů využijeme funkci `poly.calc()` z kniho
 
 ```r
 # vypocet polynomu
-poly.0 <- poly.calc(x.0, y.0)
-poly.1 <- poly.calc(x.1, y.1)
+polynom.0 <- poly.calc(x.0, y.0)
+polynom.1 <- poly.calc(x.1, y.1)
 ```
 
 
 ```r
 # definovani generujicich funkci
-poly.0 <- function(x) return(
-  -5.917962*x + 21.65116*x^2 - 29.76776*x^3 + 23.91566*x^4 - 
-    12.01474*x^5 + 3.714882*x^6 - 0.678195*x^7 + 0.06667599*x^8 -
-    0.00271318*x^9)
-poly.1 <- function(x) return(
-  0.1 - 5.575865*x + 31.15035*x^2 - 58.3787*x^3 + 48.44881*x^4 - 
-    10.48996*x^5 - 12.02612*x^6 + 11.05272*x^7 - 4.362127*x^8 +
-    0.9801225*x^9 - 0.1296233*x^10 + 0.009421169*x^11 - 
-    0.0002910194*x^12)
+# poly.0 <- function(x) return(-9.1 * x+37.2709 *x^(2)-61.2594* x^(3)+58.0332* x^4-34.0338 * x^5+12.5556 * x^(6)-2.90164 *x^(7)+0.406575 *x^(8)-0.0315332* x^9+0.00103781* x^10)
+poly.0 <- function(x) return(predict(polynom.0, x))
+# poly.1 <- function(x) return(-10.3075* x+43.5046* x^(2)+x^(3) *(-72.7162)+67.8866 *x^(4)+x^(5)* (-38.5902)+13.7339 *x^(6)+x^(7) *(-3.06169)+0.41432* x^(8)+x^(9) *(-0.0310725)+0.000989789 *x^(10))
+poly.1 <- function(x) return(predict(polynom.1, x))
+
+# definovani generujicich funkci
+# poly.0 <- function(x) return(
+#   -5.917962*x + 21.65116*x^2 - 29.76776*x^3 + 23.91566*x^4 - 
+#     12.01474*x^5 + 3.714882*x^6 - 0.678195*x^7 + 0.06667599*x^8 -
+#     0.00271318*x^9)
+# poly.1 <- function(x) return(
+#   0.1 - 5.575865*x + 31.15035*x^2 - 58.3787*x^3 + 48.44881*x^4 - 
+#     10.48996*x^5 - 12.02612*x^6 + 11.05272*x^7 - 4.362127*x^8 +
+#     0.9801225*x^9 - 0.1296233*x^10 + 0.009421169*x^11 - 
+#     0.0002910194*x^12)
 ```
 
 
@@ -413,7 +433,7 @@ table(Y.train)
 ```
 ## Y.train
 ##  0  1 
-## 69 71
+## 71 69
 ```
 
 ```r
@@ -423,7 +443,7 @@ table(Y.test)
 ```
 ## Y.test
 ##  0  1 
-## 31 29
+## 29 31
 ```
 
 ```r
@@ -434,7 +454,7 @@ table(Y.train) / sum(table(Y.train))
 ```
 ## Y.train
 ##         0         1 
-## 0.4928571 0.5071429
+## 0.5071429 0.4928571
 ```
 
 ```r
@@ -444,7 +464,7 @@ table(Y.test) / sum(table(Y.test))
 ```
 ## Y.test
 ##         0         1 
-## 0.5166667 0.4833333
+## 0.4833333 0.5166667
 ```
 
 ### $K$ nejbližších sousedů
@@ -480,26 +500,26 @@ summary(neighb.model) # shrnuti modelu
 ## -Probability of correct classification by group (prob.classification):
 ## y
 ##         1         2 
-## 0.6521739 0.7464789 
+## 0.6478873 0.6811594 
 ## 
 ## -Confusion matrix between the theoretical groups (by rows)
 ##   and estimated groups (by column) 
 ##    
 ##      1  2
-##   1 45 24
-##   2 18 53
+##   1 46 25
+##   2 22 47
 ## 
 ## -Vector of probability of correct classification
 ##    by number of neighbors (knn):
 ##      1      2      3      4      5      6      7      8      9     10     11 
-## 0.6643 0.6071 0.7000 0.6500 0.6929 0.6643 0.6571 0.6286 0.6357 0.6286 0.6429 
+## 0.5929 0.5929 0.6357 0.5714 0.6643 0.6286 0.6071 0.5714 0.5643 0.5857 0.5643 
 ##     12 
-## 0.6000 
+## 0.5357 
 ## 
-## -Optimal number of neighbors: knn.opt= 3 
-## with highest probability of correct classification max.prob=  0.7 
+## -Optimal number of neighbors: knn.opt= 5 
+## with highest probability of correct classification max.prob=  0.6642857 
 ## 
-## -Probability of correct classification:  0.7
+## -Probability of correct classification:  0.6643
 ```
 
 ```r
@@ -513,7 +533,7 @@ neighb.model$max.prob # maximalni presnost
 ```
 
 ```
-## [1] 0.7
+## [1] 0.6642857
 ```
 
 ```r
@@ -521,7 +541,7 @@ neighb.model$max.prob # maximalni presnost
 ```
 
 ```
-## [1] 3
+## [1] 5
 ```
 
 Proveďme předchozí postup pro trénovací data, která rozdělíme na $k$ částí a tedy zopakujeme tuto část kódu $k$-krát.
@@ -579,13 +599,13 @@ CV.results
 ```
 
 ```
-##  [1] 0.6580002 0.5840400 0.7091546 0.6745607 0.6762541 0.6774446 0.6399223
-##  [8] 0.6278775 0.6605212 0.6026207 0.5954779 0.5883350 0.5970652 0.5966684
-## [15] 0.6123207 0.6002058 0.5854066 0.5876814 0.5282977 0.5492594 0.5310755
-## [22] 0.4976721 0.4894088 0.4695675
+##  [1] 0.5857358 0.5951648 0.6427215 0.6042361 0.6714448 0.6065285 0.5896720
+##  [8] 0.5850835 0.5930786 0.5628131 0.5669534 0.5639768 0.5720883 0.5700868
+## [15] 0.6106147 0.5844673 0.6093109 0.6021433 0.5915428 0.6116456 0.6086937
+## [22] 0.5856167 0.5885471 0.5717639
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $K$ jako 3 s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.7092.
+Vidíme, že nejlépe vychází hodnota parametru $K$ jako 5 s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6714.
 Pro přehlednost si ještě vykresleme průběh validační chybovosti v závislosti na počtu sousedů $K$.
 
 
@@ -626,24 +646,24 @@ summary(neighb.model)
 ## -Probability of correct classification by group (prob.classification):
 ## y
 ##         1         2 
-## 0.6521739 0.7464789 
+## 0.6478873 0.6811594 
 ## 
 ## -Confusion matrix between the theoretical groups (by rows)
 ##   and estimated groups (by column) 
 ##    
 ##      1  2
-##   1 45 24
-##   2 18 53
+##   1 46 25
+##   2 22 47
 ## 
 ## -Vector of probability of correct classification
 ##    by number of neighbors (knn):
-##   3 
-## 0.7 
+##      5 
+## 0.6643 
 ## 
-## -Optimal number of neighbors: knn.opt= 3 
-## with highest probability of correct classification max.prob=  0.7 
+## -Optimal number of neighbors: knn.opt= 5 
+## with highest probability of correct classification max.prob=  0.6642857 
 ## 
-## -Probability of correct classification:  0.7
+## -Probability of correct classification:  0.6643
 ```
 
 ```r
@@ -657,10 +677,10 @@ presnost <- table(as.numeric(factor(Y.test)), model.neighb.predict) |>
 ```
 
 ```
-## [1] 0.3333333
+## [1] 0.3666667
 ```
 
-Vidíme tedy, že přesnost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou 3, kterou jsme určili cross-validací, je na trénovacích datech rovna 0.3 a na testovacích datech 0.3333.
+Vidíme tedy, že přesnost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou 5, kterou jsme určili cross-validací, je na trénovacích datech rovna 0.3357 a na testovacích datech 0.3667.
 
 K porovnání jendotlivých modelů můžeme použít oba typy chybovostí, pro přehlednost si je budeme ukládat do tabulky.
 
@@ -692,8 +712,8 @@ data.PCA.train <- as.data.frame(data.PCA$scores) # skore prvnich p HK
 data.PCA.train$Y <- factor(Y.train) # prislusnost do trid
 ```
 
-V tomto konkrétním případě jsme za počet hlavních komponent vzali $p$ = 2, které dohromady vysvětlují 98.61 % variability v datech.
-První hlavní komponenta potom vysvětluje 98 % a druhá 0.61 % variability.
+V tomto konkrétním případě jsme za počet hlavních komponent vzali $p$ = 2, které dohromady vysvětlují 98.58 % variability v datech.
+První hlavní komponenta potom vysvětluje 98.05 % a druhá 0.53 % variability.
 Graficky si můžeme zobrazit hodnoty skórů prvních dvou hlavních komponent, barevně odlišených podle příslušnosti do klasifikační třídy.
 
 
@@ -755,7 +775,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme jednak přesnost klasifikátoru na trénovacích (80 %), tak i na testovacích datech (76.67 %).
+Spočítali jsme jednak přesnost klasifikátoru na trénovacích (61.43 %), tak i na testovacích datech (60 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()`.
@@ -849,7 +869,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme tedy jednak přesnost klasifikátoru na trénovacích (82.14 %), tak i na testovacích datech (78.33 %).
+Spočítali jsme tedy jednak přesnost klasifikátoru na trénovacích (64.29 %), tak i na testovacích datech (60 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v případě LDA.
@@ -1005,7 +1025,7 @@ pred.baz |> ggplot(aes(x = n.basis, y = Err.test)) +
 </div>
 
 Vidíme, že s rostoucím počtem bází pro $\beta(t)$ má trénovací chybovost (modrá čára) tendenci klesat a tedy bychom na jejím základě volili velké hodnoty $n_{basis}$.
-Naopak optimální volbou na základě testovací chybovosti je $n$ rovno 46, tedy výrazně menší hodnota než 50.
+Naopak optimální volbou na základě testovací chybovosti je $n$ rovno 29, tedy výrazně menší hodnota než 50.
 Naopak s rostoucím $n$ roste testovací chyvost, což ukazuje na přeučení modelu.
 
 Z výše uvedených důvodů pro určení optimálního počtu bazických funkcí pro $\beta(t)$ využijeme 10-ti násobnou cross-validaci.
@@ -1090,14 +1110,14 @@ CV.results
 
 ```
 ##         4         5         6         7         8         9        10        11 
-## 0.7589929 0.7529110 0.7549604 0.7906179 0.7997088 0.7962900 0.8565794 0.8488162 
+## 0.6035247 0.6329436 0.7996436 0.8573400 0.8224601 0.8278721 0.8943264 0.9064425 
 ##        12        13        14        15        16        17        18        19 
-## 0.8551905 0.8551905 0.8418571 0.8547399 0.8414871 0.8543261 0.8535073 0.8363512 
+## 0.9076091 0.8762015 0.8867757 0.8470415 0.8320067 0.8488931 0.8157511 0.8674492 
 ##        20        21        22        23        24        25 
-## 0.8345086 0.8307956 0.8031955 0.8117920 0.8434684 0.8347504
+## 0.8909965 0.8579702 0.8825653 0.8632741 0.8826097 0.8844194
 ```
 
-Vykresleme si ještě průběh validační chybovosti i se zvýrazněnou optimální hodnotou $n_{optimal}$ rovnou 10 s validační chybovostí 0.1434.
+Vykresleme si ještě průběh validační chybovosti i se zvýrazněnou optimální hodnotou $n_{optimal}$ rovnou 12 s validační chybovostí 0.0924.
 
 
 ```r
@@ -1118,7 +1138,7 @@ CV.results |> ggplot(aes(x = n.basis, y = 1 - CV)) +
 <p class="caption">(\#fig:unnamed-chunk-43)Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází.</p>
 </div>
 
-Nyní již tedy můžeme definovat finální model pomocí funkcionální logistické regrese, přičemž bázi pro $\beta(t)$ volíme B-splinovou bázi s 10 bázemi.
+Nyní již tedy můžeme definovat finální model pomocí funkcionální logistické regrese, přičemž bázi pro $\beta(t)$ volíme B-splinovou bázi s 12 bázemi.
 
 
 ```r
@@ -1150,7 +1170,7 @@ presnost.test <- table(Y.test, predictions.test$Y.pred) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme trénovací chybovost (rovna 7.14 %) i testovací chybovost (rovna 15 %).
+Spočítali jsme trénovací chybovost (rovna 2.86 %) i testovací chybovost (rovna 8.33 %).
 Pro lepší představu si ještě můžeme vykreslit hodnoty odhadnutých pravděpodobností příslušnosti do klasifikační třídy $Y = 1$ na trénovacích datech v závislosti na hodnotách lineárního prediktoru.
 
 
@@ -1242,7 +1262,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme tedy přesnost klasifikátoru na trénovacích (80 %) i na testovacích datech (76.67 %).
+Spočítali jsme tedy přesnost klasifikátoru na trénovacích (61.43 %) i na testovacích datech (60 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v případě LDA i QDA.
@@ -1343,7 +1363,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost klasifikátoru na testovacích datech je tedy 45 % a na trénovacích datech 72.14 %.
+Přesnost klasifikátoru na testovacích datech je tedy 53.33 % a na trénovacích datech 66.43 %.
 
 Graficky si rozhodovací strom můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1415,7 +1435,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na testovacích datech je tedy 78.33 % a na trénovacích datech 83.57 %.
+Přesnost rozhodovacího stromu na testovacích datech je tedy 58.33 % a na trénovacích datech 63.57 %.
 
 Graficky si rozhodovací strom sestrojený na skórech hlavních komponent můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1498,7 +1518,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy 72.86 % a na testovacích datech 45 %.
+Přesnost rozhodovacího stromu na trénovacích datech je tedy 67.14 % a na testovacích datech 48.33 %.
 
 Graficky si rozhodovací strom sestrojený na koeficientech B-splinového vyjádření můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1576,7 +1596,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost náhodného lesu na trénovacích datech je tedy 96.43 % a na testovacích datech 66.67 %.
+Přesnost náhodného lesu na trénovacích datech je tedy 99.29 % a na testovacích datech 66.67 %.
 
 
 ```r
@@ -1610,7 +1630,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy 95.71 % a na testovacích datech 78.33 %.
+Přesnost rozhodovacího stromu na trénovacích datech je tedy 94.29 % a na testovacích datech 60 %.
 
 
 ```r
@@ -1644,7 +1664,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost tohoto klasifikátoru na trénovacích datech je 97.14 % a na testovacích datech 65 %.
+Přesnost tohoto klasifikátoru na trénovacích datech je 100 % a na testovacích datech 66.67 %.
 
 
 ```r
@@ -1744,8 +1764,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM na trénovacích datech je tedy 90 % pro lineární jádro, 77.86 % pro polynomiální jádro a 74.29 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 81.67 % pro lineární jádro, 65 % pro polynomiální jádro a 56.67 % pro radiální jádro.
+Přesnost metody SVM na trénovacích datech je tedy 90 % pro lineární jádro, 75 % pro polynomiální jádro a 64.29 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 78.33 % pro lineární jádro, 73.33 % pro polynomiální jádro a 51.67 % pro radiální jádro.
 
 
 ```r
@@ -1807,8 +1827,8 @@ presnost.test.r <- table(data.PCA.test$Y, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 81.43 % pro lineární jádro, 77.14 % pro polynomiální jádro a 82.86 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 78.33 % pro lineární jádro, 75 % pro polynomiální jádro a 78.33 % pro radiální jádro.
+Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 62.14 % pro lineární jádro, 58.57 % pro polynomiální jádro a 62.86 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 60 % pro lineární jádro, 58.33 % pro polynomiální jádro a 60 % pro radiální jádro.
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v předchozích případech, kdy jsme také vykreslovali klasifikační hranici.
@@ -1911,8 +1931,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 87.86 % pro lineární jádro, 77.86 % pro polynomiální jádro a 73.57 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 83.33 % pro lineární jádro, 63.33 % pro polynomiální jádro a 56.67 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 88.57 % pro lineární jádro, 74.29 % pro polynomiální jádro a 63.57 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 78.33 % pro lineární jádro, 70 % pro polynomiální jádro a 51.67 % pro radiální jádro.
 
 
 ```r
@@ -2063,12 +2083,12 @@ data.frame(d_opt = d.opt, ERR = 1 - presnost.opt.cv,
 
 ```
 ##        d_opt        ERR
-## linear    26 0.05076923
-## poly      11 0.08615385
-## radial    12 0.10410256
+## linear    10 0.05721612
+## poly      10 0.09864469
+## radial    10 0.06395604
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d$ jako 26 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9492, 11 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9138 a 12 pro radiální jádro s hodnotou přesnosti 0.8959.
+Vidíme, že nejlépe vychází hodnota parametru $d$ jako 10 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9428, 10 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9014 a 10 pro radiální jádro s hodnotou přesnosti 0.936.
 Pro přehlednost si ještě vykresleme průběh validačních chybovostí v závislosti na dimenzi $d$.
 
 
@@ -2163,8 +2183,8 @@ for (kernel_number in 1:3) {
 }
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 2.14 % pro lineární jádro, 9.29 % pro polynomiální jádro a 5.71 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 11.67 % pro lineární jádro, 10 % pro polynomiální jádro a 5 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 3.57 % pro lineární jádro, 5 % pro polynomiální jádro a 5 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 8.33 % pro lineární jádro, 10 % pro polynomiální jádro a 10 % pro radiální jádro.
 
 
 ```r
@@ -2475,9 +2495,9 @@ Table: (\#tab:unnamed-chunk-95)Souhrnné výsledky metody SVM v kombinaci s RKHS
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS                                                                    0.0500                                                   0.1333
-SVM poly - RKHS                                                                      0.0643                                                   0.3333
-SVM rbf - RKHS                                                                       0.0714                                                   0.2500
+SVM linear - RKHS                                                                    0.0786                                                   0.3667
+SVM poly - RKHS                                                                      0.0429                                                   0.3167
+SVM rbf - RKHS                                                                       0.0643                                                   0.2500
 
 Vidíme, že model u všech třech jader velmi dobře klasifikuje trénovací data, zatímco jeho úspěšnost na testovacích datech není vůbec dobrá.
 Je zřejmé, že došlo k overfittingu, proto využijeme cross-validaci, abychom určili optimální hodnoty $\gamma$ a $d$.
@@ -2625,11 +2645,11 @@ Table: (\#tab:unnamed-chunk-98)Souhrnné výsledky cross-validace pro metodu SVM
 
           $\quad\quad\quad\quad\quad d$   $\quad\quad\quad\quad\quad\gamma$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ----------------------------------  ----------------------------------  ----------------------------------
-linear                               18                              0.8483                              0.0793  linear                            
-poly                                 22                              6.1054                              0.0860  polynomial                        
-radial                               27                              0.5179                              0.0793  radial                            
+linear                               10                             10.0000                              0.0589  linear                            
+poly                                 11                              0.8483                              0.1301  polynomial                        
+radial                               10                             10.0000                              0.1144  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 18 a $\gamma={}$ 0.8483 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9207, $d={}$ 22 a $\gamma={}$ 6.1054 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.914 a $d={}$ 27 a $\gamma={}$ 0.5179 pro radiální jádro s hodnotou přesnosti 0.9207.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 10 a $\gamma={}$ 10 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9411, $d={}$ 11 a $\gamma={}$ 0.8483 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8699 a $d={}$ 10 a $\gamma={}$ 10 pro radiální jádro s hodnotou přesnosti 0.8856.
 Pro zajímavost si ještě vykresleme funkci validační chybovosti v závislosti na dimenzi $d$ a hodnotě hyperparametru $\gamma$.
 
 
@@ -2653,11 +2673,6 @@ CV.results.plot |>
   scale_fill_brewer(palette = "Spectral") + 
   geom_point(data = df.RKHS.res, aes(x = d, y = gamma),
              size = 5, pch = '+')
-```
-
-```
-## Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Spectral is 11
-## Returning the palette you asked for with that many colors
 ```
 
 <div class="figure">
@@ -2766,12 +2781,12 @@ Table: (\#tab:unnamed-chunk-102)Souhrnné výsledky metody SVM v kombinaci s RKH
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - radial                                                           0.0500                                                   0.1833
-SVM poly - RKHS - radial                                                             0.0286                                                   0.1000
-SVM rbf - RKHS - radial                                                              0.0214                                                   0.1333
+SVM linear - RKHS - radial                                                           0.0429                                                   0.1500
+SVM poly - RKHS - radial                                                             0.0643                                                   0.1667
+SVM rbf - RKHS - radial                                                              0.0571                                                   0.1333
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 5 % pro lineární jádro, 2.86 % pro polynomiální jádro a 2.14 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 18.33 % pro lineární jádro, 10 % pro polynomiální jádro a 13.33 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 4.29 % pro lineární jádro, 6.43 % pro polynomiální jádro a 5.71 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 15 % pro lineární jádro, 16.67 % pro polynomiální jádro a 13.33 % pro radiální jádro.
 
 
 ```r
@@ -2946,11 +2961,11 @@ Table: (\#tab:unnamed-chunk-107)Souhrnné výsledky cross-validace pro metodu SV
 
           $\quad\quad\quad\quad\quad d$   $\quad\quad\quad\quad\quad p$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ------------------------------  ----------------------------------  ----------------------------------
-linear                               33                               3                              0.2131  linear                            
-poly                                  8                               3                              0.2304  polynomial                        
-radial                               13                               5                              0.2109  radial                            
+linear                                7                               4                              0.3033  linear                            
+poly                                 37                               4                              0.3315  polynomial                        
+radial                                9                               4                              0.3109  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 33 a $p={}$ 3 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.7869, $d={}$ 8 a $p={}$ 3 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.7696 a $d={}$ 13 a $p={}$ 5 pro radiální jádro s hodnotou přesnosti 0.7891.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 7 a $p={}$ 4 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6967, $d={}$ 37 a $p={}$ 4 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6685 a $d={}$ 9 a $p={}$ 4 pro radiální jádro s hodnotou přesnosti 0.6891.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3048,12 +3063,12 @@ Table: (\#tab:unnamed-chunk-110)Souhrnné výsledky metody SVM v kombinaci s RKH
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - poly                                                             0.1429                                                   0.4000
-SVM poly - RKHS - poly                                                               0.2071                                                   0.3833
-SVM rbf - RKHS - poly                                                                0.1571                                                   0.2500
+SVM linear - RKHS - poly                                                             0.2929                                                   0.3833
+SVM poly - RKHS - poly                                                               0.2429                                                   0.3833
+SVM rbf - RKHS - poly                                                                0.2643                                                   0.2667
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 14.29 % pro lineární jádro, 20.71 % pro polynomiální jádro a 15.71 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 40 % pro lineární jádro, 38.33 % pro polynomiální jádro a 25 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 29.29 % pro lineární jádro, 24.29 % pro polynomiální jádro a 26.43 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 38.33 % pro lineární jádro, 38.33 % pro polynomiální jádro a 26.67 % pro radiální jádro.
 
 
 ```r
@@ -3214,11 +3229,11 @@ Table: (\#tab:unnamed-chunk-115)Souhrnné výsledky cross-validace pro metodu SV
 
           $\quad\quad\quad\quad\quad d$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ----------------------------------  ----------------------------------
-linear                               14                              0.1062  linear                            
-poly                                  3                              0.1859  polynomial                        
-radial                               23                              0.1510  radial                            
+linear                               15                              0.4227  linear                            
+poly                                 34                              0.4042  polynomial                        
+radial                               29                              0.4002  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 14 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8938, $d={}$ 3 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8141 a $d={}$ 23 pro radiální jádro s hodnotou přesnosti 0.849.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 15 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.5773, $d={}$ 34 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.5958 a $d={}$ 29 pro radiální jádro s hodnotou přesnosti 0.5998.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3314,12 +3329,12 @@ Table: (\#tab:unnamed-chunk-118)Souhrnné výsledky metody SVM v kombinaci s RKH
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - linear                                                           0.0857                                                   0.2333
-SVM poly - RKHS - linear                                                             0.1571                                                   0.2000
-SVM rbf - RKHS - linear                                                              0.1143                                                   0.2000
+SVM linear - RKHS - linear                                                           0.3214                                                      0.3
+SVM poly - RKHS - linear                                                             0.3143                                                      0.5
+SVM rbf - RKHS - linear                                                              0.2643                                                      0.4
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 8.57 % pro lineární jádro, 15.71 % pro polynomiální jádro a 11.43 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 23.33 % pro lineární jádro, 20 % pro polynomiální jádro a 20 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 32.14 % pro lineární jádro, 31.43 % pro polynomiální jádro a 26.43 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 30 % pro lineární jádro, 50 % pro polynomiální jádro a 40 % pro radiální jádro.
 
 
 ```r
@@ -3333,38 +3348,38 @@ Table: (\#tab:unnamed-chunk-120)Souhrnné výsledky použitých metod na simulov
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-KNN                                                                                  0.3000                                                   0.3333
-LDA                                                                                  0.2000                                                   0.2333
-QDA                                                                                  0.1786                                                   0.2167
-LR functional                                                                        0.0714                                                   0.1500
-LR score                                                                             0.2000                                                   0.2333
-Tree - diskr.                                                                        0.2786                                                   0.5500
-Tree - score                                                                         0.1643                                                   0.2167
-Tree - Bbasis                                                                        0.2714                                                   0.5500
-RForest - diskr                                                                      0.0357                                                   0.3333
-RForest - score                                                                      0.0429                                                   0.2167
-RForest - Bbasis                                                                     0.0286                                                   0.3500
-SVM linear - diskr                                                                   0.1000                                                   0.1833
-SVM poly - diskr                                                                     0.2214                                                   0.3500
-SVM rbf - diskr                                                                      0.2571                                                   0.4333
-SVM linear - PCA                                                                     0.1857                                                   0.2167
-SVM poly - PCA                                                                       0.2286                                                   0.2500
-SVM rbf - PCA                                                                        0.1714                                                   0.2167
-SVM linear - Bbasis                                                                  0.1214                                                   0.1667
-SVM poly - Bbasis                                                                    0.2214                                                   0.3667
-SVM rbf - Bbasis                                                                     0.2643                                                   0.4333
-SVM linear - projection                                                              0.0214                                                   0.1167
-SVM poly - projection                                                                0.0929                                                   0.1000
-SVM rbf - projection                                                                 0.0571                                                   0.0500
-SVM linear - RKHS - radial                                                           0.0500                                                   0.1833
-SVM poly - RKHS - radial                                                             0.0286                                                   0.1000
-SVM rbf - RKHS - radial                                                              0.0214                                                   0.1333
-SVM linear - RKHS - poly                                                             0.1429                                                   0.4000
-SVM poly - RKHS - poly                                                               0.2071                                                   0.3833
-SVM rbf - RKHS - poly                                                                0.1571                                                   0.2500
-SVM linear - RKHS - linear                                                           0.0857                                                   0.2333
-SVM poly - RKHS - linear                                                             0.1571                                                   0.2000
-SVM rbf - RKHS - linear                                                              0.1143                                                   0.2000
+KNN                                                                                  0.3357                                                   0.3667
+LDA                                                                                  0.3857                                                   0.4000
+QDA                                                                                  0.3571                                                   0.4000
+LR functional                                                                        0.0286                                                   0.0833
+LR score                                                                             0.3857                                                   0.4000
+Tree - diskr.                                                                        0.3357                                                   0.4667
+Tree - score                                                                         0.3643                                                   0.4167
+Tree - Bbasis                                                                        0.3286                                                   0.5167
+RForest - diskr                                                                      0.0071                                                   0.3333
+RForest - score                                                                      0.0571                                                   0.4000
+RForest - Bbasis                                                                     0.0000                                                   0.3333
+SVM linear - diskr                                                                   0.1000                                                   0.2167
+SVM poly - diskr                                                                     0.2500                                                   0.2667
+SVM rbf - diskr                                                                      0.3571                                                   0.4833
+SVM linear - PCA                                                                     0.3786                                                   0.4000
+SVM poly - PCA                                                                       0.4143                                                   0.4167
+SVM rbf - PCA                                                                        0.3714                                                   0.4000
+SVM linear - Bbasis                                                                  0.1143                                                   0.2167
+SVM poly - Bbasis                                                                    0.2571                                                   0.3000
+SVM rbf - Bbasis                                                                     0.3643                                                   0.4833
+SVM linear - projection                                                              0.0357                                                   0.0833
+SVM poly - projection                                                                0.0500                                                   0.1000
+SVM rbf - projection                                                                 0.0500                                                   0.1000
+SVM linear - RKHS - radial                                                           0.0429                                                   0.1500
+SVM poly - RKHS - radial                                                             0.0643                                                   0.1667
+SVM rbf - RKHS - radial                                                              0.0571                                                   0.1333
+SVM linear - RKHS - poly                                                             0.2929                                                   0.3833
+SVM poly - RKHS - poly                                                               0.2429                                                   0.3833
+SVM rbf - RKHS - poly                                                                0.2643                                                   0.2667
+SVM linear - RKHS - linear                                                           0.3214                                                   0.3000
+SVM poly - RKHS - linear                                                             0.3143                                                   0.5000
+SVM rbf - RKHS - linear                                                              0.2643                                                   0.4000
 
 ## Simulační studie
 
@@ -3384,7 +3399,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{si
 set.seed(42)
 
 # pocet simulaci
-n.sim <- 5
+n.sim <- 3
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody
@@ -3423,7 +3438,7 @@ Do datové tabulky `CV_RESULTS` si potom budeme ukládat hodnoty optimálních h
 for(sim in 1:n.sim) {
   # pocet vygenerovanych pozorovani pro kazdou tridu
   n <- 100
-  # vektor casu ekvidistantni na intervalu [0, 1]
+  # vektor casu ekvidistantni na intervalu [0, 6]
   t <- seq(0, 6, length = 51)
   
   # pro Y = 0
@@ -4883,1187 +4898,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6128,8 +4963,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6198,14 +5031,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6222,10 +5047,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6258,14 +5079,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6282,8 +5095,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
@@ -6294,16 +5105,8 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6376,14 +5179,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6400,8 +5195,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
@@ -6418,14 +5211,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6434,16 +5219,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6452,12 +5227,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6515,21 +5284,13 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6554,8 +5315,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6612,6 +5371,8 @@ for(sim in 1:n.sim) {
 ```
 
 ```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6660,8 +5421,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6846,6 +5605,8 @@ for(sim in 1:n.sim) {
 ```
 
 ```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6886,12 +5647,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6964,6 +5719,8 @@ for(sim in 1:n.sim) {
 ```
 
 ```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -6988,12 +5745,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7082,8 +5833,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7093,21 +5842,13 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7191,13 +5932,9 @@ for(sim in 1:n.sim) {
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7287,21 +6024,13 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7351,21 +6080,11 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7419,13 +6138,7 @@ for(sim in 1:n.sim) {
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7491,13 +6204,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7595,13 +6302,9 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7611,13 +6314,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7634,8 +6331,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7668,12 +6363,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7707,13 +6396,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7739,13 +6422,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7763,13 +6440,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7810,8 +6481,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7821,21 +6490,13 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7844,8 +6505,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7913,13 +6572,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -7977,13 +6630,9 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -8002,8 +6651,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -8036,10 +6683,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -8096,8 +6739,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -8322,10 +6963,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -8558,8 +7195,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -8793,13 +7428,7 @@ for(sim in 1:n.sim) {
 
 ```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
 
-```
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -9008,8 +7637,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -9122,10 +7749,6 @@ for(sim in 1:n.sim) {
 ```
 
 ```
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 ```
 
@@ -9284,38 +7907,38 @@ Table: (\#tab:unnamed-chunk-124)Souhrnné výsledky použitých metod na simulov
 
                               $\widehat{Err}_{train}$   $\widehat{Err}_{test}$   $\widehat{SD}_{train}$   $\widehat{SD}_{test}$
 ---------------------------  ------------------------  -----------------------  -----------------------  ----------------------
-KNN                                            0.1657                   0.1600                   0.0430                  0.0303
-LDA                                            0.1471                   0.2000                   0.0206                  0.0612
-QDA                                            0.1414                   0.2100                   0.0305                  0.0703
-LR_functional                                  0.0400                   0.0933                   0.0265                  0.0346
-LR_score                                       0.1414                   0.2033                   0.0234                  0.0582
-Tree_discr                                     0.1243                   0.1900                   0.0491                  0.0346
-Tree_score                                     0.1443                   0.2100                   0.0329                  0.0641
-Tree_Bbasis                                    0.1157                   0.1833                   0.0483                  0.0236
-RF_discr                                       0.0214                   0.1667                   0.0071                  0.0167
-RF_score                                       0.0229                   0.2033                   0.0060                  0.0506
-RF_Bbasis                                      0.0186                   0.1733                   0.0064                  0.0091
-SVM linear - diskr                             0.0543                   0.0967                   0.0229                  0.0415
-SVM poly - diskr                               0.0957                   0.1433                   0.0251                  0.0346
-SVM rbf - diskr                                0.0814                   0.1667                   0.0130                  0.0289
-SVM linear - PCA                               0.1486                   0.2000                   0.0362                  0.0565
-SVM poly - PCA                                 0.1414                   0.2033                   0.0228                  0.0660
-SVM rbf - PCA                                  0.1086                   0.2067                   0.0244                  0.0418
-SVM linear - Bbasis                            0.0586                   0.0967                   0.0178                  0.0398
-SVM poly - Bbasis                              0.0914                   0.1600                   0.0222                  0.0465
-SVM rbf - Bbasis                               0.0771                   0.1667                   0.0163                  0.0289
-SVM linear - projection                        0.0257                   0.1100                   0.0256                  0.0723
-SVM poly - projection                          0.0386                   0.1100                   0.0164                  0.0253
-SVM rbf - projection                           0.0257                   0.1167                   0.0130                  0.0204
-SVM linear - RKHS - radial                     0.0571                   0.1333                   0.0262                  0.0601
-SVM poly - RKHS - radial                       0.0329                   0.1633                   0.0179                  0.0828
-SVM rbf - RKHS - radial                        0.0486                   0.1367                   0.0274                  0.0361
-SVM linear - RKHS - poly                       0.2214                   0.2833                   0.0354                  0.0373
-SVM poly - RKHS - poly                         0.2257                   0.2967                   0.0284                  0.0519
-SVM rbf - RKHS - poly                          0.2243                   0.2800                   0.0334                  0.0431
-SVM linear - RKHS - linear                     0.1886                   0.2400                   0.0669                  0.0253
-SVM poly - RKHS - linear                       0.2329                   0.2900                   0.0179                  0.0401
-SVM rbf - RKHS - linear                        0.2043                   0.2633                   0.0390                  0.0711
+KNN                                            0.1976                   0.2111                   0.0251                  0.0347
+LDA                                            0.1619                   0.1889                   0.0360                  0.0694
+QDA                                            0.1595                   0.1944                   0.0352                  0.0674
+LR_functional                                  0.0333                   0.0944                   0.0289                  0.0255
+LR_score                                       0.1667                   0.2056                   0.0367                  0.0536
+Tree_discr                                     0.1905                   0.2333                   0.0367                  0.0866
+Tree_score                                     0.2333                   0.3167                   0.0322                  0.0333
+Tree_Bbasis                                    0.1881                   0.2333                   0.0393                  0.0928
+RF_discr                                       0.0071                   0.1722                   0.0071                  0.0347
+RF_score                                       0.0119                   0.2333                   0.0082                  0.0667
+RF_Bbasis                                      0.0048                   0.1778                   0.0082                  0.0255
+SVM linear - diskr                             0.0476                   0.1111                   0.0041                  0.0096
+SVM poly - diskr                               0.1143                   0.2056                   0.0143                  0.0347
+SVM rbf - diskr                                0.0810                   0.1944                   0.0041                  0.0694
+SVM linear - PCA                               0.1643                   0.2000                   0.0327                  0.0577
+SVM poly - PCA                                 0.1476                   0.2389                   0.0393                  0.0962
+SVM rbf - PCA                                  0.1214                   0.2111                   0.0357                  0.0674
+SVM linear - Bbasis                            0.0524                   0.1111                   0.0165                  0.0096
+SVM poly - Bbasis                              0.1071                   0.2056                   0.0247                  0.0347
+SVM rbf - Bbasis                               0.0786                   0.1833                   0.0071                  0.0577
+SVM linear - projection                        0.0405                   0.0556                   0.0206                  0.0347
+SVM poly - projection                          0.0357                   0.1111                   0.0143                  0.0347
+SVM rbf - projection                           0.0238                   0.0778                   0.0082                  0.0347
+SVM linear - RKHS - radial                     0.0619                   0.1056                   0.0206                  0.0347
+SVM poly - RKHS - radial                       0.0571                   0.1444                   0.0258                  0.0347
+SVM rbf - RKHS - radial                        0.0476                   0.1389                   0.0109                  0.0509
+SVM linear - RKHS - poly                       0.2048                   0.3167                   0.0041                  0.0333
+SVM poly - RKHS - poly                         0.2214                   0.2833                   0.0311                  0.0289
+SVM rbf - RKHS - poly                          0.1976                   0.2722                   0.0251                  0.0509
+SVM linear - RKHS - linear                     0.3262                   0.4111                   0.0230                  0.0255
+SVM poly - RKHS - linear                       0.2786                   0.4056                   0.0258                  0.0536
+SVM rbf - RKHS - linear                        0.2429                   0.3667                   0.0247                  0.0167
 
 V tabulce výše jsou uvedeny všechny vypočtené charakteristiky.
 Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi stálost či míru variability jednotlivých metod.
@@ -9389,7 +8012,7 @@ Table: (\#tab:unnamed-chunk-129)Mediány hodnot hyperparametrů pro vybrané met
 
  $K$ pro KNN          $d$ pro SVM linear   $d$ pro SVM poly     $d$ pro SVM radial
 -------------------  -------------------  -------------------  -------------------
-                 14                   25                   14                   14
+                 23                   15                   10                   13
 
 
 ```r

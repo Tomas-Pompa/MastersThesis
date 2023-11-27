@@ -24,7 +24,7 @@ library(tidyr)
 library(ddalpha)
 library(polynom)
 
-# set.seed(42)
+set.seed(42)
 ```
 
 Uvažujme tedy dvě klasifikační třídy, $Y \in \{0, 1\}$, pro každou ze tříd stejný počet `n` generovaných funkcí.
@@ -34,6 +34,20 @@ Funkce budeme uvažovat na intervalu $I = [0, 6]$.
 Nyní vytvoříme funkce pomocí interpolačních polynomů. Nejprve si definujeme body, kterými má procházet naše křivka, a následně jimi proložíme interpolační polynom, který použijeme pro generování křivek pro klasifikaci.
 
 ```{r}
+# definujici body pro tridu 0
+x.0 <- c(-2, -1.35, -1.06, -0.58, 0.26, 0.84, 1.73, 2.5, 3.2, 3.43, 4) + 2
+y.0 <- c(0, 0.25, 0.86, 1.49, 1.1, 0.15, -0.11, -0.36, -0.1, 0.23, 0)
+
+# definujici body pro tridu 1
+x.1 <- c(-2, -1.8, -1.3, -1.09, -0.75, -0.49, 0.14, 0.43, 0.96, 1.7, 2.1, 2.6, 3, 3.43, 3.7, 4) + 2
+y.1 <- c(0.1, -0.45, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1,-0.12, -0.4, -0.35, 0.25, 0.4, 0)
+
+# {{0,0},{0.65,0.25},{0.94,0.76},{1.42,1.2},{2.26,0.94},{2.84,0.1},{3.73,-0.01},{4.5,-0.1},{5.2, -0.1},{5.43,0.23},{6,0}}
+x.1 <- c(0, 0.65, 0.94, 1.42, 2.26, 2.84, 3.73, 4.5, 5.2, 5.43, 6)
+y.1 <- c(0, 0.25, 0.76, 1.2, 0.94, 0.1, -0.01, -0.1, -0.1, 0.23, 0)
+# h(x)=-9.1 x+37.2709 x^(2)-61.2594 x^(3)+58.0332 x^(4)-34.0338 x^(5)+12.5556 x^(6)-2.90164 x^(7)+0.406575 x^(8)-0.0315332 x^(9)+0.00103781 x^(10)
+# f(x)=-10.3075 x+43.5046 x^(2)+x^(3) (-72.7162)+67.8866 x^(4)+x^(5) (-38.5902)+13.7339 x^(6)+x^(7) (-3.06169)+0.41432 x^(8)+x^(9) (-0.0310725)+0.000989789 x^(10)
+
 # definujici body pro tridu 0
 x.0 <- c(-2, -1.35, -1.06, -0.58, 0.26, 0.84, 1.73, 2.5, 3.43, 4) + 2
 y.0 <- c(0, 0.25, 0.86, 1.49, 1.1, 0.15, -0.11, -0.36, 0.23, 0)
@@ -60,21 +74,27 @@ Pro výpočet interpolačních polynomů využijeme funkci `poly.calc()` z kniho
 
 ```{r}
 # vypocet polynomu
-poly.0 <- poly.calc(x.0, y.0)
-poly.1 <- poly.calc(x.1, y.1)
+polynom.0 <- poly.calc(x.0, y.0)
+polynom.1 <- poly.calc(x.1, y.1)
 ```
 
 ```{r}
 # definovani generujicich funkci
-poly.0 <- function(x) return(
-  -5.917962*x + 21.65116*x^2 - 29.76776*x^3 + 23.91566*x^4 - 
-    12.01474*x^5 + 3.714882*x^6 - 0.678195*x^7 + 0.06667599*x^8 -
-    0.00271318*x^9)
-poly.1 <- function(x) return(
-  0.1 - 5.575865*x + 31.15035*x^2 - 58.3787*x^3 + 48.44881*x^4 - 
-    10.48996*x^5 - 12.02612*x^6 + 11.05272*x^7 - 4.362127*x^8 +
-    0.9801225*x^9 - 0.1296233*x^10 + 0.009421169*x^11 - 
-    0.0002910194*x^12)
+# poly.0 <- function(x) return(-9.1 * x+37.2709 *x^(2)-61.2594* x^(3)+58.0332* x^4-34.0338 * x^5+12.5556 * x^(6)-2.90164 *x^(7)+0.406575 *x^(8)-0.0315332* x^9+0.00103781* x^10)
+poly.0 <- function(x) return(predict(polynom.0, x))
+# poly.1 <- function(x) return(-10.3075* x+43.5046* x^(2)+x^(3) *(-72.7162)+67.8866 *x^(4)+x^(5)* (-38.5902)+13.7339 *x^(6)+x^(7) *(-3.06169)+0.41432* x^(8)+x^(9) *(-0.0310725)+0.000989789 *x^(10))
+poly.1 <- function(x) return(predict(polynom.1, x))
+
+# definovani generujicich funkci
+# poly.0 <- function(x) return(
+#   -5.917962*x + 21.65116*x^2 - 29.76776*x^3 + 23.91566*x^4 - 
+#     12.01474*x^5 + 3.714882*x^6 - 0.678195*x^7 + 0.06667599*x^8 -
+#     0.00271318*x^9)
+# poly.1 <- function(x) return(
+#   0.1 - 5.575865*x + 31.15035*x^2 - 58.3787*x^3 + 48.44881*x^4 - 
+#     10.48996*x^5 - 12.02612*x^6 + 11.05272*x^7 - 4.362127*x^8 +
+#     0.9801225*x^9 - 0.1296233*x^10 + 0.009421169*x^11 - 
+#     0.0002910194*x^12)
 ```
 
 ```{r}
@@ -3150,7 +3170,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{si
 set.seed(42)
 
 # pocet simulaci
-n.sim <- 5
+n.sim <- 3
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody
@@ -3188,7 +3208,7 @@ Do datové tabulky `CV_RESULTS` si potom budeme ukládat hodnoty optimálních h
 for(sim in 1:n.sim) {
   # pocet vygenerovanych pozorovani pro kazdou tridu
   n <- 100
-  # vektor casu ekvidistantni na intervalu [0, 1]
+  # vektor casu ekvidistantni na intervalu [0, 6]
   t <- seq(0, 6, length = 51)
   
   # pro Y = 0
