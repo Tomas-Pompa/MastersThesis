@@ -8,7 +8,7 @@ Pro simulaci nejprve:
 
 -   zvolíme vhodné funkce,
 
--   generujeme body ze zvoleného intervalu, které obsahují , například gaussovský, šum,
+-   generujeme body ze zvoleného intervalu, které obsahují, například gaussovský, šum,
 
 -   takto získané diskrétní body vyhladíme do podoby funkcionálního objektu pomocí nějakého vhodného bázového systému.
 
@@ -39,13 +39,16 @@ Nyní vytvoříme funkce pomocí interpolačních polynomů. Nejprve si definuje
 
 ```r
 # definujici body pro tridu 0
-x.0 <- c(-2, -1.35, -1.06, -0.58, 0.26, 0.84, 1.73, 2.5, 3.43, 4) + 2
+x.0 <- c(0.00, 0.65, 0.94, 1.42, 2.26, 2.84, 3.73, 4.50, 5.43, 6.00)
 y.0 <- c(0, 0.25, 0.86, 1.49, 1.1, 0.15, -0.11, -0.36, 0.23, 0)
 
 # definujici body pro tridu 1
-x.1 <- c(-2, -1.49, -1.09, -0.75, -0.49, 0.14, 0.43, 0.96, 1.7, 2.6, 3.25, 3.67, 4) + 2
-y.1 <- c(0.1, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1, -0.4, 0.3, 0.37, 0)
+x.1 <- c(0.00, 0.51, 0.91, 1.25, 1.51, 2.14, 2.43, 2.96, 3.70, 4.60,
+         5.25, 5.67, 6.00)
+y.1 <- c(0.1, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1, -0.4,
+         0.3, 0.37, 0)
 ```
+
 
 
 
@@ -58,12 +61,13 @@ dat_points <- data.frame(x = c(x.0, x.1),
 
 ggplot(dat_points, aes(x = x, y = y, colour = Class)) + 
   geom_point(size=1.5) + 
-  theme_bw()
+  theme_bw() + 
+  labs(colour = 'Klasifikační\n      třída')
 ```
 
 <img src="03-Simulace_3_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
-Pro výpočet interpolačních polynomů využijeme funkci `poly.calc()` z knihovny `polynom`.
+Pro výpočet interpolačních polynomů využijeme funkci `poly.calc()` z knihovny `polynom`. Dále definujeme funkce `poly.0()` a `poly.1()`, které budou počítat hodnoty polynomů v daném bodě intervalu. K jejich vytvoření použijeme funkci `predict()`, na jejíž vstup zadáme příslušný polynom a bod, ve kterám chceme polynom vyhodnotit.
 
 
 ```r
@@ -74,23 +78,12 @@ polynom.1 <- poly.calc(x.1, y.1)
 
 
 ```r
-# definovani generujicich funkci
-# poly.0 <- function(x) return(-9.1 * x+37.2709 *x^(2)-61.2594* x^(3)+58.0332* x^4-34.0338 * x^5+12.5556 * x^(6)-2.90164 *x^(7)+0.406575 *x^(8)-0.0315332* x^9+0.00103781* x^10)
 poly.0 <- function(x) return(predict(polynom.0, x))
-# poly.1 <- function(x) return(-10.3075* x+43.5046* x^(2)+x^(3) *(-72.7162)+67.8866 *x^(4)+x^(5)* (-38.5902)+13.7339 *x^(6)+x^(7) *(-3.06169)+0.41432* x^(8)+x^(9) *(-0.0310725)+0.000989789 *x^(10))
 poly.1 <- function(x) return(predict(polynom.1, x))
-
-# definovani generujicich funkci
-# poly.0 <- function(x) return(
-#   -5.917962*x + 21.65116*x^2 - 29.76776*x^3 + 23.91566*x^4 - 
-#     12.01474*x^5 + 3.714882*x^6 - 0.678195*x^7 + 0.06667599*x^8 -
-#     0.00271318*x^9)
-# poly.1 <- function(x) return(
-#   0.1 - 5.575865*x + 31.15035*x^2 - 58.3787*x^3 + 48.44881*x^4 - 
-#     10.48996*x^5 - 12.02612*x^6 + 11.05272*x^7 - 4.362127*x^8 +
-#     0.9801225*x^9 - 0.1296233*x^10 + 0.009421169*x^11 - 
-#     0.0002910194*x^12)
 ```
+
+
+
 
 
 ```r
@@ -108,57 +101,30 @@ ggplot(dat_points, aes(x = x, y = y, colour = Class)) +
   geom_point(size=1.5) + 
   theme_bw() + 
   geom_line(data = dat_poly_plot,
-            aes(x = x, y = y, colour = Class))
+            aes(x = x, y = y, colour = Class),
+            linewidth = 0.8) + 
+  labs(colour = 'Klasifikační\n      třída')
 ```
 
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<div class="figure">
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-8-1.png" alt="Znázornění dvou funkcí na intervalu $I = [0, 6]$, ze kterých generujeme pozorování ze tříd 0 a 1." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-8)Znázornění dvou funkcí na intervalu $I = [0, 6]$, ze kterých generujeme pozorování ze tříd 0 a 1.</p>
+</div>
 
-
-
-Pro třídu $Y = 0$ a $Y = 1$ uvažujme funkce
-
-$$
-f_0(x) = 2 \cdot \sin\left(\frac{\pi x}{2}\right) + x^2 + \frac{1}{2},
-$$
-
-$$
-f_1(x) = 3 \cdot \sin\left(\frac{\pi x}{2}\right) + \frac{1}{2} x.
-$$
-
-Jejich grafy jsou na obrázcích níže.
 
 
 ```r
 # generujici funkce pro Y = 0 a Y = 1
 funkce_0 <- poly.0
-# pridat nahodny posun v zacatku nebo periode
 funkce_1 <- poly.1
 ```
 
 
-```r
-x <- seq(0, 6, length = 501)
-y0 <- funkce_0(x)
-y1 <- funkce_1(x)
-df <- data.frame(x = rep(x, 2),
-                 y = c(y0, y1),
-                 Y = rep(c('Y = 0', 'Y = 1'), each = length(x)))
-
-df |> ggplot(aes(x = x, y = y, colour = Y)) + 
-  geom_line(linewidth = 1) + 
-  theme_bw() +
-  labs(colour = 'Group')
-```
-
-<div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-9-1.png" alt="Znázornění dvou funkcí na intervalu $[0, 1]$, ze kterých generujeme pozorování ze tříd 0 a 1." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-9)Znázornění dvou funkcí na intervalu $[0, 1]$, ze kterých generujeme pozorování ze tříd 0 a 1.</p>
-</div>
 
 Nyní si vytvoříme funkci pro generování náhodných funkcí s přidaným šumem (resp. bodů na předem dané síti) ze zvolené generující funkce.
 Argument `t` označuje vektor hodnot, ve kterých chceme dané funkce vyhodnotit, `fun` značí generující funkci, `n` počet funkcí a `sigma` směrodatnou odchylku $\sigma$ normálního rozdělení $\text{N}(\mu, \sigma^2)$, ze kterého náhodně generujeme gaussovský bílý šum s $\mu = 0$.
-Abychom ukázali výhodu použití metod, které pracují s funkcionálními daty, přidáme při generování ke každému simulovanému pozorování navíc i náhodný člen, který bude mít význam vertikálního posunu celé funkce.
-Tento posun budeme generovat s normálního rozdělění s parametrem $\sigma^2 = 4$.
+Abychom ukázali výhodu použití metod, které pracují s funkcionálními daty, přidáme při generování ke každému simulovanému pozorování navíc i náhodný člen, který bude mít význam vertikálního posunu celé funkce (parametr `sigma_shift`).
+Tento posun budeme generovat s normálního rozdělení s parametrem $\sigma^2 = 4$.
 
 
 ```r
@@ -190,7 +156,7 @@ V každé ze dvou tříd budeme uvažovat 100 pozorování, tedy `n = 100`.
 ```r
 # pocet vygenerovanych pozorovani pro kazdou tridu
 n <- 100
-# vektor casu ekvidistantni na intervalu [0, 1]
+# vektor casu ekvidistantni na intervalu [0, 6]
 t <- seq(0, 6, length = 51)
 
 # pro Y = 0
@@ -230,21 +196,21 @@ DF |> ggplot(aes(x = t, y = V, group = interaction(time, group),
                  colour = group)) + 
   geom_line(linewidth = 0.5) +
   theme_bw() +
-  labs(x = 'Time',
-       y = 'Function',
-       colour = 'Group') +
+  labs(x = expression(x[1]),
+       y = expression(x[2]),
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels=c('Y = 0', 'Y = 1'))
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-12-1.png" alt="Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-12)Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-13-1.png" alt="Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-13)Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená.</p>
 </div>
 
 ## Vyhlazení pozorovaných křivek
 
 Nyní převedeme pozorované diskrétní hodnoty (vektory hodnot) na funkcionální objekty, se kterými budeme následně pracovat.
-Jelikož se nejedná o periodické křivky na intervalu $I = [0, 1]$, využijeme k vyhlazení B-sline bázi.
+Opět využijeme k vyhlazení B-sline bázi.
 
 Za uzly bereme celý vektor `t`, standardně uvažujeme kubické spliny, proto volíme (implicitní volba v `R`) `norder = 4`.
 Budeme penalizovat druhou derivaci funkcí.
@@ -270,7 +236,7 @@ Hodnotu $\lambda$ budeme uvažovat pro obě klasifikační skupiny stejnou, nebo
 # spojeni pozorovani do jedne matice
 XX <- cbind(X0, X1)
 
-lambda.vect <- 10^seq(from = -5, to = 3, length.out = 25) # vektor lambd
+lambda.vect <- 10^seq(from = -2, to = 1, length.out = 50) # vektor lambd
 gcv <- rep(NA, length = length(lambda.vect)) # prazdny vektor pro ulozebi GCV
 
 for(index in 1:length(lambda.vect)) {
@@ -293,18 +259,18 @@ Pro lepší znázornění si vykreslíme průběh $GCV(\lambda)$.
 
 ```r
 GCV |> ggplot(aes(x = lambda, y = GCV)) + 
-  geom_line(linetype = 'dashed', linewidth = 0.8) + 
-  geom_point(size = 2.5) + 
+  geom_line(linetype = 'solid', linewidth = 0.6) + 
+  geom_point(size = 1.5) + 
   theme_bw() + 
   labs(x = bquote(paste(log[10](lambda), ' ;   ', 
                         lambda[optimal] == .(round(lambda.opt, 4)))),
        y = expression(GCV(lambda))) + 
-  geom_point(aes(x = log10(lambda.opt), y = min(gcv)), colour = 'red', size = 3)
+  geom_point(aes(x = log10(lambda.opt), y = min(gcv)), colour = 'red', size = 2.5)
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-15-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-15)Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-16-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-16)Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$.</p>
 </div>
 
 S touto optimální volbou vyhlazovacího parametru $\lambda$ nyní vyhladíme všechny funkce a opět znázorníme graficky prvních 10 pozorovaných křivek z každé klasifikační třídy.
@@ -323,15 +289,15 @@ DF |> ggplot(aes(x = t, y = Vsmooth, group = interaction(time, group),
                  colour = group)) + 
   geom_line(linewidth = 0.75) +
   theme_bw() +
-  labs(x = 'Time',
-       y = 'Function',
-       colour = 'Group') +
+  labs(x = expression(x[1]),
+       y = expression(x[2]),
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels=c('Y = 0', 'Y = 1'))
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-16-1.png" alt="Prvních 10 vyhlazených křivek z každé klasifikační třídy." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-16)Prvních 10 vyhlazených křivek z každé klasifikační třídy.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-17-1.png" alt="Prvních 10 vyhlazených křivek z každé klasifikační třídy." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-17)Prvních 10 vyhlazených křivek z každé klasifikační třídy.</p>
 </div>
 
 Ještě znázorněme všechny křivky včetně průměru zvlášť pro každou třídu.
@@ -356,19 +322,60 @@ DFmean <- data.frame(
 
 DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group), 
                  colour = group)) + 
-  geom_line(linewidth = 0.25) +
+  geom_line(linewidth = 0.25, alpha = 0.5) +
   theme_bw() +
-  labs(x = 'Time',
-       y = 'Function',
-       colour = 'Group') +
+  labs(x = expression(x[1]),
+       y = expression(x[2]),
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) + 
-  geom_line(aes(x = t, y = Mean), 
-            colour = 'black', linewidth = 1, linetype = 'twodash')
+  geom_line(aes(x = t, y = Mean, colour = group), 
+            linewidth = 1.2, linetype = 'solid') + 
+  scale_x_continuous(expand = c(0.01, 0.01)) + 
+  #ylim(c(-1, 2)) + 
+  scale_y_continuous(expand = c(0.01, 0.01))#, limits = c(-1, 2))
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-17-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-17)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-18-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-18)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.</p>
+</div>
+
+
+```r
+DFsmooth <- data.frame(
+  t = rep(t, 2 * n),
+  time = rep(rep(1:n, each = length(t)), 2),
+  Smooth = c(fdobjSmootheval),
+  Mean = c(rep(apply(fdobjSmootheval[ , 1 : n], 1, mean), n),
+            rep(apply(fdobjSmootheval[ , (n + 1) : (2 * n)], 1, mean), n)),
+  group = factor(rep(c(0, 1), each = n * length(t)))
+)
+
+DFmean <- data.frame(
+  t = rep(t, 2),
+  Mean = c(apply(fdobjSmootheval[ , 1 : n], 1, mean), 
+            apply(fdobjSmootheval[ , (n + 1) : (2 * n)], 1, mean)),
+  group = factor(rep(c(0, 1), each = length(t)))
+)
+
+DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group), 
+                 colour = group)) + 
+  geom_line(linewidth = 0.25, alpha = 0.5) +
+  theme_bw() +
+  labs(x = expression(x[1]),
+       y = expression(x[2]),
+       colour = 'Klasifikační\n      třída') +
+  scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) + 
+  geom_line(aes(x = t, y = Mean, colour = group), 
+            linewidth = 1.2, linetype = 'solid') + 
+  scale_x_continuous(expand = c(0.01, 0.01)) + 
+  #ylim(c(-1, 2)) + 
+  scale_y_continuous(expand = c(0.01, 0.01), limits = c(-1, 2))
+```
+
+<div class="figure">
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-19-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-19)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.</p>
 </div>
 
 ## Klasifikace křivek
@@ -479,49 +486,11 @@ neighb.model <- classif.knn(group = y.train,
                             fdataobj = x.train, 
                             knn = c(1:round(sqrt(length(y.train))))) 
 
-summary(neighb.model) # shrnuti modelu
-```
-
-```
-##      - SUMMARY - 
-## 
-## -Probability of correct classification by group (prob.classification):
-## y
-##         1         2 
-## 0.6478873 0.6811594 
-## 
-## -Confusion matrix between the theoretical groups (by rows)
-##   and estimated groups (by column) 
-##    
-##      1  2
-##   1 46 25
-##   2 22 47
-## 
-## -Vector of probability of correct classification
-##    by number of neighbors (knn):
-##      1      2      3      4      5      6      7      8      9     10     11 
-## 0.5929 0.5929 0.6357 0.5714 0.6643 0.6286 0.6071 0.5714 0.5643 0.5857 0.5643 
-##     12 
-## 0.5357 
-## 
-## -Optimal number of neighbors: knn.opt= 5 
-## with highest probability of correct classification max.prob=  0.6642857 
-## 
-## -Probability of correct classification:  0.6643
-```
-
-```r
-plot(neighb.model$gcv, pch = 16) # vykresleni zavislosti GCV na poctu sousedu K
-```
-
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-22-1.png" width="672" />
-
-```r
 neighb.model$max.prob # maximalni presnost
 ```
 
 ```
-## [1] 0.6642857
+## [1] 0.6428571
 ```
 
 ```r
@@ -587,13 +556,13 @@ CV.results
 ```
 
 ```
-##  [1] 0.5857358 0.5951648 0.6427215 0.6042361 0.6714448 0.6065285 0.5896720
-##  [8] 0.5850835 0.5930786 0.5628131 0.5669534 0.5639768 0.5720883 0.5700868
-## [15] 0.6106147 0.5844673 0.6093109 0.6021433 0.5915428 0.6116456 0.6086937
+##  [1] 0.5623592 0.5655382 0.6374971 0.5902938 0.6570858 0.5980519 0.5758192
+##  [8] 0.5792012 0.5993777 0.5699559 0.5507196 0.5505840 0.5720883 0.5730172
+## [15] 0.6172813 0.5921596 0.6093109 0.5973814 0.5977928 0.6116456 0.6028113
 ## [22] 0.5856167 0.5885471 0.5717639
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $K$ jako 5 s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6714.
+Vidíme, že nejlépe vychází hodnota parametru $K$ jako 5 s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6571.
 Pro přehlednost si ještě vykresleme průběh validační chybovosti v závislosti na počtu sousedů $K$.
 
 
@@ -611,8 +580,8 @@ CV.results |> ggplot(aes(x = K, y = 1 - CV)) +
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-24-1.png" alt="Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-24)Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-26-1.png" alt="Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-26)Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů.</p>
 </div>
 
 Nyní známe optimální hodnotu parametru $K$ a tudíž můžeme sestavit finální model.
@@ -625,50 +594,14 @@ neighb.model <- classif.knn(group = y.train, fdataobj = x.train, knn = K.opt)
 model.neighb.predict <- predict(neighb.model, 
                                 new.fdataobj = fdata(X.test))
 
-summary(neighb.model)
-```
-
-```
-##      - SUMMARY - 
-## 
-## -Probability of correct classification by group (prob.classification):
-## y
-##         1         2 
-## 0.6478873 0.6811594 
-## 
-## -Confusion matrix between the theoretical groups (by rows)
-##   and estimated groups (by column) 
-##    
-##      1  2
-##   1 46 25
-##   2 22 47
-## 
-## -Vector of probability of correct classification
-##    by number of neighbors (knn):
-##      5 
-## 0.6643 
-## 
-## -Optimal number of neighbors: knn.opt= 5 
-## with highest probability of correct classification max.prob=  0.6642857 
-## 
-## -Probability of correct classification:  0.6643
-```
-
-```r
 # presnost na testovacich datech
 presnost <- table(as.numeric(factor(Y.test)), model.neighb.predict) |>
   prop.table() |>
   diag() |>
   sum()
-# chybovost
-1 - presnost
 ```
 
-```
-## [1] 0.3666667
-```
-
-Vidíme tedy, že přesnost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou 5, kterou jsme určili cross-validací, je na trénovacích datech rovna 0.3357 a na testovacích datech 0.3667.
+Vidíme tedy, že přesnost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou 5, kterou jsme určili cross-validací, je na trénovacích datech rovna 0.3571 a na testovacích datech 0.3833.
 
 K porovnání jendotlivých modelů můžeme použít oba typy chybovostí, pro přehlednost si je budeme ukládat do tabulky.
 
@@ -693,15 +626,16 @@ Proveďme tedy nejprve funkcionální analýzu hlavních komponent a určeme po�
 # analyza hlavnich komponent
 data.PCA <- pca.fd(X.train, nharm = 10) # nharm - maximalni pocet HK
 nharm <- which(cumsum(data.PCA$varprop) >= 0.9)[1] # urceni p
-if(nharm == 1) nharm <- 2
+if(nharm == 1) nharm <- 2 # aby bylo mozne vykreslovat grafy,
+# potrebujeme alespon 2 HK
 
 data.PCA <- pca.fd(X.train, nharm = nharm) 
 data.PCA.train <- as.data.frame(data.PCA$scores) # skore prvnich p HK
 data.PCA.train$Y <- factor(Y.train) # prislusnost do trid
 ```
 
-V tomto konkrétním případě jsme za počet hlavních komponent vzali $p$ = 2, které dohromady vysvětlují 98.58 % variability v datech.
-První hlavní komponenta potom vysvětluje 98.05 % a druhá 0.53 % variability.
+V tomto konkrétním případě jsme za počet hlavních komponent vzali $p$ = 2, které dohromady vysvětlují 98.72 % variability v datech.
+První hlavní komponenta potom vysvětluje 98.2 % a druhá 0.52 % variability.
 Graficky si můžeme zobrazit hodnoty skórů prvních dvou hlavních komponent, barevně odlišených podle příslušnosti do klasifikační třídy.
 
 
@@ -712,14 +646,14 @@ data.PCA.train |> ggplot(aes(x = V1, y = V2, colour = Y)) +
                  round(100 * data.PCA$varprop[1], 2), '%)'),
        y = paste('2. hlavní komponenta (', 
                  round(100 * data.PCA$varprop[2], 2), '%)'),
-       colour = 'Group') +
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) +
   theme_bw()
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-28-1.png" alt="Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-28)Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-30-1.png" alt="Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-30)Hodnoty skórů prvních dvou hlavních komponent pro trénovací data. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.</p>
 </div>
 
 Abychom mohli určit přesnost klasifikace na testovacích datech, potřebujeme spočítat skóre pro první 2 hlavní komponenty pro testovací data.
@@ -727,12 +661,13 @@ Tato skóre určíme pomocí vzorce:
 
 $$
 \xi_{i, j} = \int \left( X_i(t) - \mu(t)\right) \cdot \rho_j(t)\text dt,
-$$ kde $\mu(t)$ je střední hodnota (průměrná funkce) a $\rho_j(t)$ vlastní fukce (funkcionální hlavní komponenty).
+$$ 
+kde $\mu(t)$ je střední hodnota (průměrná funkce) a $\rho_j(t)$ vlastní fukce (funkcionální hlavní komponenty).
 
 
 ```r
 # vypocet skoru testovacich funkci
-scores <- matrix(NA, ncol = nharm, nrow = length(Y.test)) # prazdna matice 
+scores <- matrix(NA, ncol = nharm, nrow = length(Y.test)) # prazdna matice
 
 for(k in 1:dim(scores)[1]) {
   xfd = X.test[k] - data.PCA$meanfd[1] # k-te pozorovani - prumerna funkce
@@ -763,7 +698,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme jednak přesnost klasifikátoru na trénovacích (61.43 %), tak i na testovacích datech (60 %).
+Spočítali jsme jednak přesnost klasifikátoru na trénovacích (58.57 %), tak i na testovacích datech (60 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()`.
@@ -801,15 +736,15 @@ data.PCA.train |> ggplot(aes(x = V1, y = V2, colour = Y)) +
                  round(100 * data.PCA$varprop[1], 2), '%)'),
        y = paste('2. hlavní komponenta (', 
                  round(100 * data.PCA$varprop[2], 2), '%)'),
-       colour = 'Group') +
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) +
   theme_bw() +
   geom_contour(data = nd, aes(x = V1, y = V2, z = prd), colour = 'black')
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-31-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-31)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-33-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-33)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí LDA.</p>
 </div>
 
 Vidíme, že dělící hranicí je přímka, lineární funkce v prostoru 2D, což jsme ostatně od LDA čekali.
@@ -874,15 +809,15 @@ data.PCA.train |> ggplot(aes(x = V1, y = V2, colour = Y)) +
                  round(100 * data.PCA$varprop[1], 2), '%)'),
        y = paste('2. hlavní komponenta (', 
                  round(100 * data.PCA$varprop[2], 2), '%)'),
-       colour = 'Group') +
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) +
   theme_bw() +
   geom_contour(data = nd, aes(x = V1, y = V2, z = prd), colour = 'black')
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-37-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-37)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-39-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-39)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (parabola v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí QDA.</p>
 </div>
 
 Všimněme si, že dělící hranicí mezi klasifikačními třídami je nyní parabola.
@@ -909,7 +844,8 @@ Analogicky jako v případě konečné dimenze vstupních dat uvažujeme logisti
 
 $$
 g\left(\mathbb E [Y|X = x]\right) = \eta (x) = g(\pi(x)) = \alpha + \int \beta(t)\cdot x(t) \text d t,
-$$ kde $\eta(x)$ je lineární prediktor nabývající hodnot z intervalu $(-\infty, \infty)$, $g(\cdot)$ je *linková funkce*, v případě logistické regrese se jedná o logitovou funkci $g: (0,1) \rightarrow \mathbb R,\ g(p) = \ln\frac{p}{1-p}$ a $\pi(x)$ podmíněná pravděpodobnost
+$$ 
+kde $\eta(x)$ je lineární prediktor nabývající hodnot z intervalu $(-\infty, \infty)$, $g(\cdot)$ je *linková funkce*, v případě logistické regrese se jedná o logitovou funkci $g: (0,1) \rightarrow \mathbb R,\ g(p) = \ln\frac{p}{1-p}$ a $\pi(x)$ podmíněná pravděpodobnost
 
 $$
 \pi(x) = \text{Pr}(Y = 1 | X = x) = g^{-1}(\eta(x)) = \frac{\text e^{\alpha + \int \beta(t)\cdot x(t) \text d t}}{1 + \text e^{\alpha + \int \beta(t)\cdot x(t) \text d t}},
@@ -941,12 +877,12 @@ K tomu však potřebujeme najít vhodný počet bázových funkcí.
 To bychom mohli určit na základě chybovosti na trénovacích datech, avšak tato data budou upřenostňovat výběr velkého počtu bází a bude docházet k přeučení modelu.
 
 Ilustrujme si to na následujícím případě.
-Pro každý z počtu bází $n_{basis} \in \{4, 5, \dots, 50\}$ natrénujeme model na trénovacích datech, určíme na nich chybovost a také spočítáme chybovost na testovacích datech.
+Pro každý z počtu bází $n_{basis} \in \{4, 5, \dots, 30\}$ natrénujeme model na trénovacích datech, určíme na nich chybovost a také spočítáme chybovost na testovacích datech.
 Připomeňme, že k výběru vhodného počtu bází nemůžeme využít stejná data jako pro odhad testovací chybovosti, neboť bychom tuto chybovost podcenili.
 
 
 ```r
-n.basis.max <- 50
+n.basis.max <- 30
 n.basis <- 4:n.basis.max
 pred.baz <- matrix(NA, nrow = length(n.basis), ncol = 2, 
                    dimnames = list(n.basis, c('Err.train', 'Err.test')))
@@ -1008,8 +944,8 @@ pred.baz |> ggplot(aes(x = n.basis, y = Err.test)) +
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-41-1.png" alt="Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro $\beta$. Červeným bodem je znázorněn optimální počet $n_{optimal}$ zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-41)Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro $\beta$. Červeným bodem je znázorněn optimální počet $n_{optimal}$ zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-43-1.png" alt="Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro $\beta$. Červeným bodem je znázorněn optimální počet $n_{optimal}$ zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-43)Závislost testovací a trénovací chybovosti na počtu bázových funkcí pro $\beta$. Červeným bodem je znázorněn optimální počet $n_{optimal}$ zvolený jako minimum testovací chybovosti, černou čarou je vykreslena testovací a modrou přerušovanou čarou je vykreslen průběh trénovací chybovosti.</p>
 </div>
 
 Vidíme, že s rostoucím počtem bází pro $\beta(t)$ má trénovací chybovost (modrá čára) tendenci klesat a tedy bychom na jejím základě volili velké hodnoty $n_{basis}$.
@@ -1093,19 +1029,9 @@ for (index in 1:k_cv) {
 CV.results <- apply(CV.results, 1, mean)
 n.basis.opt <- n.basis[which.max(CV.results)]
 presnost.opt.cv <- max(CV.results)
-CV.results
 ```
 
-```
-##         4         5         6         7         8         9        10        11 
-## 0.6035247 0.6329436 0.7996436 0.8573400 0.8224601 0.8278721 0.8943264 0.9064425 
-##        12        13        14        15        16        17        18        19 
-## 0.9076091 0.8762015 0.8867757 0.8470415 0.8320067 0.8488931 0.8157511 0.8674492 
-##        20        21        22        23        24        25 
-## 0.8909965 0.8579702 0.8825653 0.8632741 0.8826097 0.8844194
-```
-
-Vykresleme si ještě průběh validační chybovosti i se zvýrazněnou optimální hodnotou $n_{optimal}$ rovnou 12 s validační chybovostí 0.0924.
+Vykresleme si ještě průběh validační chybovosti i se zvýrazněnou optimální hodnotou $n_{optimal}$ rovnou 11 s validační chybovostí 0.072.
 
 
 ```r
@@ -1118,15 +1044,16 @@ CV.results |> ggplot(aes(x = n.basis, y = 1 - CV)) +
   labs(x = bquote(paste(n[basis], ' ;   ', 
                         n[optimal] == .(n.basis.opt))),
        y = 'Validační chybovost') + 
-  scale_x_continuous(breaks = n.basis)
+  scale_x_continuous(breaks = n.basis) + 
+  theme(panel.grid.minor = element_blank())
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-44-1.png" alt="Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-44)Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-46-1.png" alt="Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-46)Závislost validační chybovosti na hodnotě $n_{basis}$, tedy na počtu bází.</p>
 </div>
 
-Nyní již tedy můžeme definovat finální model pomocí funkcionální logistické regrese, přičemž bázi pro $\beta(t)$ volíme B-splinovou bázi s 12 bázemi.
+Nyní již tedy můžeme definovat finální model pomocí funkcionální logistické regrese, přičemž bázi pro $\beta(t)$ volíme B-splinovou bázi s 11 bázemi.
 
 
 ```r
@@ -1158,7 +1085,7 @@ presnost.test <- table(Y.test, predictions.test$Y.pred) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme trénovací chybovost (rovna 2.86 %) i testovací chybovost (rovna 8.33 %).
+Spočítali jsme trénovací chybovost (rovna 3.57 %) i testovací chybovost (rovna 8.33 %).
 Pro lepší představu si ještě můžeme vykreslit hodnoty odhadnutých pravděpodobností příslušnosti do klasifikační třídy $Y = 1$ na trénovacích datech v závislosti na hodnotách lineárního prediktoru.
 
 
@@ -1174,12 +1101,12 @@ data.frame(
   theme_bw() + 
   labs(x = 'Lineární prediktor',
        y = 'Odhadnuté pravděpodobnosti Pr(Y = 1|X = x)',
-       colour = 'Třída') 
+       colour = 'Klasifikační\n      třída') 
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-46-1.png" alt="Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-46)Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-48-1.png" alt="Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-48)Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.</p>
 </div>
 
 Můžeme si ještě pro informaci zobrazit průběh odhadnuté parametrické funkce $\beta(t)$.
@@ -1191,21 +1118,22 @@ beta.seq <- eval.fd(evalarg = t.seq, fdobj = model.glm$beta.l$x)
 
 data.frame(t = t.seq, beta = beta.seq) |> 
   ggplot(aes(t, beta)) + 
+  geom_abline(aes(slope = 0, intercept = 0), linetype = 'dashed', 
+              linewidth = 0.5, colour = 'grey') +
   geom_line() + 
   theme_bw() +
-  labs(x = 'Time',
+  labs(x = expression(x[1]),
        y = expression(widehat(beta)(t))) + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  geom_abline(aes(slope = 0, intercept = 0), linetype = 'dashed', 
-              linewidth = 0.5, colour = 'grey')
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-47-1.png" alt="Průběh odhadu parametrické funkce $\beta(t), t \in [0, 1]$." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-47)Průběh odhadu parametrické funkce $\beta(t), t \in [0, 1]$.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-49-1.png" alt="Průběh odhadu parametrické funkce $\beta(t), t \in [0, 6]$." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-49)Průběh odhadu parametrické funkce $\beta(t), t \in [0, 6]$.</p>
 </div>
 
-Vidíme, že hodnoty funkce $\hat\beta(t)$ se drží kolem nuly pro časy $t$ z prostředka intervalu $[0, 1]$, zatímco pro krajní časy jsou hodnoty vyšší.
+Vidíme, že hodnoty funkce $\hat\beta(t)$ se drží kolem nuly pro časy $t$ z prostředka intervalu $[0, 6]$, zatímco pro krajní časy jsou hodnoty vyšší.
 To implikuje rozdílnost funkcí z klasifikačních tříd na začátku a konci intervalu, zatímco uprostřed intervalu jsou funkce velmi podobné.
 
 Výsledky opět přidáme do souhrnné tabulky.
@@ -1250,7 +1178,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme tedy přesnost klasifikátoru na trénovacích (61.43 %) i na testovacích datech (60 %).
+Spočítali jsme tedy přesnost klasifikátoru na trénovacích (59.29 %) i na testovacích datech (60 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v případě LDA i QDA.
@@ -1269,15 +1197,15 @@ data.PCA.train |> ggplot(aes(x = V1, y = V2, colour = Y)) +
                  round(100 * data.PCA$varprop[1], 2), '%)'),
        y = paste('2. hlavní komponenta (', 
                  round(100 * data.PCA$varprop[2], 2), '%)'),
-       colour = 'Group') +
+       colour = 'Klasifikační\n      třída') +
   scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) +
   theme_bw() +
   geom_contour(data = nd, aes(x = V1, y = V2, z = prd), colour = 'black')
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-54-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-54)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-56-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-56)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí logistické regrese.</p>
 </div>
 
 Všimněme si, že dělící hranicí mezi klasifikačními třídami je nyní přímka jako v případě LDA.
@@ -1310,7 +1238,7 @@ My se nejprve zaměříme na diskretizaci intervalu a následně porovnáme výs
 
 #### Diskretizace intervalu
 
-Nejprve si musíme definovat body z intervalu $I = [0, 1]$, ve kterých funkce vyhodnotíme.
+Nejprve si musíme definovat body z intervalu $I = [0, 6]$, ve kterých funkce vyhodnotíme.
 Následně vytvoříme objekt, ve kterém budou řádky představovat jednotlivé (diskretizované) funkce a sloupce časy.
 Nakonec připojíme sloupec $Y$ s informací o příslušnosti do klasifikační třídy a totéž zopakujeme i pro testovací data.
 
@@ -1365,8 +1293,8 @@ fancyRpartPlot(rpart(Y ~ ., data = grid.data, method = "class"),
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-58-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-58)Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-60-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-60)Grafické znázornění neprořezaného rozhodovacího stromu. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.</p>
 </div>
 
 Můžeme si také vykreslit již prořezaný finální rozhodovací strom.
@@ -1384,8 +1312,8 @@ rpart.plot::rpart.plot(clf.tree$finalModel, # finalni model ... prorezany strom
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-59-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-59)Finální prořezaný rozhodovací strom.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-61-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-61)Finální prořezaný rozhodovací strom.</p>
 </div>
 
 Nakonec opět přidejme trénovací a testovací chybovost do souhrnné tabulky.
@@ -1423,7 +1351,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na testovacích datech je tedy 58.33 % a na trénovacích datech 63.57 %.
+Přesnost rozhodovacího stromu na testovacích datech je tedy 60 % a na trénovacích datech 62.14 %.
 
 Graficky si rozhodovací strom sestrojený na skórech hlavních komponent můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1436,8 +1364,8 @@ fancyRpartPlot(rpart(Y ~ ., data = data.PCA.train, method = "class"),
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-62-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-62)Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-64-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-64)Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na skórech hlavních komponent. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.</p>
 </div>
 
 Můžeme si také vykreslit již prořezaný finální rozhodovací strom.
@@ -1453,8 +1381,8 @@ rpart.plot::rpart.plot(clf.tree.PCA$finalModel, # finalni model
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-63-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-63)Finální prořezaný rozhodovací strom.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-65-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-65)Finální prořezaný rozhodovací strom.</p>
 </div>
 
 Nakonec opět přidejme trénovací a testovací chybovost do souhrnné tabulky.
@@ -1506,7 +1434,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy 67.14 % a na testovacích datech 48.33 %.
+Přesnost rozhodovacího stromu na trénovacích datech je tedy 66.43 % a na testovacích datech 55 %.
 
 Graficky si rozhodovací strom sestrojený na koeficientech B-splinového vyjádření můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1519,8 +1447,8 @@ fancyRpartPlot(rpart(Y ~ ., data = data.Bbasis.train, method = "class"),
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-67-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-67)Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-69-1.png" alt="Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-69)Grafické znázornění neprořezaného rozhodovacího stromu sestrojeného na bázových koeficientech. Modrými odstíny jsou vykresleny uzly příslušející klasifikační třídě 1 a červenými odstíny třídě 0.</p>
 </div>
 
 Můžeme si také vykreslit již prořezaný finální rozhodovací strom.
@@ -1536,8 +1464,8 @@ rpart.plot::rpart.plot(clf.tree.Bbasis$finalModel, # finalni model
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-68-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-68)Finální prořezaný rozhodovací strom.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-70-1.png" alt="Finální prořezaný rozhodovací strom." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-70)Finální prořezaný rozhodovací strom.</p>
 </div>
 
 Nakonec opět přidejme trénovací a testovací chybovost do souhrnné tabulky.
@@ -1584,7 +1512,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost náhodného lesu na trénovacích datech je tedy 99.29 % a na testovacích datech 66.67 %.
+Přesnost náhodného lesu na trénovacích datech je tedy 99.29 % a na testovacích datech 60 %.
 
 
 ```r
@@ -1618,7 +1546,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy 94.29 % a na testovacích datech 60 %.
+Přesnost rozhodovacího stromu na trénovacích datech je tedy 95.71 % a na testovacích datech 60 %.
 
 
 ```r
@@ -1652,7 +1580,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost tohoto klasifikátoru na trénovacích datech je 100 % a na testovacích datech 66.67 %.
+Přesnost tohoto klasifikátoru na trénovacích datech je 99.29 % a na testovacích datech 63.33 %.
 
 
 ```r
@@ -1675,7 +1603,8 @@ Tím dostaneme obecně nelineární dělící hranici mezi klasifikačními tř�
 
 $$
 K(x_i, x_j) = \langle \phi(x_i), \phi(x_j) \rangle_{\mathcal H}, 
-$$ kde $\phi$ je nějaká (neznámá) transformace (ang. feature map), $\mathcal H$ je Hilbertův prostor a $\langle \cdot, \cdot \rangle_{\mathcal H}$ je nějaký skalární součin na tomto Hilbertově prostoru.
+$$
+kde $\phi$ je nějaká (neznámá) transformace (ang. feature map), $\mathcal H$ je Hilbertův prostor a $\langle \cdot, \cdot \rangle_{\mathcal H}$ je nějaký skalární součin na tomto Hilbertově prostoru.
 
 Nejčastěji se v praxi volí tři typy jádrových funkcí:
 
@@ -1693,17 +1622,16 @@ Při volbě radiálního jádra máme pouze jeden další hyperparametr $\gamma$
 Opět bychom mohli hodnoty hyperparametrů určit jako optimální pro naše data, avšak vzhledem k relativní výpočetní náročnosti necháme hodnoty příslušných hyperparametrů na jejich defaultních hodnotách.
 
 V případě funkcionálních dat máme několik možností, jak použít metodu SVM.
-Nejjednodušší variantou je použít tuto klasifikační metodu přímo na diskretizovanou funkci.
-Další možností je opět využít skóre hlavních komponent a klasifikovat křivky pomocí jejich reprezentace.
-Další přímočarou variantou je využít vyjádření křivek pomocí B-splinové báze a klasifikovat křivky na základě koeficientů jejich vyjádření v této bázi.
+Nejjednodušší variantou je použít tuto klasifikační metodu přímo na diskretizovanou funkci (sekce \@ref(diskr)).
+Další možností je opět využít skóre hlavních komponent a klasifikovat křivky pomocí jejich reprezentace \@ref(PCA-SVM).
+Další přímočarou variantou je využít vyjádření křivek pomocí B-splinové báze a klasifikovat křivky na základě koeficientů jejich vyjádření v této bázi (sekce \@ref(basis-SVM)).
 
 Složitější úvahou můžeme dospět k několika dalším možnostem, které využívají funkcionální podstatu dat.
-Jednak můžeme místo klasifikace původní křivky využít její derivaci (případně druhou derivaci, třetí, ...), **druhak můžeme definovat novou jádrovou funkci**, která vezme do úvahy funkcionální podstatu dat.
-To je možné zejména proto, že v definici metody SVM pracujeme s libovolným Hilbertovým prostorem (bez omezení na konečnou dimenzi), tedy připouštíme i Hilbertův prostor funkcionálních dat.
+Jednak můžeme místo klasifikace původní křivky využít její derivaci (případně druhou derivaci, třetí, ...), druhak můžeme využít projekce funkcí na podprostor generovaný, např. B-splinovými, funkcemi (sekce \@ref(projection-SVM)). Poslední metoda, kterou použijeme pro klasifikaci funkcionálních dat, spočívá v kombinaci projekce na určitý podprostor generovaný funkcemi (Reproducing Kernel Hilbert Space, RKHS) a klasifikace příslušné reprezentace. Tato metoda využívá kromě klasického SVM i SVM pro regresi, více uvádíme v sekci RKHS + SVM \@ref(RKHS-SVM).
 
-#### Diskretizace intervalu
+#### Diskretizace intervalu {#diskr}
 
-Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 1]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
+Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 6]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
 
 
 
@@ -1752,8 +1680,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM na trénovacích datech je tedy 90 % pro lineární jádro, 75 % pro polynomiální jádro a 64.29 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 78.33 % pro lineární jádro, 73.33 % pro polynomiální jádro a 51.67 % pro radiální jádro.
+Přesnost metody SVM na trénovacích datech je tedy 89.29 % pro lineární jádro, 70.71 % pro polynomiální jádro a 63.57 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 78.33 % pro lineární jádro, 66.67 % pro polynomiální jádro a 51.67 % pro radiální jádro.
 
 
 ```r
@@ -1766,7 +1694,7 @@ Res <- data.frame(model = c('SVM linear - diskr',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### Skóre hlavních komponent
+#### Skóre hlavních komponent {#PCA-SVM}
 
 V tomto případě využijeme skóre prvních p = 2 hlavních komponent.
 
@@ -1815,8 +1743,8 @@ presnost.test.r <- table(data.PCA.test$Y, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 62.14 % pro lineární jádro, 58.57 % pro polynomiální jádro a 62.86 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 60 % pro lineární jádro, 58.33 % pro polynomiální jádro a 60 % pro radiální jádro.
+Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 60 % pro lineární jádro, 57.86 % pro polynomiální jádro a 62.86 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 60 % pro lineární jádro, 55 % pro polynomiální jádro a 58.33 % pro radiální jádro.
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v předchozích případech, kdy jsme také vykreslovali klasifikační hranici.
@@ -1831,10 +1759,11 @@ nd <- rbind(nd, nd, nd) |> mutate(
    prd = c(as.numeric(predict(clf.SVM.l.PCA, newdata = nd, type = 'response')),
            as.numeric(predict(clf.SVM.p.PCA, newdata = nd, type = 'response')),
            as.numeric(predict(clf.SVM.r.PCA, newdata = nd, type = 'response'))),
-   kernel = rep(c('linear', 'polynomial', 'radial'),
+   kernel = rep(c('lineární', 'polynomiální', 'radiální'),
                 each = length(as.numeric(predict(clf.SVM.l.PCA, 
                                                  newdata = nd,
-                                                 type = 'response')))))
+                                                 type = 'response')))) |>
+     as.factor())
 
 data.PCA.train |> ggplot(aes(x = V1, y = V2, colour = Y)) +
  geom_point(size = 1.5) + 
@@ -1842,22 +1771,25 @@ data.PCA.train |> ggplot(aes(x = V1, y = V2, colour = Y)) +
                 round(100 * data.PCA$varprop[1], 2), '%)'),
       y = paste('2. hlavní komponenta (', 
                 round(100 * data.PCA$varprop[2], 2), '%)'),
-      colour = 'Group', 
-      linetype = 'Kernel type') +
+      colour = 'Klasifikační\n      třída', 
+      linetype = 'Jádro') +
  scale_colour_discrete(labels = c('Y = 0', 'Y = 1')) +
  theme_bw() +
  geom_contour(data = nd, aes(x = V1, y = V2, z = prd, linetype = kernel), 
-              colour = 'black') + 
- geom_contour(data = nd, aes(x = V1, y = V2, z = prd, linetype = kernel),
-              colour = 'black') + 
- geom_contour(data = nd, aes(x = V1, y = V2, z = prd, linetype = kernel),
-              colour = 'black')
+              colour = 'black') # +
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-83-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-83)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-85-1.png" alt="Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-85)Skóre prvních dvou hlavních komponent, barevně odlišené podle příslušnosti do klasifikační třídy. Černě je vyznačena dělící hranice (přímka, resp. křivky v rovině prvních dvou hlavních komponent) mezi třídami sestrojená pomocí metody SVM.</p>
 </div>
+
+```r
+ # geom_contour(data = nd, aes(x = V1, y = V2, z = prd, linetype = kernel),
+ #              colour = 'black') + 
+ # geom_contour(data = nd, aes(x = V1, y = V2, z = prd, linetype = kernel),
+ #              colour = 'black')
+```
 
 
 ```r
@@ -1870,7 +1802,7 @@ Res <- data.frame(model = c('SVM linear - PCA',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### Bázové koeficienty
+#### Bázové koeficienty {#basis-SVM}
 
 Nakonec použijeme vyjádření funkcí pomocí B-splinové báze.
 
@@ -1919,8 +1851,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 88.57 % pro lineární jádro, 74.29 % pro polynomiální jádro a 63.57 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 78.33 % pro lineární jádro, 70 % pro polynomiální jádro a 51.67 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 85.71 % pro lineární jádro, 79.29 % pro polynomiální jádro a 62.86 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 75 % pro lineární jádro, 76.67 % pro polynomiální jádro a 51.67 % pro radiální jádro.
 
 
 ```r
@@ -1933,7 +1865,7 @@ Res <- data.frame(model = c('SVM linear - Bbasis',
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### Projekce na B-splinovou bázi
+#### Projekce na B-splinovou bázi {#projection-SVM}
 
 Další možností, jak použít klasickou metodu SVM pro funkcionální data, je projektovat původní data na nějaký $d$-dimenzionální podprostor našeho Hilbertova prostoru $\mathcal H$, označme jej $V_d$.
 Předpokládejme, že tento podprostor $V_d$ má ortonormální bázi $\{\Psi_j\}_{j = 1, \dots, d}$.
@@ -2071,12 +2003,12 @@ data.frame(d_opt = d.opt, ERR = 1 - presnost.opt.cv,
 
 ```
 ##        d_opt        ERR
-## linear    10 0.05721612
-## poly      10 0.09864469
-## radial    10 0.06395604
+## linear    10 0.06457875
+## poly      10 0.07736264
+## radial    10 0.07838828
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d$ jako 10 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9428, 10 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9014 a 10 pro radiální jádro s hodnotou přesnosti 0.936.
+Vidíme, že nejlépe vychází hodnota parametru $d$ jako 10 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9354, 10 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9226 a 10 pro radiální jádro s hodnotou přesnosti 0.9216.
 Pro přehlednost si ještě vykresleme průběh validačních chybovostí v závislosti na dimenzi $d$.
 
 
@@ -2085,7 +2017,7 @@ CV.results <- data.frame(d = dimensions |> rep(3),
                          CV = c(CV.results$SVM.l, 
                                 CV.results$SVM.p, 
                                 CV.results$SVM.r),
-                         Kernel = rep(c('linear', 'polynomial', 'radial'), 
+                         Kernel = rep(c('lineární', 'polynomiální', 'radiální'), 
                                       each = length(dimensions)) |> factor())
 CV.results |> ggplot(aes(x = d, y = 1 - CV, colour = Kernel)) + 
   geom_line(linetype = 'dashed') + 
@@ -2095,14 +2027,15 @@ CV.results |> ggplot(aes(x = d, y = 1 - CV, colour = Kernel)) +
              aes(x = d.opt, y = 1 - presnost.opt.cv), colour = 'black', size = 2) +
   theme_bw() + 
   labs(x = bquote(paste(d)),
-       y = 'Validační chybovost') + 
+       y = 'Validační chybovost',
+       colour = 'Jádro') + 
   theme(legend.position = "bottom") + 
   scale_x_continuous(breaks = dimensions)
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-88-1.png" alt="Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-88)Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-90-1.png" alt="Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-90)Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce.</p>
 </div>
 
 Nyní již můžeme natrénovat jednotlivé klasifikátory na všech trénovacích datech a podívat se na jejich úspěšnost na testovacích datech.
@@ -2179,7 +2112,7 @@ Na testovacích datech je potom přesnost metody 8.33 % pro lineární jádro, 1
 RESULTS <- rbind(RESULTS, Res)
 ```
 
-#### RKHS + SVM
+#### RKHS + SVM {#RKHS-SVM} 
 
 V této sekci se podíváme na další možnost, jak využít metodu podpůrných vektorů pro klasifikaci funkcionálních dat.
 V tomto případě půjde opět o již nám známý princip, kdy nejprve funkcionální data vyjádříme jakožto nějaké konečně-rozměrné objekty a na tyto objekty následně aplikujeme klasickou metodu SVM.
@@ -2188,26 +2121,32 @@ Nyní však metodu SVM použijeme i pro samotnou reprezentaci funkcionálních d
 Jak již název napovídá, půjde o kombinaci dvou konceptů -- jednak metody podpůrných vektorů a druhak prostoru, který se nazývá v anglické literatuře *Reproducing Kernel Hilbert Space*.
 Pro tento prostor je klíčovým pojmem *jádro* -- *kernel*.
 
-**Definice [Jádro]:** *Jádro je taková funkce* $K : \mathcal X \times \mathcal X \rightarrow \mathbb R$, *že pro každou dvojici* $\boldsymbol x, \tilde{\boldsymbol x} \in \mathcal X$ *platí* $$
+::: {.definition #kernel name="Jádro"} 
+Jádro je taková funkce $K : \mathcal X \times \mathcal X \rightarrow \mathbb R$, že pro každou dvojici $\boldsymbol x, \tilde{\boldsymbol x} \in \mathcal X$ platí 
+\begin{equation*}
 K(\boldsymbol x, \tilde{\boldsymbol x}) = \big\langle \boldsymbol\phi(\boldsymbol x), \boldsymbol\phi(\tilde{\boldsymbol x}) \big\rangle_{\mathcal H},
-$$ *kde* $\boldsymbol\phi : \mathcal X \rightarrow \mathcal H$ *je zobrazení z prostoru* $\mathcal X$ *do prostoru* $\mathcal H$.
+\end{equation*}
+kde $\boldsymbol\phi : \mathcal X \rightarrow \mathcal H$ je zobrazení z prostoru $\mathcal X$ do prostoru $\mathcal H$.
+:::
 
 Aby funkce byla jádrem, musí splňovat určité podmínky.
 
-**Lemma:** *Nechť* $\mathcal X$ *je nějaký Hilbertův prostor. Potom symetrická funkce* $K : \mathcal X \times \mathcal X \rightarrow \mathbb R$ *je jádrem, pokud* $\forall k \geq 1, \boldsymbol x_1, \dots, \boldsymbol x_k \in \mathcal X$ *a* $c_1, \dots, c_k \in \mathbb R$ *platí*
-
-$$
+::: {.lemma} 
+Nechť $\mathcal X$ je nějaký Hilbertův prostor. Potom symetrická funkce $K : \mathcal X \times \mathcal X \rightarrow \mathbb R$ je jádrem, pokud $\forall k \geq 1, \boldsymbol x_1, \dots, \boldsymbol x_k \in \mathcal X$ a $c_1, \dots, c_k \in \mathbb R$ platí
+\begin{equation*}
 \sum_{i, j = 1}^k c_ic_j K(\boldsymbol x_i, \boldsymbol x_j) \geq 0.
-$$
+\end{equation*}
+:::
 
 Vlastnost výše se nazývá pozitivní semidefinitnost.
 Platí také následující tvrzení.
 
-**Tvrzení:** *Funkce* $K: \mathcal X \times \mathcal X \rightarrow \mathbb R$ *je jádrem právě tehdy, když existuje Hilbertův prostor* $\mathcal H$ *a zobrazení* $\boldsymbol\phi : \mathcal X \rightarrow \mathcal H$ *takové, že*
-
-$$
+::: {.theorem} 
+Funkce $K: \mathcal X \times \mathcal X \rightarrow \mathbb R$ je jádrem právě tehdy, když existuje Hilbertův prostor $\mathcal H$ a zobrazení $\boldsymbol\phi : \mathcal X \rightarrow \mathcal H$ takové, že
+\begin{equation*}
 K(\boldsymbol x, \tilde{\boldsymbol x}) = \big\langle \boldsymbol\phi(\boldsymbol x), \boldsymbol\phi(\tilde{\boldsymbol x}) \big\rangle_{\mathcal H} \quad \forall \boldsymbol x, \tilde{\boldsymbol x}\in \mathcal X.
-$$
+\end{equation*}
+:::
 
 Nyní již máme připravenou půdu pro zavedení pojmu *Reproducing Kernel Hilbert Space*.
 
@@ -2262,6 +2201,7 @@ Potom
 &= f(x)
 \end{align*}
 ```
+
 *Vlastnosti:*
 
 -   nechť $\mathcal H$ je Hilbertův prostor funkcí $g: \mathcal X \rightarrow \mathbb R$.
@@ -2331,15 +2271,17 @@ Metoda SVM tedy dává smysluplnou reprezentaci původních křivek pomocí vekt
 Tato reprezentace je však velmi nestabilní, neboť i při malé změně původních hodnot může dojít ke změně v množině podpůrných vektorů pro danou funkci, a tedy dojde k výrazné změně celé reprezentace této křivky (reprezentace není spojitá ve vstupních hodnotách).
 Definujeme proto novou reprezentaci původních křivek, která již nebude trpět tímto nedostatkem.
 
-**Tvrzení:** *Nechť* $c$ *je funkce, jejíž pozorovaná verze je* $\hat c = \{(\boldsymbol x_i, y_{i}) \in \mathcal X \times \mathcal Y\}_{i = 1}^m$ *a* $K$ *je jádro s vlastními funkcemi* $\{\phi_1, \dots, \phi_d, \dots\}$ *(báze* $\mathcal H_K$*). Potom funkce* $c^*(\boldsymbol x)$ *může být vyjádřena ve tvaru*
-
-$$
+::: {.theorem #MaG name="Muñoz-González"} 
+Nechť $c$ je funkce, jejíž pozorovaná verze je $\hat c = \{(\boldsymbol x_i, y_{i}) \in \mathcal X \times \mathcal Y\}_{i = 1}^m$ a $K$ je jádro s vlastními funkcemi $\{\phi_1, \dots, \phi_d, \dots\}$ (báze $\mathcal H_K$). Potom funkce $c^*(\boldsymbol x)$ může být vyjádřena ve tvaru
+\begin{equation*}
 c^*(\boldsymbol x) = \sum_{j = 1}^d \lambda_j^* \phi_j(\boldsymbol x),
-$$ *kde* $\lambda_j^*$ *jsou váhy projekce* $c^*(\boldsymbol x)$ *na prostor funkcí generovaný vlastními funkcemi jádra* $K$ *a* $d$ *je dimenze prostoru* $\mathcal H$*. V praxi, kdy máme k dispozici pouze konečně mnoho pozorování,* $\lambda_j^*$ *mohou být odhadnuty pomocí*
-
-$$
+\end{equation*}
+kde $\lambda_j^*$ jsou váhy projekce $c^*(\boldsymbol x)$ na prostor funkcí generovaný vlastními funkcemi jádra $K$ a $d$ je dimenze prostoru $\mathcal H$. V praxi, kdy máme k dispozici pouze konečně mnoho pozorování, $\lambda_j^*$ mohou být odhadnuty pomocí
+\begin{equation*}
 \hat\lambda_j^* = \hat\lambda_j \sum_{i = 1}^m \alpha_i\hat\phi_{ji}, \quad j = 1, 2, \dots, \hat d,
-$$ *kde* $\hat\lambda_j$ *je* $j$*-té vlastní číslo příslušné* $j$*-tému vlastnímu vektoru* $\hat\phi_j$ *matice* $K_S = \big(K(\boldsymbol x_i, \boldsymbol x_j)\big)_{i, j = 1}^m, \hat d = \text{rank}(K_S)$ *a* $\alpha_i$ *jsou řešením optimalizačního problému.*
+\end{equation*}
+kde $\hat\lambda_j$ je $j$-té vlastní číslo příslušné $j$-tému vlastnímu vektoru $\hat\phi_j$ matice $K_S = \big(K(\boldsymbol x_i, \boldsymbol x_j)\big)_{i, j = 1}^m, \hat d = \text{rank}(K_S)$ a $\alpha_i$ jsou řešením optimalizačního problému.
+:::
 
 ##### Implementace metody v `R`
 
@@ -2479,13 +2421,13 @@ for (kernel_number in 1:3) {
 ```
 
 
-Table: (\#tab:unnamed-chunk-96)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-98)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS                                                                    0.0786                                                   0.3667
-SVM poly - RKHS                                                                      0.0429                                                   0.3167
-SVM rbf - RKHS                                                                       0.0643                                                   0.2500
+SVM linear - RKHS                                                                    0.1000                                                   0.4167
+SVM poly - RKHS                                                                      0.0500                                                   0.3167
+SVM rbf - RKHS                                                                       0.0786                                                   0.2500
 
 Vidíme, že model u všech třech jader velmi dobře klasifikuje trénovací data, zatímco jeho úspěšnost na testovacích datech není vůbec dobrá.
 Je zřejmé, že došlo k overfittingu, proto využijeme cross-validaci, abychom určili optimální hodnoty $\gamma$ a $d$.
@@ -2499,7 +2441,7 @@ data.RKHS <- grid.data[, -dim(grid.data)[2]] |> t()
 
 # hodnoty hyperparametru, ktere budeme prochazet
 dimensions <- 3:40 # rozumny rozsah hodnot d
-gamma.cv <- 10^seq(-2, 1, length = 15)
+gamma.cv <- 10^seq(-1, 2, length = 15)
 
 # list se tremi slozkami ... array pro jednotlive jadra -> linear, poly, radial
 # prazdna matice, do ktere vlozime jednotlive vysledky
@@ -2629,15 +2571,15 @@ df.RKHS.res <- data.frame(d = d.opt, gamma = gamma.opt, CV = err.opt.cv,
 ```
 
 
-Table: (\#tab:unnamed-chunk-99)Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-101)Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
           $\quad\quad\quad\quad\quad d$   $\quad\quad\quad\quad\quad\gamma$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ----------------------------------  ----------------------------------  ----------------------------------
-linear                               10                             10.0000                              0.0589  linear                            
-poly                                 11                              0.8483                              0.1301  polynomial                        
-radial                               10                             10.0000                              0.1144  radial                            
+linear                               11                              8.4834                              0.0727  linear                            
+poly                                  8                              8.4834                              0.1145  polynomial                        
+radial                               40                              0.4394                              0.0993  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 10 a $\gamma={}$ 10 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9411, $d={}$ 11 a $\gamma={}$ 0.8483 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8699 a $d={}$ 10 a $\gamma={}$ 10 pro radiální jádro s hodnotou přesnosti 0.8856.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 11 a $\gamma={}$ 8.4834 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9273, $d={}$ 8 a $\gamma={}$ 8.4834 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8855 a $d={}$ 40 a $\gamma={}$ 0.4394 pro radiální jádro s hodnotou přesnosti 0.9007.
 Pro zajímavost si ještě vykresleme funkci validační chybovosti v závislosti na dimenzi $d$ a hodnotě hyperparametru $\gamma$.
 
 
@@ -2664,8 +2606,8 @@ CV.results.plot |>
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-100-1.png" alt="Závislost validační chybovosti na volbě hyperparametrů $d$ a $\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-100)Závislost validační chybovosti na volbě hyperparametrů $d$ a $\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-102-1.png" alt="Závislost validační chybovosti na volbě hyperparametrů $d$ a $\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-102)Závislost validační chybovosti na volbě hyperparametrů $d$ a $\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM.</p>
 </div>
 
 Na grafech výše vidíme, jak se měnila validační chybovost v závislosti na hodnotách hyperparametrů $d$ a $\gamma$.
@@ -2765,16 +2707,16 @@ for (kernel_number in 1:3) {
 ```
 
 
-Table: (\#tab:unnamed-chunk-103)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-105)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - radial                                                           0.0429                                                   0.1500
-SVM poly - RKHS - radial                                                             0.0643                                                   0.1667
-SVM rbf - RKHS - radial                                                              0.0571                                                   0.1333
+SVM linear - RKHS - radial                                                           0.0571                                                   0.1333
+SVM poly - RKHS - radial                                                             0.0643                                                   0.0833
+SVM rbf - RKHS - radial                                                              0.0143                                                   0.1500
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 4.29 % pro lineární jádro, 6.43 % pro polynomiální jádro a 5.71 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 15 % pro lineární jádro, 16.67 % pro polynomiální jádro a 13.33 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 5.71 % pro lineární jádro, 6.43 % pro polynomiální jádro a 1.43 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 13.33 % pro lineární jádro, 8.33 % pro polynomiální jádro a 15 % pro radiální jádro.
 
 
 ```r
@@ -2945,15 +2887,15 @@ df.RKHS.res <- data.frame(d = d.opt, p = poly.opt, CV = err.opt.cv,
 ```
 
 
-Table: (\#tab:unnamed-chunk-108)Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-110)Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
           $\quad\quad\quad\quad\quad d$   $\quad\quad\quad\quad\quad p$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ------------------------------  ----------------------------------  ----------------------------------
-linear                                7                               4                              0.3033  linear                            
-poly                                 37                               4                              0.3315  polynomial                        
-radial                                9                               4                              0.3109  radial                            
+linear                               18                               2                              0.2922  linear                            
+poly                                 15                               2                              0.3241  polynomial                        
+radial                               22                               2                              0.3143  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 7 a $p={}$ 4 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6967, $d={}$ 37 a $p={}$ 4 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6685 a $d={}$ 9 a $p={}$ 4 pro radiální jádro s hodnotou přesnosti 0.6891.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 18 a $p={}$ 2 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.7078, $d={}$ 15 a $p={}$ 2 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6759 a $d={}$ 22 a $p={}$ 2 pro radiální jádro s hodnotou přesnosti 0.6857.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3047,16 +2989,16 @@ for (kernel_number in 1:3) {
 ```
 
 
-Table: (\#tab:unnamed-chunk-111)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-113)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - poly                                                             0.2929                                                   0.3833
-SVM poly - RKHS - poly                                                               0.2429                                                   0.3833
-SVM rbf - RKHS - poly                                                                0.2643                                                   0.2667
+SVM linear - RKHS - poly                                                             0.2643                                                   0.4000
+SVM poly - RKHS - poly                                                               0.2786                                                   0.4000
+SVM rbf - RKHS - poly                                                                0.2286                                                   0.2833
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 29.29 % pro lineární jádro, 24.29 % pro polynomiální jádro a 26.43 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 38.33 % pro lineární jádro, 38.33 % pro polynomiální jádro a 26.67 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 26.43 % pro lineární jádro, 27.86 % pro polynomiální jádro a 22.86 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 40 % pro lineární jádro, 40 % pro polynomiální jádro a 28.33 % pro radiální jádro.
 
 
 ```r
@@ -3213,15 +3155,15 @@ df.RKHS.res <- data.frame(d = d.opt, CV = err.opt.cv,
 ```
 
 
-Table: (\#tab:unnamed-chunk-116)Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-118)Souhrnné výsledky cross-validace pro metodu SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
           $\quad\quad\quad\quad\quad d$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ----------------------------------  ----------------------------------
-linear                               15                              0.4227  linear                            
-poly                                 34                              0.4042  polynomial                        
-radial                               29                              0.4002  radial                            
+linear                               28                              0.3635  linear                            
+poly                                  5                              0.3939  polynomial                        
+radial                               27                              0.4007  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 15 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.5773, $d={}$ 34 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.5958 a $d={}$ 29 pro radiální jádro s hodnotou přesnosti 0.5998.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 28 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6365, $d={}$ 5 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.6061 a $d={}$ 27 pro radiální jádro s hodnotou přesnosti 0.5993.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3313,16 +3255,16 @@ for (kernel_number in 1:3) {
 ```
 
 
-Table: (\#tab:unnamed-chunk-119)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-121)Souhrnné výsledky metody SVM v kombinaci s RKHS na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - linear                                                           0.3214                                                      0.3
-SVM poly - RKHS - linear                                                             0.3143                                                      0.5
-SVM rbf - RKHS - linear                                                              0.2643                                                      0.4
+SVM linear - RKHS - linear                                                           0.2429                                                   0.3667
+SVM poly - RKHS - linear                                                             0.3714                                                   0.4833
+SVM rbf - RKHS - linear                                                              0.2786                                                   0.3000
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 32.14 % pro lineární jádro, 31.43 % pro polynomiální jádro a 26.43 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 30 % pro lineární jádro, 50 % pro polynomiální jádro a 40 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 24.29 % pro lineární jádro, 37.14 % pro polynomiální jádro a 27.86 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 36.67 % pro lineární jádro, 48.33 % pro polynomiální jádro a 30 % pro radiální jádro.
 
 
 ```r
@@ -3332,42 +3274,42 @@ RESULTS <- rbind(RESULTS, Res)
 ## Tabulka výsledků
 
 
-Table: (\#tab:unnamed-chunk-121)Souhrnné výsledky použitých metod na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
+Table: (\#tab:unnamed-chunk-123)Souhrnné výsledky použitých metod na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti a $\widehat{Err}_{test}$ testovací chybovosti.
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-KNN                                                                                  0.3357                                                   0.3667
-LDA                                                                                  0.3857                                                   0.4000
+KNN                                                                                  0.3571                                                   0.3833
+LDA                                                                                  0.4143                                                   0.4000
 QDA                                                                                  0.3571                                                   0.4000
-LR functional                                                                        0.0286                                                   0.0833
-LR score                                                                             0.3857                                                   0.4000
+LR functional                                                                        0.0357                                                   0.0833
+LR score                                                                             0.4071                                                   0.4000
 Tree - diskr.                                                                        0.3357                                                   0.4667
-Tree - score                                                                         0.3643                                                   0.4167
-Tree - Bbasis                                                                        0.3286                                                   0.5167
-RForest - diskr                                                                      0.0071                                                   0.3333
-RForest - score                                                                      0.0571                                                   0.4000
-RForest - Bbasis                                                                     0.0000                                                   0.3333
-SVM linear - diskr                                                                   0.1000                                                   0.2167
-SVM poly - diskr                                                                     0.2500                                                   0.2667
-SVM rbf - diskr                                                                      0.3571                                                   0.4833
-SVM linear - PCA                                                                     0.3786                                                   0.4000
-SVM poly - PCA                                                                       0.4143                                                   0.4167
-SVM rbf - PCA                                                                        0.3714                                                   0.4000
-SVM linear - Bbasis                                                                  0.1143                                                   0.2167
-SVM poly - Bbasis                                                                    0.2571                                                   0.3000
-SVM rbf - Bbasis                                                                     0.3643                                                   0.4833
+Tree - score                                                                         0.3786                                                   0.4000
+Tree - Bbasis                                                                        0.3357                                                   0.4500
+RForest - diskr                                                                      0.0071                                                   0.4000
+RForest - score                                                                      0.0429                                                   0.4000
+RForest - Bbasis                                                                     0.0071                                                   0.3667
+SVM linear - diskr                                                                   0.1071                                                   0.2167
+SVM poly - diskr                                                                     0.2929                                                   0.3333
+SVM rbf - diskr                                                                      0.3643                                                   0.4833
+SVM linear - PCA                                                                     0.4000                                                   0.4000
+SVM poly - PCA                                                                       0.4214                                                   0.4500
+SVM rbf - PCA                                                                        0.3714                                                   0.4167
+SVM linear - Bbasis                                                                  0.1429                                                   0.2500
+SVM poly - Bbasis                                                                    0.2071                                                   0.2333
+SVM rbf - Bbasis                                                                     0.3714                                                   0.4833
 SVM linear - projection                                                              0.0357                                                   0.0833
 SVM poly - projection                                                                0.0500                                                   0.1000
 SVM rbf - projection                                                                 0.0500                                                   0.1000
-SVM linear - RKHS - radial                                                           0.0429                                                   0.1500
-SVM poly - RKHS - radial                                                             0.0643                                                   0.1667
-SVM rbf - RKHS - radial                                                              0.0571                                                   0.1333
-SVM linear - RKHS - poly                                                             0.2929                                                   0.3833
-SVM poly - RKHS - poly                                                               0.2429                                                   0.3833
-SVM rbf - RKHS - poly                                                                0.2643                                                   0.2667
-SVM linear - RKHS - linear                                                           0.3214                                                   0.3000
-SVM poly - RKHS - linear                                                             0.3143                                                   0.5000
-SVM rbf - RKHS - linear                                                              0.2643                                                   0.4000
+SVM linear - RKHS - radial                                                           0.0571                                                   0.1333
+SVM poly - RKHS - radial                                                             0.0643                                                   0.0833
+SVM rbf - RKHS - radial                                                              0.0143                                                   0.1500
+SVM linear - RKHS - poly                                                             0.2643                                                   0.4000
+SVM poly - RKHS - poly                                                               0.2786                                                   0.4000
+SVM rbf - RKHS - poly                                                                0.2286                                                   0.2833
+SVM linear - RKHS - linear                                                           0.2429                                                   0.3667
+SVM poly - RKHS - linear                                                             0.3714                                                   0.4833
+SVM rbf - RKHS - linear                                                              0.2786                                                   0.3000
 
 ## Simulační studie
 
@@ -3387,7 +3329,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{si
 set.seed(42)
 
 # pocet simulaci
-n.sim <- 10
+n.sim <- 100
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody
@@ -3409,10 +3351,17 @@ SIMULACE <- list(train = as.data.frame(matrix(NA, ncol = length(methods),
                                              dimnames = list(1:n.sim, methods))))
 
 # objekt na ulozeni optimalnich hodnot hyperparametru, ktere se urcuji pomoci CV
-CV_RESULTS <- data.frame(KNN_K = rep(NA, n.sim),
+CV_RESULTS <- data.frame(KNN_K = rep(NA, n.sim), 
+                         nharm = NA, 
+                         LR_func_n_basis = NA,
                          SVM_d_Linear = NA,
                          SVM_d_Poly = NA,
-                         SVM_d_Radial = NA)
+                         SVM_d_Radial = NA, 
+                         SVM_RKHS_radial_gamma = NA, 
+                         SVM_RKHS_radial_d = NA, 
+                         SVM_RKHS_poly_p = NA, 
+                         SVM_RKHS_poly_d = NA,
+                         SVM_RKHS_linear_d = NA)
 ```
 
 Nyní zopakujeme celou předchozí část `n.sim`-krát a hodnoty chybovostí si budeme ukládat to listu `SIMULACE`.
@@ -3552,6 +3501,7 @@ for(sim in 1:n.sim) {
   # analyza hlavnich komponent
   data.PCA <- pca.fd(X.train, nharm = 10) # nharm - maximalni pocet HK
   nharm <- which(cumsum(data.PCA$varprop) >= 0.9)[1] # urceni p
+  CV_RESULTS$nharm[sim] <- nharm
   if(nharm == 1) nharm <- 2
   
   data.PCA <- pca.fd(X.train, nharm = nharm) 
@@ -3689,6 +3639,7 @@ for(sim in 1:n.sim) {
   # spocitame prumerne presnosti pro jednotliva n pres folds
   CV.results <- apply(CV.results, 1, mean)
   n.basis.opt <- n.basis[which.max(CV.results)]
+  CV_RESULTS$LR_func_n_basis[sim] <- n.basis.opt
   presnost.opt.cv <- max(CV.results)
   
   # optimalni model
@@ -4153,7 +4104,7 @@ for(sim in 1:n.sim) {
              which.max(CV.results$SVM.r) + n_basis_min - 1)
   
   # ulozime optimalni d do datove tabulky
-  CV_RESULTS[sim, 2:4] <- d.opt
+  CV_RESULTS[sim, 4:6] <- d.opt
   
   # pripravime si datovou tabulku pro ulozeni vysledku
   Res <- data.frame(model = c('SVM linear - projection', 
@@ -4225,7 +4176,7 @@ for(sim in 1:n.sim) {
   
   # hodnoty hyperparametru, ktere budeme prochazet
   dimensions <- seq(3, 40, by =2) # rozumny rozsah hodnot d
-  gamma.cv <- 10^seq(-2, 1, length = 15)
+  gamma.cv <- 10^seq(-1, 2, length = 15)
   
   # list se tremi slozkami ... array pro jednotlive jadra -> linear, poly, radial
   # prazdna matice, do ktere vlozime jednotlive vysledky
@@ -4346,6 +4297,9 @@ for(sim in 1:n.sim) {
   df.RKHS.res <- data.frame(d = d.opt, gamma = gamma.opt, CV = err.opt.cv,
              Kernel = c('linear', 'polynomial', 'radial') |> factor(),
              row.names = c('linear', 'poly', 'radial'))
+  
+  CV_RESULTS$SVM_RKHS_radial_gamma[sim] <- gamma.opt
+  CV_RESULTS$SVM_RKHS_radial_d[sim] <- d.opt
   
   # odstranime posledni sloupec, ve kterem jsou hodnoty Y
   data.RKHS <- grid.data[, -dim(grid.data)[2]] |> t()
@@ -4577,6 +4531,9 @@ for(sim in 1:n.sim) {
              Kernel = c('linear', 'polynomial', 'radial') |> factor(),
              row.names = c('linear', 'poly', 'radial'))
   
+  CV_RESULTS$SVM_RKHS_poly_p[sim] <- poly.opt
+  CV_RESULTS$SVM_RKHS_poly_d[sim] <- d.opt
+  
   # odstranime posledni sloupec, ve kterem jsou hodnoty Y
   data.RKHS <- grid.data[, -dim(grid.data)[2]] |> t()
   # pridame i testovaci data
@@ -4794,6 +4751,8 @@ for(sim in 1:n.sim) {
              Kernel = c('linear', 'polynomial', 'radial') |> factor(),
              row.names = c('linear', 'poly', 'radial'))
   
+  CV_RESULTS$SVM_RKHS_linear_d[sim] <- d.opt
+  
   # odstranime posledni sloupec, ve kterem jsou hodnoty Y
   data.RKHS <- grid.data[, -dim(grid.data)[2]] |> t()
   # pridame i testovaci data
@@ -4899,42 +4858,42 @@ SIMULACE.df <- data.frame(Err.train = apply(SIMULACE$train, 2, mean),
 ### Výsledky
 
 
-Table: (\#tab:unnamed-chunk-125)Souhrnné výsledky použitých metod na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti, $\widehat{Err}_{test}$ testovací chybovosti, $\widehat{SD}_{train}$ odhad směrodatné odchylky trénovacích chybovostí a $\widehat{SD}_{test}$ je odhad směrodatné odchylky testovacích chybovostí.
+Table: (\#tab:unnamed-chunk-127)Souhrnné výsledky použitých metod na simulovaných datech. $\widehat{Err}_{train}$ značí odhad trénovací chybovosti, $\widehat{Err}_{test}$ testovací chybovosti, $\widehat{SD}_{train}$ odhad směrodatné odchylky trénovacích chybovostí a $\widehat{SD}_{test}$ je odhad směrodatné odchylky testovacích chybovostí.
 
                               $\widehat{Err}_{train}$   $\widehat{Err}_{test}$   $\widehat{SD}_{train}$   $\widehat{SD}_{test}$
 ---------------------------  ------------------------  -----------------------  -----------------------  ----------------------
-KNN                                            0.2150                   0.2267                   0.0565                  0.0353
-LDA                                            0.1800                   0.1900                   0.0470                  0.0446
-QDA                                            0.1643                   0.2067                   0.0483                  0.0573
-LR_functional                                  0.0336                   0.1267                   0.0303                  0.0466
-LR_score                                       0.1779                   0.1967                   0.0414                  0.0367
-Tree_discr                                     0.2036                   0.2717                   0.0420                  0.0754
-Tree_score                                     0.2364                   0.3267                   0.0374                  0.0522
-Tree_Bbasis                                    0.1936                   0.2650                   0.0554                  0.0722
-RF_discr                                       0.0036                   0.2017                   0.0051                  0.0319
-RF_score                                       0.0100                   0.2367                   0.0069                  0.0436
-RF_Bbasis                                      0.0036                   0.1983                   0.0051                  0.0277
-SVM linear - diskr                             0.0614                   0.1133                   0.0252                  0.0312
-SVM poly - diskr                               0.1129                   0.2333                   0.0299                  0.0648
-SVM rbf - diskr                                0.0821                   0.2100                   0.0330                  0.0510
-SVM linear - PCA                               0.1743                   0.1950                   0.0466                  0.0409
-SVM poly - PCA                                 0.1457                   0.2567                   0.0325                  0.0817
-SVM rbf - PCA                                  0.1279                   0.2217                   0.0395                  0.0516
-SVM linear - Bbasis                            0.0679                   0.1150                   0.0261                  0.0346
-SVM poly - Bbasis                              0.1086                   0.2267                   0.0323                  0.0681
-SVM rbf - Bbasis                               0.0814                   0.2067                   0.0372                  0.0479
-SVM linear - projection                        0.0379                   0.0967                   0.0228                  0.0436
-SVM poly - projection                          0.0321                   0.1183                   0.0113                  0.0288
-SVM rbf - projection                           0.0207                   0.1017                   0.0063                  0.0277
-SVM linear - RKHS - radial                     0.0500                   0.1483                   0.0210                  0.0461
-SVM poly - RKHS - radial                       0.0614                   0.1550                   0.0294                  0.0273
-SVM rbf - RKHS - radial                        0.0407                   0.1683                   0.0169                  0.0481
-SVM linear - RKHS - poly                       0.2000                   0.2967                   0.0553                  0.0537
-SVM poly - RKHS - poly                         0.2279                   0.3033                   0.0474                  0.0532
-SVM rbf - RKHS - poly                          0.1814                   0.2817                   0.0500                  0.0454
-SVM linear - RKHS - linear                     0.2721                   0.3833                   0.0523                  0.0577
-SVM poly - RKHS - linear                       0.3014                   0.4333                   0.0401                  0.0676
-SVM rbf - RKHS - linear                        0.2393                   0.3700                   0.0467                  0.0773
+KNN                                            0.2120                   0.2302                   0.0449                  0.0678
+LDA                                            0.1776                   0.1988                   0.0495                  0.0650
+QDA                                            0.1641                   0.2177                   0.0481                  0.0711
+LR_functional                                  0.0337                   0.1157                   0.0313                  0.0435
+LR_score                                       0.1767                   0.1995                   0.0494                  0.0631
+Tree_discr                                     0.1862                   0.2688                   0.0404                  0.0649
+Tree_score                                     0.2249                   0.3248                   0.0471                  0.0733
+Tree_Bbasis                                    0.1891                   0.2717                   0.0420                  0.0601
+RF_discr                                       0.0041                   0.2032                   0.0054                  0.0513
+RF_score                                       0.0099                   0.2438                   0.0084                  0.0781
+RF_Bbasis                                      0.0043                   0.1973                   0.0054                  0.0488
+SVM linear - diskr                             0.0589                   0.1023                   0.0232                  0.0405
+SVM poly - diskr                               0.1043                   0.2137                   0.0346                  0.0731
+SVM rbf - diskr                                0.0780                   0.1912                   0.0271                  0.0602
+SVM linear - PCA                               0.1742                   0.2033                   0.0521                  0.0658
+SVM poly - PCA                                 0.1426                   0.2528                   0.0447                  0.0877
+SVM rbf - PCA                                  0.1196                   0.2250                   0.0417                  0.0722
+SVM linear - Bbasis                            0.0646                   0.1038                   0.0245                  0.0393
+SVM poly - Bbasis                              0.1008                   0.2107                   0.0332                  0.0728
+SVM rbf - Bbasis                               0.0774                   0.1895                   0.0265                  0.0593
+SVM linear - projection                        0.0403                   0.0955                   0.0226                  0.0391
+SVM poly - projection                          0.0361                   0.1128                   0.0197                  0.0434
+SVM rbf - projection                           0.0278                   0.1033                   0.0163                  0.0428
+SVM linear - RKHS - radial                     0.0531                   0.1372                   0.0238                  0.0519
+SVM poly - RKHS - radial                       0.0486                   0.1665                   0.0286                  0.0576
+SVM rbf - RKHS - radial                        0.0441                   0.1402                   0.0198                  0.0459
+SVM linear - RKHS - poly                       0.1939                   0.2995                   0.0464                  0.0635
+SVM poly - RKHS - poly                         0.2179                   0.3222                   0.0424                  0.0742
+SVM rbf - RKHS - poly                          0.1811                   0.2865                   0.0362                  0.0620
+SVM linear - RKHS - linear                     0.2422                   0.3757                   0.0591                  0.0629
+SVM poly - RKHS - linear                       0.3008                   0.4222                   0.0399                  0.0692
+SVM rbf - RKHS - linear                        0.2371                   0.3682                   0.0353                  0.0707
 
 V tabulce výše jsou uvedeny všechny vypočtené charakteristiky.
 Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi stálost či míru variability jednotlivých metod.
@@ -4965,8 +4924,8 @@ SIMULACE$train |>
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-126-1.png" alt="Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-126)Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-128-1.png" alt="Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-128)Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
 </div>
 
 
@@ -4995,8 +4954,8 @@ SIMULACE$test |>
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-128-1.png" alt="Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-128)Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-130-1.png" alt="Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-130)Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
 </div>
 
 
@@ -5004,20 +4963,23 @@ SIMULACE$test |>
 Nakonec se podívejme, jaké hodnoty hyperparametrů byly nejčastější volbou.
 
 
-Table: (\#tab:unnamed-chunk-130)Mediány hodnot hyperparametrů pro vybrané metody, u nichž se určoval nějaký hyperparametr pomocí cross-validace.
+Table: (\#tab:unnamed-chunk-132)Mediány hodnot hyperparametrů pro vybrané metody, u nichž se určoval nějaký hyperparametr pomocí cross-validace.
 
- $K$ pro KNN          $d$ pro SVM linear   $d$ pro SVM poly     $d$ pro SVM radial
--------------------  -------------------  -------------------  -------------------
-               15.5                   13                 11.5                 13.5
+ KNN_K   nharm   LR_func_n_basis   SVM_d_Linear   SVM_d_Poly   SVM_d_Radial   SVM_RKHS_radial_gamma   SVM_RKHS_radial_d   SVM_RKHS_poly_p   SVM_RKHS_poly_d   SVM_RKHS_linear_d
+------  ------  ----------------  -------------  -----------  -------------  ----------------------  ------------------  ----------------  ----------------  ------------------
+    15       6              12.5             13           12             12                     6.8                  17                 2                19                  23
 
 
 ```r
-CV_RESULTS |> 
+CV_res <- CV_RESULTS |> 
   pivot_longer(cols = CV_RESULTS |> colnames(), names_to = 'method', values_to = 'hyperparameter') |>
   mutate(method = factor(method, 
                          levels = CV_RESULTS |> colnames(), 
                          labels = CV_RESULTS |> colnames(), ordered = TRUE)) |> 
-  as.data.frame() |>
+  as.data.frame() 
+
+CV_res |> 
+  filter(method %in% c('KNN_K', 'nharm', 'LR_func_n_basis')) |>
   ggplot(aes(x = hyperparameter, #y = after_stat(density),
              fill = method, colour = method)) + 
   geom_histogram() + 
@@ -5029,6 +4991,83 @@ CV_RESULTS |>
 ```
 
 <div class="figure">
-<img src="03-Simulace_3_files/figure-html/unnamed-chunk-131-1.png" alt="Krabicové diagramy hodnot hyperparametrů." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-131)Krabicové diagramy hodnot hyperparametrů.</p>
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-133-1.png" alt="Histogramy hodnot hyperparametrů pro KNN, funkcionální logistickou regresi a také histogram pro počet hlavních komponent." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-133)Histogramy hodnot hyperparametrů pro KNN, funkcionální logistickou regresi a také histogram pro počet hlavních komponent.</p>
 </div>
+
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+
+```r
+CV_res |> 
+  filter(method %in% c('SVM_d_Linear', 'SVM_d_Poly', 'SVM_d_Radial')) |>
+  ggplot(aes(x = hyperparameter, #y = after_stat(density),
+             fill = method, colour = method)) + 
+  geom_histogram() + 
+  theme_bw() + 
+  facet_grid(~method, scales = 'free') +
+  labs(x = 'Hodnoty hyperparametru',
+       y = 'Absolutní počet') + 
+  theme(legend.position = 'none')
+```
+
+<div class="figure">
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-135-1.png" alt="Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-135)Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi.</p>
+</div>
+
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+
+```r
+CV_res |> 
+  filter(method %in% c('SVM_RKHS_radial_gamma', 'SVM_RKHS_radial_d')) |>
+  ggplot(aes(x = hyperparameter, #y = after_stat(density),
+             fill = method, colour = method)) + 
+  geom_histogram() + 
+  theme_bw() + 
+  facet_grid(~method, scales = 'free') +
+  labs(x = 'Hodnoty hyperparametru',
+       y = 'Absolutní počet') + 
+  theme(legend.position = 'none')
+```
+
+<div class="figure">
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-137-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s radiálním jádrem." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-137)Histogramy hodnot hyperparametrů metody RKHS + SVM s radiálním jádrem.</p>
+</div>
+
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+
+```r
+CV_res |> 
+  filter(method %in% c('SVM_RKHS_poly_p', 'SVM_RKHS_poly_d', 'SVM_RKHS_linear_d')) |>
+  ggplot(aes(x = hyperparameter, #y = after_stat(density),
+             fill = method, colour = method)) + 
+  geom_histogram() + 
+  theme_bw() + 
+  facet_grid(~method, scales = 'free') +
+  labs(x = 'Hodnoty hyperparametru',
+       y = 'Absolutní počet') + 
+  theme(legend.position = 'none')
+```
+
+<div class="figure">
+<img src="03-Simulace_3_files/figure-html/unnamed-chunk-139-1.png" alt="Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-139)Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi.</p>
+</div>
+
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```

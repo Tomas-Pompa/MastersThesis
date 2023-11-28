@@ -22,17 +22,17 @@ Dalším cílem bude porovnání jednotlivých metod pro klasifikaci funkcionál
 
 Mezi uvažované klasifikační metody patří:
 
-- [] $K$ nejbližších sousedů (KNN),
+  - [] $K$ nejbližších sousedů (KNN),
 
-- [] logistická regrese (jak obyčejná (LR) tak její funkcionální modifikace (LR_fda)),
+  - [] logistická regrese (jak obyčejná (LR) tak její funkcionální modifikace (LR_fda)),
 
-- [] lineární (LDA) a kvadratická (QDA) diskriminační analýza,
+  - [] lineární (LDA) a kvadratická (QDA) diskriminační analýza,
 
-- [] rozhodovací stromy (DT),
+  - [] rozhodovací stromy (DT),
 
-- [] náhodné lesy (RF) a 
+  - [] náhodné lesy (RF) a 
 
-- [] Support Vector Machines.
+  - [] Support Vector Machines.
 
 Postupně jednotlivé metody projdeme, nejprve na simulovaných datech, a následně budeme konstruovat metodu podpůrných vektorů pro funkcionální data (SVM_fda).
 
