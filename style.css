@@ -22,12 +22,12 @@ pre code {
 .toc-logo {
   width: 110px !important;
   object-fit: contain;
-  margin: 1 auto;
-  display: block;
+  margin: 0 auto;
+  /*display: block;*/
 }
 
 .toc-logo img {
-  max-width: 50%;
+  max-width: 100%;
   margin-bottom: 10px;
 }
 
@@ -125,12 +125,29 @@ visibility: hidden;
   margin-bottom: 0.85em; /* adds same amount of margin as a <p> would */
 }
 
-/* Align toolbar and toc line */
+/* Align toolbar and toc line rgba(0,0,0,.07)*/
 .summary > li:first-child {
     height: 50px;
     padding-top: 10px;
-    border-bottom: 1px solid rgba(0,0,0,.07);
+    border-bottom: 1px solid #E3F2FD;
 }
 .book .book-summary ul.summary li.divider {
     height: 0px;
+}
+
+/*--- TOC LOGO ---*/
+
+.toc-logo {
+  width: 200px !important;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.toc-logo img {
+  max-width: 100%;
+  margin-bottom: 1px;
+}
+
+.summary > li:first-child {
+  height: auto !important; 
 }

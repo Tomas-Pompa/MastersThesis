@@ -18,9 +18,12 @@ rmd_files: # defines the .Rmd files to be included for each output format
   html: ["index.Rmd", 
          "01-Simulace_1.Rmd", 
          "02-Simulace_2.Rmd",
-         "03-Simulace_3.Rmd",
-         "04-Simulace_4.Rmd",
-         "05-Application_1.Rmd",
-         "06-Application_2.Rmd",
-         "07-Application_3.Rmd",
-         "08-Application_4.Rmd"] # 
+         "03-Simulace_2_sigma.Rmd",
+         "04-Simulace_2_shift.Rmd",
+         "05-Simulace_3.Rmd",
+         "06-Simulace_3_sigma.Rmd",
+         "07-Simulace_3_shift.Rmd",
+         "08-Simulace_4.Rmd",
+         "09-Application_1.Rmd",
+         "10-Application_2.Rmd",
+         "11-Application_3.Rmd"] # 

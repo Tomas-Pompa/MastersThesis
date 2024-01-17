@@ -7,10 +7,10 @@ bookdown::gitbook:
   code_folding: hide
   fig_caption: true
   number_sections: true
-  split_by: chapter
+  #split_by: chapter
   config:
     toc:
-      collapse: subsection
+      collapse: section
       scroll_highlight: true
       before: |
         <li class="toc-logo"><a href="./"><img src="sci-lg-eng-rgb.png"></a></li>

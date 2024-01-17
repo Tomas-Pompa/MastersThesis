@@ -1,10 +1,10 @@
 ## Klasifikace funkcionálních dat
 
-Tento dokument slouží jako podpůrný materiál pro diplomovou práci 
+Tento dokument slouží jako podpůrný materiál pro diplomovou práci:
 
 **Metoda podpůrných vektorů pro funkcionální data**,
 
-jejíž oficiální zadání zní následovně:
+jejíž oficiální zadání zní následovně.
 
 *Zadání*: V mnoha aplikacích naměřená data reprezentují hodnoty nějaké funkce. Proto je
 výhodné, pokud to situace dovolí, pracovat s nimi ve funkcionální podobě, tj. jako s prvky
@@ -16,24 +16,24 @@ simulovaných nebo reálných datech.
 ### Support vector machines pro funkcionální data
 
 Cílem dokumentu bude aplikovat poznatky o metodě podpůrných vektorů (SVM) pro mnohorozměrná data na data funkcionálního typu, tedy nekonečně-rozměrné objekty.
-K tomu využijeme jednak převod (redukci) objektů z nekonečné dimenze na objekty konečné dimenze a následným využitím známých postupů a také modifikaci SVM přímo pro funkcionální data, k čemuž využijeme poznatky o Hilbertových prostorech a skalárním součinu.
+K tomu využijeme zejména převod (redukci) objektů z nekonečné dimenze na objekty konečné dimenze a následným využitím známých postupů z konečných rozměrů. Ukážeme několik možných přístupů.
 
-Dalším cílem bude porovnání jednotlivých metod pro klasifikaci funkcionálních dat na reálných a simulovaných datech. Bylo by dobré vymyslet nějakou zajímavou simulační studii, která bude demonstrovat různá chování uvažovaných metod.
+Dalším cílem bude porovnání jednotlivých metod pro klasifikaci funkcionálních dat na reálných a simulovaných datech. Zaměříme se primárně na simulovaná data a kromě porovnání metod mezi sebou na základě simulační studie se také podíváme na závislost úspěšnosti klasifikace uvažovaných metod na parametrech, které využíváme při generování (bude nás zajímat rozptyl kolem generujících křivek a také rozptyl vertikálního posunutí).
 
 Mezi uvažované klasifikační metody patří:
 
-  - [] $K$ nejbližších sousedů (KNN),
+  - $K$ nejbližších sousedů (KNN),
 
-  - [] logistická regrese (jak obyčejná (LR) tak její funkcionální modifikace (LR_fda)),
+  - logistická regrese (jak obyčejná (LR) tak její funkcionální modifikace (LR_fda)),
 
-  - [] lineární (LDA) a kvadratická (QDA) diskriminační analýza,
+  - lineární (LDA) a kvadratická (QDA) diskriminační analýza,
 
-  - [] rozhodovací stromy (DT),
+  - rozhodovací stromy (DT),
 
-  - [] náhodné lesy (RF) a 
+  - náhodné lesy (RF) a 
 
-  - [] Support Vector Machines.
+  - Support Vector Machines.
 
-Postupně jednotlivé metody projdeme, nejprve na simulovaných datech, a následně budeme konstruovat metodu podpůrných vektorů pro funkcionální data (SVM_fda).
+Postupně jednotlivé metody projdeme, nejprve na simulovaných datech, a následně budeme konstruovat metodu podpůrných vektorů pro funkcionální data.
 
 Základním balíčkem v `R` pro práci s funkcionálními objekty je `fda`. Dalšími užitečnými balíčky budou `MASS`, `e1071`, `fda.usc`, `refund` a další.
