@@ -180,7 +180,7 @@ Rozdělíme data v poměru 30:70 na testovací a trénovací část, abychom moh
 ```{r}
 # rozdeleni na testovaci a trenovaci cast
 set.seed(42)
-split <- sample.split(XXfd$fdnames$reps, SplitRatio = 0.65)
+split <- sample.split(XXfd$fdnames$reps, SplitRatio = 0.7)
 
 # vytvoreni vektoru 0 a 1, 0 pro divky a 1 pro chlapce 
 Y <- rep(c(0, 1), c(n_girls, n_boys))
@@ -2015,7 +2015,7 @@ Hodnota tohoto hyperparametru výrazně ovlivňuje chování a tedy i úspěšno
 # hodnoty z clanku 
 # A. Muñoz, J. González / Pattern Recognition Letters 31 (2010) 511–516
 eps <- 0.01
-C <- 100
+C <- 1 # 100 dava spatne vysledky
 ```
 
 ###### Gaussovké jádro
@@ -2072,6 +2072,7 @@ for(i in 1:dim(data.RKHS)[2]) {
                   kernel = 'radial',
                   type = 'eps-regression',
                   epsilon = eps,
+                  cost = C,
                   gamma = gamma)
   # urceni alpha
   alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
@@ -2124,7 +2125,7 @@ for (kernel_number in 1:3) {
   # sestrojeni modelu
   clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                       type = 'C-classification',
-                      C = C,
+                      cost = C,
                       scale = TRUE,
                       kernel = kernel_type)
   
@@ -2200,6 +2201,7 @@ for (gamma in gamma.cv) {
                     kernel = 'radial',
                     type = 'eps-regression',
                     epsilon = eps,
+                    cost = C,
                     gamma = gamma)
     alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs 
   }
@@ -2240,7 +2242,7 @@ for (gamma in gamma.cv) {
         clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                             type = 'C-classification',
                             scale = TRUE,
-                            C = C,
+                            cost = C,
                             kernel = kernel_type)
         
         # presnost na validacnich datech
@@ -2372,6 +2374,7 @@ for (kernel_number in 1:3) {
                     kernel = 'radial',
                     type = 'eps-regression',
                     epsilon = eps,
+                    cost = C,
                     gamma = gamma)
     # urceni alpha
     alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
@@ -2405,7 +2408,7 @@ for (kernel_number in 1:3) {
   clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                       type = 'C-classification',
                       scale = TRUE,
-                      C = C,
+                      cost = C,
                       kernel = kernel_type)
   
   # presnost na trenovacich datech
@@ -2508,8 +2511,7 @@ for (p in poly.cv) {
                     kernel = 'polynomial',
                     type = 'eps-regression',
                     coef0 = 1,
-                    gamma = 1,
-                    C = 100,
+                    cost = C,
                     epsilon = eps,
                     degree = p)
     alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs 
@@ -2551,7 +2553,7 @@ for (p in poly.cv) {
         clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                             type = 'C-classification',
                             scale = TRUE,
-                            C = C,                    
+                            cost = C,                    
                             coef0 = 1,
                             gamma = 1,
                             kernel = kernel_type)
@@ -2658,7 +2660,7 @@ for (kernel_number in 1:3) {
                     type = 'eps-regression',
                     epsilon = eps,
                     coef0 = 1,
-                    C = C,
+                    cost = C,
                     gamma = 1,
                     degree = p)
     # urceni alpha
@@ -2694,7 +2696,7 @@ for (kernel_number in 1:3) {
                       type = 'C-classification',
                       scale = TRUE,
                       coef0 = 1,
-                      C = C,
+                      cost = C,
                       gamma = 1,
                       kernel = kernel_type)
   
@@ -2797,7 +2799,7 @@ for(i in 1:dim(data.RKHS)[2]) {
                   epsilon = eps,                   
                   coef0 = 1,
                   gamma = 1,
-                  C = C)
+                  cost = C)
   alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs 
 }
 
@@ -2841,7 +2843,7 @@ for(d.RKHS in dimensions) {
                           epsilon = eps,                   
                           coef0 = 1,
                           gamma = 1,
-                          C = C)
+                          cost = C)
       
       # presnost na validacnich datech
       predictions.test <- predict(clf.SVM.RKHS, newdata = data.RKHS.test)
@@ -2934,7 +2936,7 @@ for (kernel_number in 1:3) {
                     epsilon = eps,                   
                     coef0 = 1,
                     gamma = 1,
-                    C = C)
+                    cost = C)
     # urceni alpha
     alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
   }
@@ -2971,7 +2973,7 @@ for (kernel_number in 1:3) {
                       epsilon = eps,                   
                       coef0 = 1,
                       gamma = 1,
-                      C = C)
+                      cost = C)
   
   # presnost na trenovacich datech
   predictions.train <- predict(clf.SVM.RKHS, newdata = data.RKHS.train)
@@ -3017,7 +3019,7 @@ knitr::kable(RESULTS,
              format = 'simple')
 ```
 
-## Simulační studie
+## Simulační studie {#simstudyA1}
 
 V celé předchozí části jsme se zabývali pouze jedním náhodně vygenerovaným souborem funkcí ze dvou klasifikačních tříd, který jsme následně opět náhodně rozdělili na testovací a trénovací část.
 Poté jsme jednotlivé klasifikátory získané pomocí uvažovaných metod ohodnotili na základě testovací a trénovací chybovosti.
@@ -3034,7 +3036,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{si
 set.seed(42)
 
 # pocet simulaci
-n.sim <- 10
+n.sim <- 100
 
 ## list, do ktereho budeme ukladat hodnoty chybovosti
 # ve sloupcich budou metody
@@ -3094,7 +3096,7 @@ set.seed(42)
 
 for(sim in 1:n.sim) {
   # rozdeleni na testovaci a trenovaci cast
-  split <- sample.split(XXfd$fdnames$reps, SplitRatio = 0.65)
+  split <- sample.split(XXfd$fdnames$reps, SplitRatio = 0.7)
   
   Y <- rep(c(0, 1), c(n_girls, n_boys))
   
@@ -3837,7 +3839,7 @@ for(sim in 1:n.sim) {
   
   ## 7.5) SVM + RKHS
   
-  C <- 100
+  C <- 1
   eps <- 0.01
   
   ### Gaussovo jadro
@@ -3897,7 +3899,8 @@ for(sim in 1:n.sim) {
       svm.RKHS <- svm(y ~ x, data = df.svm, 
                       kernel = 'radial',
                       type = 'eps-regression',
-                      epsilon = eps,                   
+                      epsilon = eps, 
+                      cost = C,
                       gamma = gamma)
       alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs 
     }
@@ -3938,7 +3941,7 @@ for(sim in 1:n.sim) {
           clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                               type = 'C-classification',
                               scale = TRUE,
-                              C = C,
+                              cost = C,
                               kernel = kernel_type)
           
           # presnost na validacnich datech
@@ -4023,6 +4026,7 @@ for(sim in 1:n.sim) {
                       kernel = 'radial',
                       type = 'eps-regression',
                       epsilon = eps,
+                      cost = C,
                       gamma = gamma)
       # urceni alpha
       alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
@@ -4056,7 +4060,7 @@ for(sim in 1:n.sim) {
     clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                         type = 'C-classification',
                         scale = TRUE,
-                        C = C,
+                        cost = C,
                         kernel = kernel_type)
     
     # presnost na trenovacich datech
@@ -4135,7 +4139,7 @@ for(sim in 1:n.sim) {
                       epsilon = eps,                   
                       coef0 = 1,
                       gamma = 1,
-                      C = C,
+                      cost = C,
                       degree = p)
       alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs 
     }
@@ -4179,7 +4183,7 @@ for(sim in 1:n.sim) {
                               epsilon = eps,                   
                               coef0 = 1,
                               gamma = 1,
-                              C = C,
+                              cost = C,
                               kernel = kernel_type)
           
           # presnost na validacnich datech
@@ -4267,7 +4271,7 @@ for(sim in 1:n.sim) {
                       epsilon = eps,                   
                       coef0 = 1,
                       gamma = 1,
-                      C = C,
+                      cost = C,
                       degree = p)
       # urceni alpha
       alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
@@ -4304,7 +4308,7 @@ for(sim in 1:n.sim) {
                         epsilon = eps,                   
                         coef0 = 1,
                         gamma = 1,
-                        C = C,
+                        cost = C,
                         kernel = kernel_type)
     
     # presnost na trenovacich datech
@@ -4377,6 +4381,7 @@ for(sim in 1:n.sim) {
     svm.RKHS <- svm(y ~ x, data = df.svm, 
                     kernel = 'linear',
                     type = 'eps-regression',
+                    cost = C,
                     epsilon = eps)
     alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs 
   }
@@ -4417,7 +4422,7 @@ for(sim in 1:n.sim) {
         clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                             type = 'C-classification',
                             scale = TRUE,
-                            C = C,
+                            cost = C,
                             kernel = kernel_type)
         
         # presnost na validacnich datech
@@ -4490,6 +4495,7 @@ for(sim in 1:n.sim) {
       svm.RKHS <- svm(y ~ x, data = df.svm, 
                       kernel = 'linear',
                       type = 'eps-regression',
+                      cost = C,
                       epsilon = eps)
       # urceni alpha
       alpha.RKHS[svm.RKHS$index, i] <- svm.RKHS$coefs # nahrazeni nul koeficienty
@@ -4523,7 +4529,7 @@ for(sim in 1:n.sim) {
     clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                         type = 'C-classification',
                         scale = TRUE,
-                        C = C,
+                        cost = C,
                         kernel = kernel_type)
     
     # presnost na trenovacich datech

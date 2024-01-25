@@ -1,4 +1,4 @@
-# Závislost na parametru $\sigma^2_{shift}$ {#simulace3shift}
+# Závislost na parametru $\sigma_{shift}$ {#simulace3shift}
 
 V této části se budeme zabývat závislostí výsledků ze sekce \@ref(simulace3) na hodnotě $\sigma^2_{shift}$, která definuje rozptyl normálního rozdělení, ze kterého generujeme posun pro generované křivky. Očekáváme, že s rostoucí hodnotou $\sigma^2_{shift}$ se budou výsledky jednotlivých metod zhoršovat a tudíž klasifikace nebude tak úspěšná. Přitom předpokládáme, že metody, které využívají funkcionální podstatu dat, budou více úspěšné v porovnání s klasickými metodami při zvětšující se hodnotě $\sigma^2_{shift}$. V předchozí sekci \@ref(simulace3sigma) jsme se podívali na závislost výsledků na hodnotě $\sigma^2$, tedy na rozptylu normálního rozdělení, ze kterého generujeme náhodné chyby kolem generujících křivek.
 

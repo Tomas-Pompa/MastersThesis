@@ -386,7 +386,7 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
 <p class="caption">(\#fig:unnamed-chunk-19)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.</p>
 </div>
 
-### Výpočet derivací
+## Výpočet derivací
 
 K výpočtu derivace pro funkcionální objekt využijeme v `R` funkci `deriv.fd()` z balíčku `fda`. Jelikož chceme klasifikovat na základě první derivace, volíme argument `Lfdobj = 1`.
 
@@ -395,7 +395,7 @@ K výpočtu derivace pro funkcionální objekt využijeme v `R` funkci `deriv.fd
 XXder <- deriv.fd(XXfd, 1)
 ```
 
-Nyní si vykresleme prvních několik prvních derivací pro obě klasifikační třídy. Všimněme si z obrázku níže, že se opravdu vertikální posun pomocí derivování opravdu podařilo odstranit. Ztratili jsme tím ale do jisté míry rozdílnost mezi křivkami, protože jak z obrázku vyplývá, křivky derivací pro obě třídy se liší primárně až ke konci inzervalu, tedy pro argument v rozmezí přibližně $[5, 6]$.
+Nyní si vykresleme prvních několik prvních derivací pro obě klasifikační třídy. Všimněme si z obrázku níže, že se opravdu vertikální posun pomocí derivování opravdu podařilo odstranit. Ztratili jsme tím ale do jisté míry rozdílnost mezi křivkami, protože jak z obrázku vyplývá, křivky derivací pro obě třídy se liší primárně až ke konci intervalu, tedy pro argument v rozmezí přibližně $[5, 6]$.
 
 
 ```r

@@ -4463,37 +4463,37 @@ Table: (\#tab:unnamed-chunk-112)Souhrnné výsledky použitých metod na simulov
 
                               $\widehat{Err}_{train}$   $\widehat{Err}_{test}$   $\widehat{SD}_{train}$   $\widehat{SD}_{test}$
 ---------------------------  ------------------------  -----------------------  -----------------------  ----------------------
-KNN                                                NA                       NA                       NA                      NA
-LDA                                                NA                       NA                       NA                      NA
-QDA                                                NA                       NA                       NA                      NA
-LR_score                                           NA                       NA                       NA                      NA
-Tree_discr                                         NA                       NA                       NA                      NA
-Tree_score                                         NA                       NA                       NA                      NA
-Tree_Fbasis                                        NA                       NA                       NA                      NA
-RF_discr                                           NA                       NA                       NA                      NA
-RF_score                                           NA                       NA                       NA                      NA
-RF_Fbasis                                          NA                       NA                       NA                      NA
-SVM linear - diskr                                 NA                       NA                       NA                      NA
-SVM poly - diskr                                   NA                       NA                       NA                      NA
-SVM rbf - diskr                                    NA                       NA                       NA                      NA
-SVM linear - PCA                                   NA                       NA                       NA                      NA
-SVM poly - PCA                                     NA                       NA                       NA                      NA
-SVM rbf - PCA                                      NA                       NA                       NA                      NA
-SVM linear - Fbasis                                NA                       NA                       NA                      NA
-SVM poly - Fbasis                                  NA                       NA                       NA                      NA
-SVM rbf - Fbasis                                   NA                       NA                       NA                      NA
-SVM linear - projection                            NA                       NA                       NA                      NA
-SVM poly - projection                              NA                       NA                       NA                      NA
-SVM rbf - projection                               NA                       NA                       NA                      NA
-SVM linear - RKHS - radial                         NA                       NA                       NA                      NA
-SVM poly - RKHS - radial                           NA                       NA                       NA                      NA
-SVM rbf - RKHS - radial                            NA                       NA                       NA                      NA
-SVM linear - RKHS - poly                           NA                       NA                       NA                      NA
-SVM poly - RKHS - poly                             NA                       NA                       NA                      NA
-SVM rbf - RKHS - poly                              NA                       NA                       NA                      NA
-SVM linear - RKHS - linear                         NA                       NA                       NA                      NA
-SVM poly - RKHS - linear                           NA                       NA                       NA                      NA
-SVM rbf - RKHS - linear                            NA                       NA                       NA                      NA
+KNN                                            0.2639                   0.3015                   0.0478                  0.0642
+LDA                                            0.1161                   0.1222                   0.0288                  0.0443
+QDA                                            0.1164                   0.1218                   0.0290                  0.0454
+LR_score                                       0.1154                   0.1252                   0.0279                  0.0475
+Tree_discr                                     0.2890                   0.4555                   0.0757                  0.0703
+Tree_score                                     0.1004                   0.1315                   0.0246                  0.0442
+Tree_Fbasis                                    0.1129                   0.1557                   0.0282                  0.0492
+RF_discr                                       0.0166                   0.2907                   0.0103                  0.0692
+RF_score                                       0.0412                   0.1347                   0.0153                  0.0418
+RF_Fbasis                                      0.0000                   0.1145                   0.0000                  0.0427
+SVM linear - diskr                             0.0894                   0.1107                   0.0251                  0.0463
+SVM poly - diskr                               0.3183                   0.3732                   0.0595                  0.0994
+SVM rbf - diskr                                0.3233                   0.4212                   0.0520                  0.0846
+SVM linear - PCA                               0.1157                   0.1257                   0.0283                  0.0477
+SVM poly - PCA                                 0.1369                   0.1623                   0.0332                  0.0621
+SVM rbf - PCA                                  0.1095                   0.1307                   0.0285                  0.0462
+SVM linear - Fbasis                            0.0017                   0.1750                   0.0053                  0.0592
+SVM poly - Fbasis                              0.0006                   0.2545                   0.0023                  0.1116
+SVM rbf - Fbasis                               0.0030                   0.1465                   0.0048                  0.0487
+SVM linear - projection                        0.0581                   0.1177                   0.0314                  0.0513
+SVM poly - projection                          0.0320                   0.1380                   0.0314                  0.0519
+SVM rbf - projection                           0.0291                   0.1237                   0.0240                  0.0487
+SVM linear - RKHS - radial                     0.0508                   0.1240                   0.0277                  0.0460
+SVM poly - RKHS - radial                       0.0463                   0.1432                   0.0272                  0.0535
+SVM rbf - RKHS - radial                        0.0424                   0.1347                   0.0215                  0.0468
+SVM linear - RKHS - poly                       0.1076                   0.1723                   0.0305                  0.0585
+SVM poly - RKHS - poly                         0.1061                   0.1833                   0.0367                  0.0664
+SVM rbf - RKHS - poly                          0.1016                   0.1712                   0.0306                  0.0510
+SVM linear - RKHS - linear                     0.1151                   0.1980                   0.0363                  0.0594
+SVM poly - RKHS - linear                       0.1175                   0.2080                   0.0341                  0.0619
+SVM rbf - RKHS - linear                        0.1068                   0.1892                   0.0290                  0.0550
 
 V tabulce výše jsou uvedeny všechny vypočtené charakteristiky.
 Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi stálost či míru variability jednotlivých metod.
@@ -4529,9 +4529,6 @@ SIMULACE$train |>
 </div>
 
 
-```
-## Warning: Removed 1 rows containing missing values (`geom_hline()`).
-```
 
 
 ```r
@@ -4562,9 +4559,6 @@ SIMULACE$test |>
 </div>
 
 
-```
-## Warning: Removed 1 rows containing missing values (`geom_hline()`).
-```
 
 Nakonec se podívejme, jaké hodnoty hyperparametrů byly nejčastější volbou.
 

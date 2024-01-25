@@ -26,4 +26,6 @@ rmd_files: # defines the .Rmd files to be included for each output format
          "08-Simulace_4.Rmd",
          "09-Application_1.Rmd",
          "10-Application_2.Rmd",
-         "11-Application_3.Rmd"] # 
+         "11-Application_3.Rmd",
+         "12-Application_4.Rmd",
+         "13-Application_5.Rmd"] # 

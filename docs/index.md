@@ -1,7 +1,7 @@
 --- 
 title: "Diplomová práce"
 author: "Tomáš Pompa"
-date: "17. 01. 2024"
+date: "25. 01. 2024"
 site: bookdown::bookdown_site
 ---
 

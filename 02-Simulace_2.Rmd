@@ -4262,7 +4262,7 @@ save(SIMULACE, CV_RESULTS, file = 'RData/simulace_02.RData')
 
 Nyní spočítáme průměrné testovací a trénovací chybovosti pro jednotlivé klasifikační metody.
 
-```{r eval=T}
+```{r eval=F}
 # dame do vysledne tabulky
 SIMULACE.df <- data.frame(Err.train = apply(SIMULACE$train, 2, mean),
                           Err.test = apply(SIMULACE$test, 2, mean),

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitola 12 Aplikace na reálných datech 4 | Diplomová práce</title>
+  <meta name="description" content="Kapitola 12 Aplikace na reálných datech 4 | Diplomová práce" />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitola 12 Aplikace na reálných datech 4 | Diplomová práce" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitola 12 Aplikace na reálných datech 4 | Diplomová práce" />
+  
+  
+  
+
+<meta name="author" content="Tomáš Pompa" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="aplikace-na-reálných-datech-3.html"/>
+<link rel="next" href="podpůrné-materiály-pro-diplomovou-práci.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/codefolding-lua-1.1/codefolding-lua.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="toc-logo"><a href="./"><img src="sci-lg-eng-rgb.png"></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>SVM pro funkcionální data</a></li>
+<li class="part"><span><b>Simulační studie</b></span></li>
+<li class="chapter" data-level="1" data-path="simulace1.html"><a href="simulace1.html"><i class="fa fa-check"></i><b>1</b> Simulace 1</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="simulace1.html"><a href="simulace1.html#simulace-funkcionálních-dat"><i class="fa fa-check"></i><b>1.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="1.2" data-path="simulace1.html"><a href="simulace1.html#vyhlazení-pozorovaných-křivek"><i class="fa fa-check"></i><b>1.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="1.3" data-path="simulace1.html"><a href="simulace1.html#klasifikace-křivek"><i class="fa fa-check"></i><b>1.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="simulace1.html"><a href="simulace1.html#k-nejbližších-sousedů"><i class="fa fa-check"></i><b>1.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="1.3.2" data-path="simulace1.html"><a href="simulace1.html#lineární-diskriminační-analýza"><i class="fa fa-check"></i><b>1.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="1.3.3" data-path="simulace1.html"><a href="simulace1.html#kvadratická-diskriminační-analýza"><i class="fa fa-check"></i><b>1.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="1.3.4" data-path="simulace1.html"><a href="simulace1.html#logistická-regrese"><i class="fa fa-check"></i><b>1.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="1.3.5" data-path="simulace1.html"><a href="simulace1.html#rozhodovací-stromy"><i class="fa fa-check"></i><b>1.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="1.3.6" data-path="simulace1.html"><a href="simulace1.html#náhodné-lesy"><i class="fa fa-check"></i><b>1.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="1.3.7" data-path="simulace1.html"><a href="simulace1.html#support-vector-machines"><i class="fa fa-check"></i><b>1.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="simulace1.html"><a href="simulace1.html#tabulka-výsledků"><i class="fa fa-check"></i><b>1.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="1.5" data-path="simulace1.html"><a href="simulace1.html#simulační-studie"><i class="fa fa-check"></i><b>1.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="simulace1.html"><a href="simulace1.html#výsledky"><i class="fa fa-check"></i><b>1.5.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="simulace2.html"><a href="simulace2.html"><i class="fa fa-check"></i><b>2</b> Simulace 2</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="simulace2.html"><a href="simulace2.html#simulace-funkcionálních-dat-1"><i class="fa fa-check"></i><b>2.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="2.2" data-path="simulace2.html"><a href="simulace2.html#vyhlazení-pozorovaných-křivek-1"><i class="fa fa-check"></i><b>2.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="2.3" data-path="simulace2.html"><a href="simulace2.html#klasifikace-křivek-1"><i class="fa fa-check"></i><b>2.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="simulace2.html"><a href="simulace2.html#k-nejbližších-sousedů-1"><i class="fa fa-check"></i><b>2.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="2.3.2" data-path="simulace2.html"><a href="simulace2.html#lineární-diskriminační-analýza-1"><i class="fa fa-check"></i><b>2.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="2.3.3" data-path="simulace2.html"><a href="simulace2.html#kvadratická-diskriminační-analýza-1"><i class="fa fa-check"></i><b>2.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="2.3.4" data-path="simulace2.html"><a href="simulace2.html#logistická-regrese-1"><i class="fa fa-check"></i><b>2.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="2.3.5" data-path="simulace2.html"><a href="simulace2.html#rozhodovací-stromy-1"><i class="fa fa-check"></i><b>2.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="2.3.6" data-path="simulace2.html"><a href="simulace2.html#náhodné-lesy-1"><i class="fa fa-check"></i><b>2.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="2.3.7" data-path="simulace2.html"><a href="simulace2.html#support-vector-machines-1"><i class="fa fa-check"></i><b>2.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="simulace2.html"><a href="simulace2.html#tabulka-výsledků-1"><i class="fa fa-check"></i><b>2.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="2.5" data-path="simulace2.html"><a href="simulace2.html#simulační-studie-1"><i class="fa fa-check"></i><b>2.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="simulace2.html"><a href="simulace2.html#výsledky-1"><i class="fa fa-check"></i><b>2.5.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="simulace2sigma.html"><a href="simulace2sigma.html"><i class="fa fa-check"></i><b>3</b> Závislost na parametru <span class="math inline">\(\sigma^2\)</span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="simulace2sigma.html"><a href="simulace2sigma.html#simulace-funkcionálních-dat-2"><i class="fa fa-check"></i><b>3.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="3.2" data-path="simulace2sigma.html"><a href="simulace2sigma.html#vyhlazení-pozorovaných-křivek-2"><i class="fa fa-check"></i><b>3.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="3.3" data-path="simulace2sigma.html"><a href="simulace2sigma.html#klasifikace-křivek-2"><i class="fa fa-check"></i><b>3.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="simulace2sigma.html"><a href="simulace2sigma.html#k-nejbližších-sousedů-2"><i class="fa fa-check"></i><b>3.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="3.3.2" data-path="simulace2sigma.html"><a href="simulace2sigma.html#lineární-diskriminační-analýza-2"><i class="fa fa-check"></i><b>3.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="3.3.3" data-path="simulace2sigma.html"><a href="simulace2sigma.html#kvadratická-diskriminační-analýza-2"><i class="fa fa-check"></i><b>3.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="3.3.4" data-path="simulace2sigma.html"><a href="simulace2sigma.html#support-vector-machines-2"><i class="fa fa-check"></i><b>3.3.4</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="simulace2sigma.html"><a href="simulace2sigma.html#tabulka-výsledků-2"><i class="fa fa-check"></i><b>3.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="3.5" data-path="simulace2sigma.html"><a href="simulace2sigma.html#simulační-studie-2"><i class="fa fa-check"></i><b>3.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="simulace2sigma.html"><a href="simulace2sigma.html#grafický-výstup"><i class="fa fa-check"></i><b>3.5.1</b> Grafický výstup</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="simulace2shift.html"><a href="simulace2shift.html"><i class="fa fa-check"></i><b>4</b> Závislost na parametru <span class="math inline">\(\sigma_{shift}\)</span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="simulace2shift.html"><a href="simulace2shift.html#simulace-funkcionálních-dat-3"><i class="fa fa-check"></i><b>4.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="4.2" data-path="simulace2shift.html"><a href="simulace2shift.html#vyhlazení-pozorovaných-křivek-3"><i class="fa fa-check"></i><b>4.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="4.3" data-path="simulace2shift.html"><a href="simulace2shift.html#klasifikace-křivek-3"><i class="fa fa-check"></i><b>4.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="simulace2shift.html"><a href="simulace2shift.html#k-nejbližších-sousedů-3"><i class="fa fa-check"></i><b>4.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="4.3.2" data-path="simulace2shift.html"><a href="simulace2shift.html#lineární-diskriminační-analýza-3"><i class="fa fa-check"></i><b>4.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="4.3.3" data-path="simulace2shift.html"><a href="simulace2shift.html#kvadratická-diskriminační-analýza-3"><i class="fa fa-check"></i><b>4.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="4.3.4" data-path="simulace2shift.html"><a href="simulace2shift.html#support-vector-machines-3"><i class="fa fa-check"></i><b>4.3.4</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="simulace2shift.html"><a href="simulace2shift.html#tabulka-výsledků-3"><i class="fa fa-check"></i><b>4.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="4.5" data-path="simulace2shift.html"><a href="simulace2shift.html#simulační-studie-3"><i class="fa fa-check"></i><b>4.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="simulace2shift.html"><a href="simulace2shift.html#grafický-výstup-1"><i class="fa fa-check"></i><b>4.5.1</b> Grafický výstup</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulace3.html"><a href="simulace3.html"><i class="fa fa-check"></i><b>5</b> Simulace 3</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="simulace3.html"><a href="simulace3.html#simulace-funkcionálních-dat-4"><i class="fa fa-check"></i><b>5.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="5.2" data-path="simulace3.html"><a href="simulace3.html#vyhlazení-pozorovaných-křivek-4"><i class="fa fa-check"></i><b>5.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="5.3" data-path="simulace3.html"><a href="simulace3.html#klasifikace-křivek-4"><i class="fa fa-check"></i><b>5.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="simulace3.html"><a href="simulace3.html#k-nejbližších-sousedů-4"><i class="fa fa-check"></i><b>5.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="5.3.2" data-path="simulace3.html"><a href="simulace3.html#lineární-diskriminační-analýza-4"><i class="fa fa-check"></i><b>5.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="5.3.3" data-path="simulace3.html"><a href="simulace3.html#kvadratická-diskriminační-analýza-4"><i class="fa fa-check"></i><b>5.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="5.3.4" data-path="simulace3.html"><a href="simulace3.html#logistická-regrese-2"><i class="fa fa-check"></i><b>5.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="5.3.5" data-path="simulace3.html"><a href="simulace3.html#rozhodovací-stromy-2"><i class="fa fa-check"></i><b>5.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="5.3.6" data-path="simulace3.html"><a href="simulace3.html#náhodné-lesy-2"><i class="fa fa-check"></i><b>5.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="5.3.7" data-path="simulace3.html"><a href="simulace3.html#support-vector-machines-4"><i class="fa fa-check"></i><b>5.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="simulace3.html"><a href="simulace3.html#tabulka-výsledků-4"><i class="fa fa-check"></i><b>5.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="5.5" data-path="simulace3.html"><a href="simulace3.html#simulační-studie-4"><i class="fa fa-check"></i><b>5.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="simulace3.html"><a href="simulace3.html#výsledky-2"><i class="fa fa-check"></i><b>5.5.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="simulace3sigma.html"><a href="simulace3sigma.html"><i class="fa fa-check"></i><b>6</b> Závislost na parametru <span class="math inline">\(\sigma^2\)</span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="simulace3sigma.html"><a href="simulace3sigma.html#simulace-funkcionálních-dat-5"><i class="fa fa-check"></i><b>6.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="6.2" data-path="simulace3sigma.html"><a href="simulace3sigma.html#vyhlazení-pozorovaných-křivek-5"><i class="fa fa-check"></i><b>6.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="6.3" data-path="simulace3sigma.html"><a href="simulace3sigma.html#klasifikace-křivek-5"><i class="fa fa-check"></i><b>6.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="simulace3sigma.html"><a href="simulace3sigma.html#k-nejbližších-sousedů-5"><i class="fa fa-check"></i><b>6.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="6.3.2" data-path="simulace3sigma.html"><a href="simulace3sigma.html#lineární-diskriminační-analýza-5"><i class="fa fa-check"></i><b>6.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="6.3.3" data-path="simulace3sigma.html"><a href="simulace3sigma.html#kvadratická-diskriminační-analýza-5"><i class="fa fa-check"></i><b>6.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="6.3.4" data-path="simulace3sigma.html"><a href="simulace3sigma.html#logistická-regrese-3"><i class="fa fa-check"></i><b>6.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="6.3.5" data-path="simulace3sigma.html"><a href="simulace3sigma.html#support-vector-machines-5"><i class="fa fa-check"></i><b>6.3.5</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="simulace3sigma.html"><a href="simulace3sigma.html#tabulka-výsledků-5"><i class="fa fa-check"></i><b>6.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="6.5" data-path="simulace3sigma.html"><a href="simulace3sigma.html#simulační-studie-5"><i class="fa fa-check"></i><b>6.5</b> Simulační studie</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="simulace3shift.html"><a href="simulace3shift.html"><i class="fa fa-check"></i><b>7</b> Závislost na parametru <span class="math inline">\(\sigma_{shift}\)</span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="simulace3shift.html"><a href="simulace3shift.html#simulace-funkcionálních-dat-6"><i class="fa fa-check"></i><b>7.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="7.2" data-path="simulace3shift.html"><a href="simulace3shift.html#vyhlazení-pozorovaných-křivek-6"><i class="fa fa-check"></i><b>7.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="7.3" data-path="simulace3shift.html"><a href="simulace3shift.html#klasifikace-křivek-6"><i class="fa fa-check"></i><b>7.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="simulace3shift.html"><a href="simulace3shift.html#k-nejbližších-sousedů-6"><i class="fa fa-check"></i><b>7.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="7.3.2" data-path="simulace3shift.html"><a href="simulace3shift.html#lineární-diskriminační-analýza-6"><i class="fa fa-check"></i><b>7.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="7.3.3" data-path="simulace3shift.html"><a href="simulace3shift.html#kvadratická-diskriminační-analýza-6"><i class="fa fa-check"></i><b>7.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="7.3.4" data-path="simulace3shift.html"><a href="simulace3shift.html#logistická-regrese-4"><i class="fa fa-check"></i><b>7.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="7.3.5" data-path="simulace3shift.html"><a href="simulace3shift.html#support-vector-machines-6"><i class="fa fa-check"></i><b>7.3.5</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="simulace3shift.html"><a href="simulace3shift.html#tabulka-výsledků-6"><i class="fa fa-check"></i><b>7.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="7.5" data-path="simulace3shift.html"><a href="simulace3shift.html#simulační-studie-6"><i class="fa fa-check"></i><b>7.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="simulace3shift.html"><a href="simulace3shift.html#grafický-výstup-2"><i class="fa fa-check"></i><b>7.5.1</b> Grafický výstup</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="simulace-4.html"><a href="simulace-4.html"><i class="fa fa-check"></i><b>8</b> Simulace 4</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="simulace-4.html"><a href="simulace-4.html#simulace-funkcionálních-dat-7"><i class="fa fa-check"></i><b>8.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="8.2" data-path="simulace-4.html"><a href="simulace-4.html#vyhlazení-pozorovaných-křivek-7"><i class="fa fa-check"></i><b>8.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="8.3" data-path="simulace-4.html"><a href="simulace-4.html#výpočet-derivací"><i class="fa fa-check"></i><b>8.3</b> Výpočet derivací</a></li>
+<li class="chapter" data-level="8.4" data-path="simulace-4.html"><a href="simulace-4.html#klasifikace-křivek-7"><i class="fa fa-check"></i><b>8.4</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="simulace-4.html"><a href="simulace-4.html#k-nejbližších-sousedů-7"><i class="fa fa-check"></i><b>8.4.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="8.4.2" data-path="simulace-4.html"><a href="simulace-4.html#lineární-diskriminační-analýza-7"><i class="fa fa-check"></i><b>8.4.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="8.4.3" data-path="simulace-4.html"><a href="simulace-4.html#kvadratická-diskriminační-analýza-7"><i class="fa fa-check"></i><b>8.4.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="8.4.4" data-path="simulace-4.html"><a href="simulace-4.html#logistická-regrese-5"><i class="fa fa-check"></i><b>8.4.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="8.4.5" data-path="simulace-4.html"><a href="simulace-4.html#rozhodovací-stromy-3"><i class="fa fa-check"></i><b>8.4.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="8.4.6" data-path="simulace-4.html"><a href="simulace-4.html#náhodné-lesy-3"><i class="fa fa-check"></i><b>8.4.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="8.4.7" data-path="simulace-4.html"><a href="simulace-4.html#support-vector-machines-7"><i class="fa fa-check"></i><b>8.4.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="simulace-4.html"><a href="simulace-4.html#tabulka-výsledků-7"><i class="fa fa-check"></i><b>8.5</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="8.6" data-path="simulace-4.html"><a href="simulace-4.html#simulační-studie-7"><i class="fa fa-check"></i><b>8.6</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="simulace-4.html"><a href="simulace-4.html#výsledky-3"><i class="fa fa-check"></i><b>8.6.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>Aplikace na datech</b></span></li>
+<li class="chapter" data-level="9" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html"><i class="fa fa-check"></i><b>9</b> Aplikace na reálných datech 1</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#vyhlazení-pozorovaných-křivek-8"><i class="fa fa-check"></i><b>9.1</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="9.2" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#klasifikace-křivek-8"><i class="fa fa-check"></i><b>9.2</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#k-nejbližších-sousedů-8"><i class="fa fa-check"></i><b>9.2.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="9.2.2" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#lineární-diskriminační-analýza-8"><i class="fa fa-check"></i><b>9.2.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="9.2.3" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#kvadratická-diskriminační-analýza-8"><i class="fa fa-check"></i><b>9.2.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="9.2.4" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#logistická-regrese-6"><i class="fa fa-check"></i><b>9.2.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="9.2.5" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#rozhodovací-stromy-4"><i class="fa fa-check"></i><b>9.2.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="9.2.6" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#náhodné-lesy-4"><i class="fa fa-check"></i><b>9.2.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="9.2.7" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#support-vector-machines-8"><i class="fa fa-check"></i><b>9.2.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#tabulka-výsledků-8"><i class="fa fa-check"></i><b>9.3</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="9.4" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#simstudyA1"><i class="fa fa-check"></i><b>9.4</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="aplikace-na-reálných-datech-1.html"><a href="aplikace-na-reálných-datech-1.html#výsledky-4"><i class="fa fa-check"></i><b>9.4.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html"><i class="fa fa-check"></i><b>10</b> Aplikace na reálných datech 2</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#vyhlazení-pozorovaných-křivek-9"><i class="fa fa-check"></i><b>10.1</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="10.2" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#klasifikace-křivek-9"><i class="fa fa-check"></i><b>10.2</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#k-nejbližších-sousedů-9"><i class="fa fa-check"></i><b>10.2.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="10.2.2" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#lineární-diskriminační-analýza-9"><i class="fa fa-check"></i><b>10.2.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="10.2.3" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#kvadratická-diskriminační-analýza-9"><i class="fa fa-check"></i><b>10.2.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="10.2.4" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#logistická-regrese-7"><i class="fa fa-check"></i><b>10.2.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="10.2.5" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#rozhodovací-stromy-5"><i class="fa fa-check"></i><b>10.2.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="10.2.6" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#náhodné-lesy-5"><i class="fa fa-check"></i><b>10.2.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="10.2.7" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#support-vector-machines-9"><i class="fa fa-check"></i><b>10.2.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#tabulka-výsledků-9"><i class="fa fa-check"></i><b>10.3</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="10.4" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#klasifikace-dalších-fonémů"><i class="fa fa-check"></i><b>10.4</b> Klasifikace dalších fonémů</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="aplikace-na-reálných-datech-2.html"><a href="aplikace-na-reálných-datech-2.html#ao-proti-dcl"><i class="fa fa-check"></i><b>10.4.1</b> <em>ao</em> proti <em>dcl</em></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html"><i class="fa fa-check"></i><b>11</b> Aplikace na reálných datech 3</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#vyhlazení-pozorovaných-křivek-11"><i class="fa fa-check"></i><b>11.1</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="11.2" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#výpočet-derivací-1"><i class="fa fa-check"></i><b>11.2</b> Výpočet derivací</a></li>
+<li class="chapter" data-level="11.3" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#klasifikace-křivek-11"><i class="fa fa-check"></i><b>11.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#k-nejbližších-sousedů-10"><i class="fa fa-check"></i><b>11.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="11.3.2" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#lineární-diskriminační-analýza-11"><i class="fa fa-check"></i><b>11.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="11.3.3" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#kvadratická-diskriminační-analýza-10"><i class="fa fa-check"></i><b>11.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="11.3.4" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#logistická-regrese-9"><i class="fa fa-check"></i><b>11.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="11.3.5" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#rozhodovací-stromy-6"><i class="fa fa-check"></i><b>11.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="11.3.6" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#náhodné-lesy-6"><i class="fa fa-check"></i><b>11.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="11.3.7" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#support-vector-machines-11"><i class="fa fa-check"></i><b>11.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#tabulka-výsledků-11"><i class="fa fa-check"></i><b>11.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="11.5" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#klasA3deriv"><i class="fa fa-check"></i><b>11.5</b> Klasifikace pomocí druhé derivace</a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#k-nejbližších-sousedů-11"><i class="fa fa-check"></i><b>11.5.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="11.5.2" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#lineární-diskriminační-analýza-12"><i class="fa fa-check"></i><b>11.5.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="11.5.3" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#kvadratická-diskriminační-analýza-11"><i class="fa fa-check"></i><b>11.5.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="11.5.4" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#logistická-regrese-10"><i class="fa fa-check"></i><b>11.5.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="11.5.5" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#rozhodovací-stromy-7"><i class="fa fa-check"></i><b>11.5.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="11.5.6" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#náhodné-lesy-7"><i class="fa fa-check"></i><b>11.5.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="11.5.7" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#support-vector-machines-12"><i class="fa fa-check"></i><b>11.5.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#tabulka-výsledků-12"><i class="fa fa-check"></i><b>11.6</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="11.7" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#simstudyA3"><i class="fa fa-check"></i><b>11.7</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="11.7.1" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#simulace-pro-nederivovaná-data"><i class="fa fa-check"></i><b>11.7.1</b> Simulace pro nederivovaná data</a></li>
+<li class="chapter" data-level="11.7.2" data-path="aplikace-na-reálných-datech-3.html"><a href="aplikace-na-reálných-datech-3.html#simulace-pro-derivovaná-data"><i class="fa fa-check"></i><b>11.7.2</b> Simulace pro derivovaná data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="aplikace-na-reálných-datech-4.html"><a href="aplikace-na-reálných-datech-4.html"><i class="fa fa-check"></i><b>12</b> Aplikace na reálných datech 4</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="aplikace-na-reálných-datech-4.html"><a href="aplikace-na-reálných-datech-4.html#handwrit-data"><i class="fa fa-check"></i><b>12.1</b> <code>handwrit</code> data</a></li>
+<li class="chapter" data-level="12.2" data-path="aplikace-na-reálných-datech-4.html"><a href="aplikace-na-reálných-datech-4.html#growth-data"><i class="fa fa-check"></i><b>12.2</b> <code>growth</code> data</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html"><i class="fa fa-check"></i><b>13</b> Podpůrné materiály pro diplomovou práci</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Diplomová práce</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="aplikace-na-reálných-datech-4" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Kapitola 12</span> Aplikace na reálných datech 4<a href="aplikace-na-reálných-datech-4.html#aplikace-na-reálných-datech-4" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>V této části se podíváme podrobněji na klasifikaci pomocí postupu, při kterém nejprve data projektujeme na Reproducing Kernel Hilbert Space definovaný jádrem <span class="math inline">\(K\)</span> a následně pomocí koeficientů této projekce klasifikujeme data pomocí metody SVM. K získání koeficientů projekce se také využívá metoda SVM, avšak její analogie pro řešení regresních preblémů (SVM for regression). Tento postup je podrobněji popsán ve článku<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, jehož autory jsou Muñoz a González.</p>
+<p>Autoři ve svém článku popisují mimo jiné i chování koeficientů z vyjádření pomocí jádrových funkcí (kernel expansion) a zlepšení stability koeficientů pomocí RKHS. Tuto vlastnost si nyní ilustrujme na analogickém příkladě, jako uvádějí autoři.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1369"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1369-1"><a href="aplikace-na-reálných-datech-4.html#cb1369-1" tabindex="-1"></a><span class="fu">library</span>(fda)</span>
+<span id="cb1369-2"><a href="aplikace-na-reálných-datech-4.html#cb1369-2" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1369-3"><a href="aplikace-na-reálných-datech-4.html#cb1369-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1369-4"><a href="aplikace-na-reálných-datech-4.html#cb1369-4" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1369-5"><a href="aplikace-na-reálných-datech-4.html#cb1369-5" tabindex="-1"></a><span class="fu">library</span>(ddalpha)</span>
+<span id="cb1369-6"><a href="aplikace-na-reálných-datech-4.html#cb1369-6" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1369-7"><a href="aplikace-na-reálných-datech-4.html#cb1369-7" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb1369-8"><a href="aplikace-na-reálných-datech-4.html#cb1369-8" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb1369-9"><a href="aplikace-na-reálných-datech-4.html#cb1369-9" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span></code></pre></div>
+</details>
+<div id="handwrit-data" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> <code>handwrit</code> data<a href="aplikace-na-reálných-datech-4.html#handwrit-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Nejprve si načteme data, která představují souřadnice ručně psaných slov <em>fda</em>. Pro naše účely, kdy chceme porovnat dvě různá pozorování, si načtěme pouze první dva záznamy.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1370"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1370-1"><a href="aplikace-na-reálných-datech-4.html#cb1370-1" tabindex="-1"></a><span class="co"># nacteni dat </span></span>
+<span id="cb1370-2"><a href="aplikace-na-reálných-datech-4.html#cb1370-2" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>) <span class="sc">+</span> <span class="dv">10</span></span>
+<span id="cb1370-3"><a href="aplikace-na-reálných-datech-4.html#cb1370-3" tabindex="-1"></a>hand <span class="ot">&lt;-</span> handwrit[, samples, ]</span></code></pre></div>
+</details>
+<p>Pro lepší orientaci si data nejprve vykresleme. Nejprve celkový záznam nápisu <em>fda</em>, následně jednotlivé souřadnice <span class="math inline">\(x\)</span> a <span class="math inline">\(y\)</span> proti času.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1371-1"><a href="aplikace-na-reálných-datech-4.html#cb1371-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(hand[, <span class="dv">1</span>, <span class="dv">1</span>], hand[, <span class="dv">2</span>, <span class="dv">1</span>]),</span>
+<span id="cb1371-2"><a href="aplikace-na-reálných-datech-4.html#cb1371-2" tabindex="-1"></a>                               <span class="at">y =</span> <span class="fu">c</span>(hand[, <span class="dv">1</span>, <span class="dv">2</span>], hand[, <span class="dv">2</span>, <span class="dv">2</span>]),</span>
+<span id="cb1371-3"><a href="aplikace-na-reálných-datech-4.html#cb1371-3" tabindex="-1"></a>                               <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> <span class="dv">1401</span>)),</span>
+<span id="cb1371-4"><a href="aplikace-na-reálných-datech-4.html#cb1371-4" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1371-5"><a href="aplikace-na-reálných-datech-4.html#cb1371-5" tabindex="-1"></a>  <span class="fu">geom_path</span>() <span class="sc">+</span> </span>
+<span id="cb1371-6"><a href="aplikace-na-reálných-datech-4.html#cb1371-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1371-7"><a href="aplikace-na-reálných-datech-4.html#cb1371-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;X&#39;</span>, </span>
+<span id="cb1371-8"><a href="aplikace-na-reálných-datech-4.html#cb1371-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Y&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb1371-9"><a href="aplikace-na-reálných-datech-4.html#cb1371-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb1371-10"><a href="aplikace-na-reálných-datech-4.html#cb1371-10" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>) </span>
+<span id="cb1371-11"><a href="aplikace-na-reálných-datech-4.html#cb1371-11" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(handwritTime, handwritTime),</span>
+<span id="cb1371-12"><a href="aplikace-na-reálných-datech-4.html#cb1371-12" tabindex="-1"></a>                               <span class="at">y =</span> <span class="fu">c</span>(hand[, <span class="dv">1</span>, <span class="dv">1</span>], hand[, <span class="dv">2</span>, <span class="dv">1</span>]),</span>
+<span id="cb1371-13"><a href="aplikace-na-reálných-datech-4.html#cb1371-13" tabindex="-1"></a>                               <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> <span class="dv">1401</span>)),</span>
+<span id="cb1371-14"><a href="aplikace-na-reálných-datech-4.html#cb1371-14" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1371-15"><a href="aplikace-na-reálných-datech-4.html#cb1371-15" tabindex="-1"></a>  <span class="fu">geom_path</span>() <span class="sc">+</span> </span>
+<span id="cb1371-16"><a href="aplikace-na-reálných-datech-4.html#cb1371-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1371-17"><a href="aplikace-na-reálných-datech-4.html#cb1371-17" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>, </span>
+<span id="cb1371-18"><a href="aplikace-na-reálných-datech-4.html#cb1371-18" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;X&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb1371-19"><a href="aplikace-na-reálných-datech-4.html#cb1371-19" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb1371-20"><a href="aplikace-na-reálných-datech-4.html#cb1371-20" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)</span>
+<span id="cb1371-21"><a href="aplikace-na-reálných-datech-4.html#cb1371-21" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(handwritTime, handwritTime),</span>
+<span id="cb1371-22"><a href="aplikace-na-reálných-datech-4.html#cb1371-22" tabindex="-1"></a>                               <span class="at">y =</span> <span class="fu">c</span>(hand[, <span class="dv">1</span>, <span class="dv">2</span>], hand[, <span class="dv">2</span>, <span class="dv">2</span>]),</span>
+<span id="cb1371-23"><a href="aplikace-na-reálných-datech-4.html#cb1371-23" tabindex="-1"></a>                               <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> <span class="dv">1401</span>)),</span>
+<span id="cb1371-24"><a href="aplikace-na-reálných-datech-4.html#cb1371-24" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1371-25"><a href="aplikace-na-reálných-datech-4.html#cb1371-25" tabindex="-1"></a>  <span class="fu">geom_path</span>() <span class="sc">+</span> </span>
+<span id="cb1371-26"><a href="aplikace-na-reálných-datech-4.html#cb1371-26" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1371-27"><a href="aplikace-na-reálných-datech-4.html#cb1371-27" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>, </span>
+<span id="cb1371-28"><a href="aplikace-na-reálných-datech-4.html#cb1371-28" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Y&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb1371-29"><a href="aplikace-na-reálných-datech-4.html#cb1371-29" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb1371-30"><a href="aplikace-na-reálných-datech-4.html#cb1371-30" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)</span>
+<span id="cb1371-31"><a href="aplikace-na-reálných-datech-4.html#cb1371-31" tabindex="-1"></a>(p1 <span class="sc">|</span> p2 <span class="sc">|</span> p3)</span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Nyní se podívejme, jak dopadnou vektory koeficientů <span class="math inline">\(\boldsymbol \alpha_1\)</span>, <span class="math inline">\(\boldsymbol \alpha_2\)</span> z jádrového vyjádření získaného pomocí SVM pro regresi a také jak vypadají <span class="math inline">\(\boldsymbol \lambda_1\)</span>, <span class="math inline">\(\boldsymbol \lambda_2\)</span> pro RKHS reprezentaci. Vektory <span class="math inline">\(\boldsymbol \alpha_1\)</span> a <span class="math inline">\(\boldsymbol \alpha_2\)</span> definují reprezentaci křivek</p>
+<p><span class="math display">\[
+c_l^*(\boldsymbol x) = \sum_{i = 1}^m \alpha_{il} K(\boldsymbol x_i, \boldsymbol x), \quad \forall \boldsymbol x \in \mathcal X,
+\]</span></p>
+<p>kde <span class="math inline">\(\alpha_{il} \in \mathbb R, l= 1, 2.\)</span>. Podobně vektory <span class="math inline">\(\boldsymbol \lambda_1\)</span> a <span class="math inline">\(\boldsymbol \lambda_2\)</span> definují vyjádření křivek v bázi RKHS <span class="math inline">\(\mathcal H_K\)</span></p>
+<p><span class="math display">\[
+c_l^*(\boldsymbol x) = \sum_{j = 1}^d \lambda_{jl}^* \phi_j(\boldsymbol x),
+\]</span></p>
+<p>které můžeme odhadnout z dat pomocí</p>
+<p><span class="math display">\[
+\hat\lambda_{jl}^* = \hat\lambda_{jl} \sum_{i = 1}^m \alpha_{il}\hat\phi_{ji}, \quad j = 1, 2, \dots, \hat d.
+\]</span></p>
+<p>Uvažme Gaussovské jádro s parametrem <span class="math inline">\(\gamma = 0.5\)</span> (analogicky jako ve výše zmíněném článku).</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1372"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1372-1"><a href="aplikace-na-reálných-datech-4.html#cb1372-1" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb1372-2"><a href="aplikace-na-reálných-datech-4.html#cb1372-2" tabindex="-1"></a></span>
+<span id="cb1372-3"><a href="aplikace-na-reálných-datech-4.html#cb1372-3" tabindex="-1"></a><span class="co"># jadro a jadrova matice ... Gaussovske s parametrem gamma</span></span>
+<span id="cb1372-4"><a href="aplikace-na-reálných-datech-4.html#cb1372-4" tabindex="-1"></a>Gauss.kernel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, gamma) {</span>
+<span id="cb1372-5"><a href="aplikace-na-reálných-datech-4.html#cb1372-5" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">exp</span>(<span class="sc">-</span>gamma <span class="sc">*</span> <span class="fu">norm</span>(<span class="fu">c</span>(x <span class="sc">-</span> y) <span class="sc">|&gt;</span> <span class="fu">t</span>(), <span class="at">type =</span> <span class="st">&#39;F&#39;</span>)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb1372-6"><a href="aplikace-na-reálných-datech-4.html#cb1372-6" tabindex="-1"></a>}</span>
+<span id="cb1372-7"><a href="aplikace-na-reálných-datech-4.html#cb1372-7" tabindex="-1"></a></span>
+<span id="cb1372-8"><a href="aplikace-na-reálných-datech-4.html#cb1372-8" tabindex="-1"></a>Kernel.RKHS <span class="ot">&lt;-</span> <span class="cf">function</span>(x, gamma) {</span>
+<span id="cb1372-9"><a href="aplikace-na-reálných-datech-4.html#cb1372-9" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(x), <span class="at">nrow =</span> <span class="fu">length</span>(x))</span>
+<span id="cb1372-10"><a href="aplikace-na-reálných-datech-4.html#cb1372-10" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(K)) {</span>
+<span id="cb1372-11"><a href="aplikace-na-reálných-datech-4.html#cb1372-11" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(K)) {</span>
+<span id="cb1372-12"><a href="aplikace-na-reálných-datech-4.html#cb1372-12" tabindex="-1"></a>      K[i, j] <span class="ot">&lt;-</span> <span class="fu">Gauss.kernel</span>(<span class="at">x =</span> x[i], <span class="at">y =</span> x[j], <span class="at">gamma =</span> gamma)</span>
+<span id="cb1372-13"><a href="aplikace-na-reálných-datech-4.html#cb1372-13" tabindex="-1"></a>    }</span>
+<span id="cb1372-14"><a href="aplikace-na-reálných-datech-4.html#cb1372-14" tabindex="-1"></a>  }</span>
+<span id="cb1372-15"><a href="aplikace-na-reálných-datech-4.html#cb1372-15" tabindex="-1"></a>  <span class="fu">return</span>(K)</span>
+<span id="cb1372-16"><a href="aplikace-na-reálných-datech-4.html#cb1372-16" tabindex="-1"></a>}</span></code></pre></div>
+</details>
+<p>Nyní si spočítejme pomocí funkce <code>svm()</code> z knihovny <code>e1071</code> vektory koeficientů <span class="math inline">\(\boldsymbol \alpha_1\)</span> a <span class="math inline">\(\boldsymbol \alpha_2\)</span>. Uvědomme si, že funkce <code>svm()</code> vrací koeficienty pouze pro podpůrné vektory, pro ostatní jsou tyto koeficienty nulové. Další možností pro získání koeficientů je využít funkci <code>train()</code> z balíčku <code>caret</code> s volbou <code>method = 'svmRadial'</code>. Syntaxe této funkce je poněkud složitější, proto jsme v celém předchozím postupu uvažovali první zmíněnou funkci.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1373-1"><a href="aplikace-na-reálných-datech-4.html#cb1373-1" tabindex="-1"></a><span class="co"># urceni koeficientu alpha z SVM</span></span>
+<span id="cb1373-2"><a href="aplikace-na-reálných-datech-4.html#cb1373-2" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="fu">length</span>(handwritTime),</span>
+<span id="cb1373-3"><a href="aplikace-na-reálných-datech-4.html#cb1373-3" tabindex="-1"></a>                <span class="at">ncol =</span> <span class="fu">length</span>(samples)) <span class="co"># prazdny objekt</span></span>
+<span id="cb1373-4"><a href="aplikace-na-reálných-datech-4.html#cb1373-4" tabindex="-1"></a></span>
+<span id="cb1373-5"><a href="aplikace-na-reálných-datech-4.html#cb1373-5" tabindex="-1"></a><span class="co"># model</span></span>
+<span id="cb1373-6"><a href="aplikace-na-reálných-datech-4.html#cb1373-6" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(samples)) {</span>
+<span id="cb1373-7"><a href="aplikace-na-reálných-datech-4.html#cb1373-7" tabindex="-1"></a>  df.svm <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> handwritTime,</span>
+<span id="cb1373-8"><a href="aplikace-na-reálných-datech-4.html#cb1373-8" tabindex="-1"></a>                       <span class="at">y =</span> hand[, i, <span class="dv">1</span>])</span>
+<span id="cb1373-9"><a href="aplikace-na-reálných-datech-4.html#cb1373-9" tabindex="-1"></a>  svm.RKHS <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> df.svm, </span>
+<span id="cb1373-10"><a href="aplikace-na-reálných-datech-4.html#cb1373-10" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&#39;radial&#39;</span>,</span>
+<span id="cb1373-11"><a href="aplikace-na-reálných-datech-4.html#cb1373-11" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&#39;eps-regression&#39;</span>,</span>
+<span id="cb1373-12"><a href="aplikace-na-reálných-datech-4.html#cb1373-12" tabindex="-1"></a>                  <span class="at">epsilon =</span> <span class="fl">0.03</span>,</span>
+<span id="cb1373-13"><a href="aplikace-na-reálných-datech-4.html#cb1373-13" tabindex="-1"></a>                  <span class="at">gamma =</span> gamma,</span>
+<span id="cb1373-14"><a href="aplikace-na-reálných-datech-4.html#cb1373-14" tabindex="-1"></a>                  <span class="at">cost =</span> <span class="dv">1</span>, </span>
+<span id="cb1373-15"><a href="aplikace-na-reálných-datech-4.html#cb1373-15" tabindex="-1"></a>                  <span class="at">tolerance =</span> <span class="fl">0.001</span>,</span>
+<span id="cb1373-16"><a href="aplikace-na-reálných-datech-4.html#cb1373-16" tabindex="-1"></a>                  <span class="at">shrinking =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1373-17"><a href="aplikace-na-reálných-datech-4.html#cb1373-17" tabindex="-1"></a>                  <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1373-18"><a href="aplikace-na-reálných-datech-4.html#cb1373-18" tabindex="-1"></a>  <span class="co"># alpha[svm.RKHS$index, i] &lt;- svm.RKHS$coefs # nahrazeni nul koeficienty</span></span>
+<span id="cb1373-19"><a href="aplikace-na-reálných-datech-4.html#cb1373-19" tabindex="-1"></a>  svm.RKHS <span class="ot">&lt;-</span> <span class="fu">train</span>(y <span class="sc">~</span> x, <span class="at">data =</span> df.svm,</span>
+<span id="cb1373-20"><a href="aplikace-na-reálných-datech-4.html#cb1373-20" tabindex="-1"></a>                    <span class="at">method =</span> <span class="st">&#39;svmRadial&#39;</span>,</span>
+<span id="cb1373-21"><a href="aplikace-na-reálných-datech-4.html#cb1373-21" tabindex="-1"></a>                    <span class="at">metric =</span> <span class="st">&quot;RMSE&quot;</span>, </span>
+<span id="cb1373-22"><a href="aplikace-na-reálných-datech-4.html#cb1373-22" tabindex="-1"></a>                    <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&#39;center&#39;</span>, <span class="st">&#39;scale&#39;</span>),</span>
+<span id="cb1373-23"><a href="aplikace-na-reálných-datech-4.html#cb1373-23" tabindex="-1"></a>                    <span class="co"># trControl = trainControl(</span></span>
+<span id="cb1373-24"><a href="aplikace-na-reálných-datech-4.html#cb1373-24" tabindex="-1"></a>                    <span class="co">#   method = &quot;repeatedcv&quot;, </span></span>
+<span id="cb1373-25"><a href="aplikace-na-reálných-datech-4.html#cb1373-25" tabindex="-1"></a>                    <span class="co">#   number = 5, </span></span>
+<span id="cb1373-26"><a href="aplikace-na-reálných-datech-4.html#cb1373-26" tabindex="-1"></a>                    <span class="co">#   repeats = 2, </span></span>
+<span id="cb1373-27"><a href="aplikace-na-reálných-datech-4.html#cb1373-27" tabindex="-1"></a>                    <span class="co">#   verboseIter = FALSE</span></span>
+<span id="cb1373-28"><a href="aplikace-na-reálných-datech-4.html#cb1373-28" tabindex="-1"></a>                    <span class="co">#   )</span></span>
+<span id="cb1373-29"><a href="aplikace-na-reálných-datech-4.html#cb1373-29" tabindex="-1"></a>                    <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;none&quot;</span>),   </span>
+<span id="cb1373-30"><a href="aplikace-na-reálných-datech-4.html#cb1373-30" tabindex="-1"></a>                    <span class="co"># Telling caret not to re-tune</span></span>
+<span id="cb1373-31"><a href="aplikace-na-reálných-datech-4.html#cb1373-31" tabindex="-1"></a>                    <span class="at">tuneGrid =</span> <span class="fu">data.frame</span>(<span class="at">sigma =</span> <span class="dv">19</span>, <span class="at">C =</span> <span class="dv">1000</span>)   </span>
+<span id="cb1373-32"><a href="aplikace-na-reálných-datech-4.html#cb1373-32" tabindex="-1"></a>                    <span class="co"># Specifying the parameters</span></span>
+<span id="cb1373-33"><a href="aplikace-na-reálných-datech-4.html#cb1373-33" tabindex="-1"></a>                    )</span>
+<span id="cb1373-34"><a href="aplikace-na-reálných-datech-4.html#cb1373-34" tabindex="-1"></a>  alpha[svm.RKHS<span class="sc">$</span>finalModel<span class="sc">@</span>alphaindex, i] <span class="ot">&lt;-</span> svm.RKHS<span class="sc">$</span>finalModel<span class="sc">@</span>alpha <span class="sc">*</span></span>
+<span id="cb1373-35"><a href="aplikace-na-reálných-datech-4.html#cb1373-35" tabindex="-1"></a>    svm.RKHS<span class="sc">$</span>finalModel<span class="sc">@</span>scaling<span class="sc">$</span>y.scale<span class="sc">$</span><span class="st">`</span><span class="at">scaled:scale</span><span class="st">`</span></span>
+<span id="cb1373-36"><a href="aplikace-na-reálných-datech-4.html#cb1373-36" tabindex="-1"></a>}</span></code></pre></div>
+</details>
+<p>Vykresleme si pro lepší představu odhad křivky (červeně) společně s pozorovanou křivkou (modře).</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1374"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1374-1"><a href="aplikace-na-reálných-datech-4.html#cb1374-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> handwritTime,</span>
+<span id="cb1374-2"><a href="aplikace-na-reálných-datech-4.html#cb1374-2" tabindex="-1"></a>           <span class="at">y =</span> svm.RKHS<span class="sc">$</span>finalModel<span class="sc">@</span>fitted <span class="sc">*</span> </span>
+<span id="cb1374-3"><a href="aplikace-na-reálných-datech-4.html#cb1374-3" tabindex="-1"></a>             svm.RKHS<span class="sc">$</span>finalModel<span class="sc">@</span>scaling<span class="sc">$</span>y.scale<span class="sc">$</span><span class="st">`</span><span class="at">scaled:scale</span><span class="st">`</span>,</span>
+<span id="cb1374-4"><a href="aplikace-na-reálných-datech-4.html#cb1374-4" tabindex="-1"></a>           <span class="at">line =</span> <span class="st">&#39;estimate&#39;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1374-5"><a href="aplikace-na-reálných-datech-4.html#cb1374-5" tabindex="-1"></a>  <span class="fu">rbind</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb1374-6"><a href="aplikace-na-reálných-datech-4.html#cb1374-6" tabindex="-1"></a>    <span class="at">x =</span> handwritTime,</span>
+<span id="cb1374-7"><a href="aplikace-na-reálných-datech-4.html#cb1374-7" tabindex="-1"></a>    <span class="at">y =</span> hand[, i, <span class="dv">1</span>],</span>
+<span id="cb1374-8"><a href="aplikace-na-reálných-datech-4.html#cb1374-8" tabindex="-1"></a>    <span class="at">line =</span> <span class="st">&#39;sample&#39;</span></span>
+<span id="cb1374-9"><a href="aplikace-na-reálných-datech-4.html#cb1374-9" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb1374-10"><a href="aplikace-na-reálných-datech-4.html#cb1374-10" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y, <span class="at">col =</span> line)) <span class="sc">+</span></span>
+<span id="cb1374-11"><a href="aplikace-na-reálných-datech-4.html#cb1374-11" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb1374-12"><a href="aplikace-na-reálných-datech-4.html#cb1374-12" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb1374-13"><a href="aplikace-na-reálných-datech-4.html#cb1374-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;bottom&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb1374-14"><a href="aplikace-na-reálných-datech-4.html#cb1374-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>, <span class="at">y =</span> <span class="st">&#39;X&#39;</span>, <span class="at">col =</span> <span class="st">&#39;Curve&#39;</span>)</span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="12-Application_4_files/figure-html/unnamed-chunk-8-1.png" alt="Porovnání pozorované a odhadnuté křivky." width="672" />
+<p class="caption">
+Obrázek 3.2: Porovnání pozorované a odhadnuté křivky.
+</p>
+</div>
+<p>Podívejme se nyní konečně na hodnoty <span class="math inline">\(\boldsymbol \alpha_1\)</span> a <span class="math inline">\(\boldsymbol \alpha_2\)</span> pro dvě pozorování.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1375-1"><a href="aplikace-na-reálných-datech-4.html#cb1375-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">alpha =</span> <span class="fu">c</span>(alpha[, <span class="dv">1</span>], alpha[, <span class="dv">2</span>]),</span>
+<span id="cb1375-2"><a href="aplikace-na-reálných-datech-4.html#cb1375-2" tabindex="-1"></a>           <span class="at">Time =</span> <span class="fu">c</span>(handwritTime, handwritTime),</span>
+<span id="cb1375-3"><a href="aplikace-na-reálných-datech-4.html#cb1375-3" tabindex="-1"></a>           <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> <span class="fu">length</span>(handwritTime))) <span class="sc">|&gt;</span></span>
+<span id="cb1375-4"><a href="aplikace-na-reálných-datech-4.html#cb1375-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">xend =</span> Time, <span class="at">x =</span> Time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> alpha, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1375-5"><a href="aplikace-na-reálných-datech-4.html#cb1375-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>() <span class="sc">+</span> </span>
+<span id="cb1375-6"><a href="aplikace-na-reálných-datech-4.html#cb1375-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1375-7"><a href="aplikace-na-reálných-datech-4.html#cb1375-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
+<span id="cb1375-8"><a href="aplikace-na-reálných-datech-4.html#cb1375-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(<span class="fu">bold</span>(alpha))[i])) </span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Podívejme se nyní na hodnoty <span class="math inline">\(\boldsymbol \lambda_1\)</span> a <span class="math inline">\(\boldsymbol \lambda_2\)</span> pro dvě pozorování.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1376"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1376-1"><a href="aplikace-na-reálných-datech-4.html#cb1376-1" tabindex="-1"></a><span class="co"># spocitame matici K</span></span>
+<span id="cb1376-2"><a href="aplikace-na-reálných-datech-4.html#cb1376-2" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">Kernel.RKHS</span>(handwritTime, <span class="at">gamma =</span> gamma)</span>
+<span id="cb1376-3"><a href="aplikace-na-reálných-datech-4.html#cb1376-3" tabindex="-1"></a></span>
+<span id="cb1376-4"><a href="aplikace-na-reálných-datech-4.html#cb1376-4" tabindex="-1"></a><span class="co"># urcime vlastni cisla a vektory</span></span>
+<span id="cb1376-5"><a href="aplikace-na-reálných-datech-4.html#cb1376-5" tabindex="-1"></a>Eig <span class="ot">&lt;-</span> <span class="fu">eigen</span>(K)</span>
+<span id="cb1376-6"><a href="aplikace-na-reálných-datech-4.html#cb1376-6" tabindex="-1"></a>eig.vals <span class="ot">&lt;-</span> Eig<span class="sc">$</span>values</span>
+<span id="cb1376-7"><a href="aplikace-na-reálných-datech-4.html#cb1376-7" tabindex="-1"></a>eig.vectors <span class="ot">&lt;-</span> Eig<span class="sc">$</span>vectors</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1377-1"><a href="aplikace-na-reálných-datech-4.html#cb1377-1" tabindex="-1"></a><span class="co"># d</span></span>
+<span id="cb1377-2"><a href="aplikace-na-reálných-datech-4.html#cb1377-2" tabindex="-1"></a>d.RKHS <span class="ot">&lt;-</span> <span class="fu">rankMM</span>(K)</span>
+<span id="cb1377-3"><a href="aplikace-na-reálných-datech-4.html#cb1377-3" tabindex="-1"></a></span>
+<span id="cb1377-4"><a href="aplikace-na-reálných-datech-4.html#cb1377-4" tabindex="-1"></a><span class="co"># urceni vektoru lambda</span></span>
+<span id="cb1377-5"><a href="aplikace-na-reálných-datech-4.html#cb1377-5" tabindex="-1"></a>Lambda.RKHS <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, </span>
+<span id="cb1377-6"><a href="aplikace-na-reálných-datech-4.html#cb1377-6" tabindex="-1"></a>                      <span class="at">ncol =</span> <span class="fu">dim</span>(hand)[<span class="dv">2</span>], </span>
+<span id="cb1377-7"><a href="aplikace-na-reálných-datech-4.html#cb1377-7" tabindex="-1"></a>                      <span class="at">nrow =</span> d.RKHS) <span class="co"># vytvoreni prazdneho objektu</span></span>
+<span id="cb1377-8"><a href="aplikace-na-reálných-datech-4.html#cb1377-8" tabindex="-1"></a></span>
+<span id="cb1377-9"><a href="aplikace-na-reálných-datech-4.html#cb1377-9" tabindex="-1"></a><span class="co"># vypocet reprezentace</span></span>
+<span id="cb1377-10"><a href="aplikace-na-reálných-datech-4.html#cb1377-10" tabindex="-1"></a>Lambda.RKHS[, <span class="dv">1</span>] <span class="ot">&lt;-</span> (<span class="fu">t</span>(eig.vectors[, <span class="dv">1</span><span class="sc">:</span>d.RKHS]) <span class="sc">%*%</span> alpha[, <span class="dv">1</span>]) <span class="sc">*</span></span>
+<span id="cb1377-11"><a href="aplikace-na-reálných-datech-4.html#cb1377-11" tabindex="-1"></a>  eig.vals[<span class="dv">1</span><span class="sc">:</span>d.RKHS]</span>
+<span id="cb1377-12"><a href="aplikace-na-reálných-datech-4.html#cb1377-12" tabindex="-1"></a>Lambda.RKHS[, <span class="dv">2</span>] <span class="ot">&lt;-</span> (<span class="fu">t</span>(eig.vectors[, <span class="dv">1</span><span class="sc">:</span>d.RKHS]) <span class="sc">%*%</span> alpha[, <span class="dv">2</span>]) <span class="sc">*</span></span>
+<span id="cb1377-13"><a href="aplikace-na-reálných-datech-4.html#cb1377-13" tabindex="-1"></a>  eig.vals[<span class="dv">1</span><span class="sc">:</span>d.RKHS]</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1378"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1378-1"><a href="aplikace-na-reálných-datech-4.html#cb1378-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">lambda =</span> <span class="fu">c</span>(Lambda.RKHS[, <span class="dv">1</span>], Lambda.RKHS[, <span class="dv">2</span>]),</span>
+<span id="cb1378-2"><a href="aplikace-na-reálných-datech-4.html#cb1378-2" tabindex="-1"></a>           <span class="at">Time =</span> <span class="fu">c</span>(handwritTime, handwritTime),</span>
+<span id="cb1378-3"><a href="aplikace-na-reálných-datech-4.html#cb1378-3" tabindex="-1"></a>           <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> <span class="fu">length</span>(handwritTime))) <span class="sc">|&gt;</span></span>
+<span id="cb1378-4"><a href="aplikace-na-reálných-datech-4.html#cb1378-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">xend =</span> Time, <span class="at">x =</span> Time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> lambda, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1378-5"><a href="aplikace-na-reálných-datech-4.html#cb1378-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>() <span class="sc">+</span> </span>
+<span id="cb1378-6"><a href="aplikace-na-reálných-datech-4.html#cb1378-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1378-7"><a href="aplikace-na-reálných-datech-4.html#cb1378-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
+<span id="cb1378-8"><a href="aplikace-na-reálných-datech-4.html#cb1378-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(<span class="fu">bold</span>(lambda))[i])) <span class="sc">+</span></span>
+<span id="cb1378-9"><a href="aplikace-na-reálných-datech-4.html#cb1378-9" tabindex="-1"></a>  <span class="fu">xlim</span>(handwritTime[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>] <span class="sc">|&gt;</span> <span class="fu">range</span>()) <span class="sc">+</span> </span>
+<span id="cb1378-10"><a href="aplikace-na-reálných-datech-4.html#cb1378-10" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.01</span>, <span class="fl">0.01</span>)) <span class="sc">+</span> </span>
+<span id="cb1378-11"><a href="aplikace-na-reálných-datech-4.html#cb1378-11" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Sample)</span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Nakonec si vykresleme rozdíly.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1379"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1379-1"><a href="aplikace-na-reálných-datech-4.html#cb1379-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">lambda =</span> <span class="fu">c</span>(Lambda.RKHS[, <span class="dv">1</span>] <span class="sc">-</span> Lambda.RKHS[, <span class="dv">2</span>]),</span>
+<span id="cb1379-2"><a href="aplikace-na-reálných-datech-4.html#cb1379-2" tabindex="-1"></a>           <span class="at">Time =</span> <span class="fu">c</span>(handwritTime)) <span class="sc">|&gt;</span></span>
+<span id="cb1379-3"><a href="aplikace-na-reálných-datech-4.html#cb1379-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">xend =</span> Time, <span class="at">x =</span> Time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> lambda)) <span class="sc">+</span> </span>
+<span id="cb1379-4"><a href="aplikace-na-reálných-datech-4.html#cb1379-4" tabindex="-1"></a>  <span class="fu">geom_segment</span>() <span class="sc">+</span> </span>
+<span id="cb1379-5"><a href="aplikace-na-reálných-datech-4.html#cb1379-5" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1379-6"><a href="aplikace-na-reálných-datech-4.html#cb1379-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
+<span id="cb1379-7"><a href="aplikace-na-reálných-datech-4.html#cb1379-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(<span class="fu">bold</span>(lambda))[<span class="dv">1</span>] <span class="sc">-</span> <span class="fu">widehat</span>(<span class="fu">bold</span>(lambda))[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb1379-8"><a href="aplikace-na-reálných-datech-4.html#cb1379-8" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.01</span>, <span class="fl">0.01</span>)) <span class="sc">+</span> </span>
+<span id="cb1379-9"><a href="aplikace-na-reálných-datech-4.html#cb1379-9" tabindex="-1"></a>  <span class="fu">xlim</span>(handwritTime[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>] <span class="sc">|&gt;</span> <span class="fu">range</span>())</span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="growth-data" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> <code>growth</code> data<a href="aplikace-na-reálných-datech-4.html#growth-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Podívejme se nyní ještě na tutéž analýzu, ale z pohledu dat <code>growth</code>.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1380-1"><a href="aplikace-na-reálných-datech-4.html#cb1380-1" tabindex="-1"></a><span class="co"># nacteni dat </span></span>
+<span id="cb1380-2"><a href="aplikace-na-reálných-datech-4.html#cb1380-2" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">54</span>, <span class="dv">55</span>) <span class="sc">-</span> <span class="dv">4</span></span>
+<span id="cb1380-3"><a href="aplikace-na-reálných-datech-4.html#cb1380-3" tabindex="-1"></a>dataf <span class="ot">&lt;-</span> <span class="fu">dataf.growth</span>()</span>
+<span id="cb1380-4"><a href="aplikace-na-reálných-datech-4.html#cb1380-4" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> dataf<span class="sc">$</span>dataf[[samples[<span class="dv">1</span>]]]<span class="sc">$</span>args</span>
+<span id="cb1380-5"><a href="aplikace-na-reálných-datech-4.html#cb1380-5" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> dataf<span class="sc">$</span>dataf[[samples[<span class="dv">2</span>]]]<span class="sc">$</span>args</span>
+<span id="cb1380-6"><a href="aplikace-na-reálných-datech-4.html#cb1380-6" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> dataf<span class="sc">$</span>dataf[[samples[<span class="dv">1</span>]]]<span class="sc">$</span>vals</span>
+<span id="cb1380-7"><a href="aplikace-na-reálných-datech-4.html#cb1380-7" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> dataf<span class="sc">$</span>dataf[[samples[<span class="dv">2</span>]]]<span class="sc">$</span>vals</span>
+<span id="cb1380-8"><a href="aplikace-na-reálných-datech-4.html#cb1380-8" tabindex="-1"></a>data.gr <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t =</span> t1, <span class="at">H1 =</span> y1, <span class="at">H2 =</span> y2)</span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1381-1"><a href="aplikace-na-reálných-datech-4.html#cb1381-1" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb1381-2"><a href="aplikace-na-reálných-datech-4.html#cb1381-2" tabindex="-1"></a></span>
+<span id="cb1381-3"><a href="aplikace-na-reálných-datech-4.html#cb1381-3" tabindex="-1"></a><span class="co"># jadro a jadrova matice ... Gaussovske s parametrem gamma</span></span>
+<span id="cb1381-4"><a href="aplikace-na-reálných-datech-4.html#cb1381-4" tabindex="-1"></a>Gauss.kernel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, gamma) {</span>
+<span id="cb1381-5"><a href="aplikace-na-reálných-datech-4.html#cb1381-5" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">exp</span>(<span class="sc">-</span>gamma <span class="sc">*</span> <span class="fu">norm</span>(<span class="fu">c</span>(x <span class="sc">-</span> y) <span class="sc">|&gt;</span> <span class="fu">t</span>(), <span class="at">type =</span> <span class="st">&#39;F&#39;</span>)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb1381-6"><a href="aplikace-na-reálných-datech-4.html#cb1381-6" tabindex="-1"></a>}</span>
+<span id="cb1381-7"><a href="aplikace-na-reálných-datech-4.html#cb1381-7" tabindex="-1"></a></span>
+<span id="cb1381-8"><a href="aplikace-na-reálných-datech-4.html#cb1381-8" tabindex="-1"></a>Kernel.RKHS <span class="ot">&lt;-</span> <span class="cf">function</span>(x, gamma) {</span>
+<span id="cb1381-9"><a href="aplikace-na-reálných-datech-4.html#cb1381-9" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(x), <span class="at">nrow =</span> <span class="fu">length</span>(x))</span>
+<span id="cb1381-10"><a href="aplikace-na-reálných-datech-4.html#cb1381-10" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(K)) {</span>
+<span id="cb1381-11"><a href="aplikace-na-reálných-datech-4.html#cb1381-11" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(K)) {</span>
+<span id="cb1381-12"><a href="aplikace-na-reálných-datech-4.html#cb1381-12" tabindex="-1"></a>      K[i, j] <span class="ot">&lt;-</span> <span class="fu">Gauss.kernel</span>(<span class="at">x =</span> x[i], <span class="at">y =</span> x[j], <span class="at">gamma =</span> gamma)</span>
+<span id="cb1381-13"><a href="aplikace-na-reálných-datech-4.html#cb1381-13" tabindex="-1"></a>    }</span>
+<span id="cb1381-14"><a href="aplikace-na-reálných-datech-4.html#cb1381-14" tabindex="-1"></a>  }</span>
+<span id="cb1381-15"><a href="aplikace-na-reálných-datech-4.html#cb1381-15" tabindex="-1"></a>  <span class="fu">return</span>(K)</span>
+<span id="cb1381-16"><a href="aplikace-na-reálných-datech-4.html#cb1381-16" tabindex="-1"></a>}</span></code></pre></div>
+</details>
+<p>Nyní si spočítejme pomocí funkce <code>svm()</code> z knihovny <code>e1071</code> vektory koeficientů <span class="math inline">\(\boldsymbol \alpha_1\)</span> a <span class="math inline">\(\boldsymbol \alpha_2\)</span>. Uvědomme si, že funkce <code>svm()</code> vrací koeficienty pouze pro podpůrné vektory, pro ostatní jsou tyto koeficienty nulové.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1382"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1382-1"><a href="aplikace-na-reálných-datech-4.html#cb1382-1" tabindex="-1"></a><span class="co"># urceni koeficientu alpha z SVM</span></span>
+<span id="cb1382-2"><a href="aplikace-na-reálných-datech-4.html#cb1382-2" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="fu">length</span>(data.gr<span class="sc">$</span>t),</span>
+<span id="cb1382-3"><a href="aplikace-na-reálných-datech-4.html#cb1382-3" tabindex="-1"></a>                <span class="at">ncol =</span> <span class="dv">2</span>) <span class="co"># prazdny objekt</span></span>
+<span id="cb1382-4"><a href="aplikace-na-reálných-datech-4.html#cb1382-4" tabindex="-1"></a></span>
+<span id="cb1382-5"><a href="aplikace-na-reálných-datech-4.html#cb1382-5" tabindex="-1"></a><span class="co"># model</span></span>
+<span id="cb1382-6"><a href="aplikace-na-reálných-datech-4.html#cb1382-6" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb1382-7"><a href="aplikace-na-reálných-datech-4.html#cb1382-7" tabindex="-1"></a>  df.svm <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> data.gr<span class="sc">$</span>t,</span>
+<span id="cb1382-8"><a href="aplikace-na-reálných-datech-4.html#cb1382-8" tabindex="-1"></a>                       <span class="at">y =</span> data.gr[, i <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb1382-9"><a href="aplikace-na-reálných-datech-4.html#cb1382-9" tabindex="-1"></a>  svm.RKHS <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> df.svm, </span>
+<span id="cb1382-10"><a href="aplikace-na-reálných-datech-4.html#cb1382-10" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&#39;radial&#39;</span>,</span>
+<span id="cb1382-11"><a href="aplikace-na-reálných-datech-4.html#cb1382-11" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&#39;eps-regression&#39;</span>,</span>
+<span id="cb1382-12"><a href="aplikace-na-reálných-datech-4.html#cb1382-12" tabindex="-1"></a>                  <span class="at">epsilon =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1382-13"><a href="aplikace-na-reálných-datech-4.html#cb1382-13" tabindex="-1"></a>                  <span class="at">gamma =</span> gamma,</span>
+<span id="cb1382-14"><a href="aplikace-na-reálných-datech-4.html#cb1382-14" tabindex="-1"></a>                  <span class="at">cost =</span> <span class="dv">100000</span>, </span>
+<span id="cb1382-15"><a href="aplikace-na-reálných-datech-4.html#cb1382-15" tabindex="-1"></a>                  <span class="at">tolerance =</span> <span class="fl">0.001</span>,</span>
+<span id="cb1382-16"><a href="aplikace-na-reálných-datech-4.html#cb1382-16" tabindex="-1"></a>                  <span class="at">shrinking =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1382-17"><a href="aplikace-na-reálných-datech-4.html#cb1382-17" tabindex="-1"></a>                  <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1382-18"><a href="aplikace-na-reálných-datech-4.html#cb1382-18" tabindex="-1"></a>  <span class="co"># svm.RKHS &lt;- train(y ~ x, data = df.svm,</span></span>
+<span id="cb1382-19"><a href="aplikace-na-reálných-datech-4.html#cb1382-19" tabindex="-1"></a>  <span class="co">#                   method = &#39;svmLinear&#39;)</span></span>
+<span id="cb1382-20"><a href="aplikace-na-reálných-datech-4.html#cb1382-20" tabindex="-1"></a>  <span class="co"># urceni alpha</span></span>
+<span id="cb1382-21"><a href="aplikace-na-reálných-datech-4.html#cb1382-21" tabindex="-1"></a>  <span class="co"># b &lt;- - svm.RKHS$rho # rho ... the negative intercept</span></span>
+<span id="cb1382-22"><a href="aplikace-na-reálných-datech-4.html#cb1382-22" tabindex="-1"></a>  <span class="co"># betas &lt;- svm.RKHS$coefs</span></span>
+<span id="cb1382-23"><a href="aplikace-na-reálných-datech-4.html#cb1382-23" tabindex="-1"></a>  <span class="co"># alphas &lt;- betas + b #/ Gauss.kernel()</span></span>
+<span id="cb1382-24"><a href="aplikace-na-reálných-datech-4.html#cb1382-24" tabindex="-1"></a>  alpha[svm.RKHS<span class="sc">$</span>index, i] <span class="ot">&lt;-</span> svm.RKHS<span class="sc">$</span>coefs <span class="co"># nahrazeni nul koeficienty</span></span>
+<span id="cb1382-25"><a href="aplikace-na-reálných-datech-4.html#cb1382-25" tabindex="-1"></a>}</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1383-1"><a href="aplikace-na-reálných-datech-4.html#cb1383-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">alpha =</span> <span class="fu">c</span>(alpha[, <span class="dv">1</span>], alpha[, <span class="dv">2</span>]),</span>
+<span id="cb1383-2"><a href="aplikace-na-reálných-datech-4.html#cb1383-2" tabindex="-1"></a>           <span class="at">Time =</span> <span class="fu">c</span>(data.gr<span class="sc">$</span>t, data.gr<span class="sc">$</span>t),</span>
+<span id="cb1383-3"><a href="aplikace-na-reálných-datech-4.html#cb1383-3" tabindex="-1"></a>           <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> <span class="fu">length</span>(data.gr<span class="sc">$</span>t))) <span class="sc">|&gt;</span></span>
+<span id="cb1383-4"><a href="aplikace-na-reálných-datech-4.html#cb1383-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">xend =</span> Time, <span class="at">x =</span> Time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> alpha, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1383-5"><a href="aplikace-na-reálných-datech-4.html#cb1383-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>() <span class="sc">+</span> </span>
+<span id="cb1383-6"><a href="aplikace-na-reálných-datech-4.html#cb1383-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1383-7"><a href="aplikace-na-reálných-datech-4.html#cb1383-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Time&#39;</span>,</span>
+<span id="cb1383-8"><a href="aplikace-na-reálných-datech-4.html#cb1383-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(<span class="fu">bold</span>(alpha))[i])) </span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Podívejme se nyní na hodnoty <span class="math inline">\(\boldsymbol \lambda_1\)</span> a <span class="math inline">\(\boldsymbol \lambda_2\)</span> pro dvě pozorování.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1384"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1384-1"><a href="aplikace-na-reálných-datech-4.html#cb1384-1" tabindex="-1"></a><span class="co"># spocitame matici K</span></span>
+<span id="cb1384-2"><a href="aplikace-na-reálných-datech-4.html#cb1384-2" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">Kernel.RKHS</span>(data.gr<span class="sc">$</span>t, <span class="at">gamma =</span> gamma)</span>
+<span id="cb1384-3"><a href="aplikace-na-reálných-datech-4.html#cb1384-3" tabindex="-1"></a></span>
+<span id="cb1384-4"><a href="aplikace-na-reálných-datech-4.html#cb1384-4" tabindex="-1"></a><span class="co"># urcime vlastni cisla a vektory</span></span>
+<span id="cb1384-5"><a href="aplikace-na-reálných-datech-4.html#cb1384-5" tabindex="-1"></a>Eig <span class="ot">&lt;-</span> <span class="fu">eigen</span>(K)</span>
+<span id="cb1384-6"><a href="aplikace-na-reálných-datech-4.html#cb1384-6" tabindex="-1"></a>eig.vals <span class="ot">&lt;-</span> Eig<span class="sc">$</span>values</span>
+<span id="cb1384-7"><a href="aplikace-na-reálných-datech-4.html#cb1384-7" tabindex="-1"></a>eig.vectors <span class="ot">&lt;-</span> Eig<span class="sc">$</span>vectors</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1385-1"><a href="aplikace-na-reálných-datech-4.html#cb1385-1" tabindex="-1"></a><span class="co"># d</span></span>
+<span id="cb1385-2"><a href="aplikace-na-reálných-datech-4.html#cb1385-2" tabindex="-1"></a>d.RKHS <span class="ot">&lt;-</span> <span class="fu">rankMM</span>(K)</span>
+<span id="cb1385-3"><a href="aplikace-na-reálných-datech-4.html#cb1385-3" tabindex="-1"></a></span>
+<span id="cb1385-4"><a href="aplikace-na-reálných-datech-4.html#cb1385-4" tabindex="-1"></a><span class="co"># urceni vektoru lambda</span></span>
+<span id="cb1385-5"><a href="aplikace-na-reálných-datech-4.html#cb1385-5" tabindex="-1"></a>Lambda.RKHS <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, </span>
+<span id="cb1385-6"><a href="aplikace-na-reálných-datech-4.html#cb1385-6" tabindex="-1"></a>                      <span class="at">ncol =</span> <span class="dv">2</span>, </span>
+<span id="cb1385-7"><a href="aplikace-na-reálných-datech-4.html#cb1385-7" tabindex="-1"></a>                      <span class="at">nrow =</span> d.RKHS) <span class="co"># vytvoreni prazdneho objektu</span></span>
+<span id="cb1385-8"><a href="aplikace-na-reálných-datech-4.html#cb1385-8" tabindex="-1"></a></span>
+<span id="cb1385-9"><a href="aplikace-na-reálných-datech-4.html#cb1385-9" tabindex="-1"></a><span class="co"># vypocet reprezentace</span></span>
+<span id="cb1385-10"><a href="aplikace-na-reálných-datech-4.html#cb1385-10" tabindex="-1"></a>Lambda.RKHS[, <span class="dv">1</span>] <span class="ot">&lt;-</span> (<span class="fu">t</span>(eig.vectors[, <span class="dv">1</span><span class="sc">:</span>d.RKHS]) <span class="sc">%*%</span> alpha[, <span class="dv">1</span>]) <span class="sc">*</span></span>
+<span id="cb1385-11"><a href="aplikace-na-reálných-datech-4.html#cb1385-11" tabindex="-1"></a>  eig.vals[<span class="dv">1</span><span class="sc">:</span>d.RKHS]</span>
+<span id="cb1385-12"><a href="aplikace-na-reálných-datech-4.html#cb1385-12" tabindex="-1"></a>Lambda.RKHS[, <span class="dv">2</span>] <span class="ot">&lt;-</span> (<span class="fu">t</span>(eig.vectors[, <span class="dv">1</span><span class="sc">:</span>d.RKHS]) <span class="sc">%*%</span> alpha[, <span class="dv">2</span>]) <span class="sc">*</span></span>
+<span id="cb1385-13"><a href="aplikace-na-reálných-datech-4.html#cb1385-13" tabindex="-1"></a>  eig.vals[<span class="dv">1</span><span class="sc">:</span>d.RKHS]</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1386"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1386-1"><a href="aplikace-na-reálných-datech-4.html#cb1386-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">lambda =</span> <span class="fu">c</span>(Lambda.RKHS[, <span class="dv">1</span>], Lambda.RKHS[, <span class="dv">2</span>]),</span>
+<span id="cb1386-2"><a href="aplikace-na-reálných-datech-4.html#cb1386-2" tabindex="-1"></a>           <span class="at">Time =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>d.RKHS, <span class="dv">1</span><span class="sc">:</span>d.RKHS),</span>
+<span id="cb1386-3"><a href="aplikace-na-reálných-datech-4.html#cb1386-3" tabindex="-1"></a>           <span class="at">Sample =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>), <span class="at">each =</span> d.RKHS)) <span class="sc">|&gt;</span></span>
+<span id="cb1386-4"><a href="aplikace-na-reálných-datech-4.html#cb1386-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">xend =</span> Time, <span class="at">x =</span> Time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> lambda, <span class="at">colour =</span> Sample)) <span class="sc">+</span> </span>
+<span id="cb1386-5"><a href="aplikace-na-reálných-datech-4.html#cb1386-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>() <span class="sc">+</span> </span>
+<span id="cb1386-6"><a href="aplikace-na-reálných-datech-4.html#cb1386-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1386-7"><a href="aplikace-na-reálných-datech-4.html#cb1386-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Index&#39;</span>,</span>
+<span id="cb1386-8"><a href="aplikace-na-reálných-datech-4.html#cb1386-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(<span class="fu">bold</span>(lambda))[i])) <span class="sc">+</span></span>
+<span id="cb1386-9"><a href="aplikace-na-reálných-datech-4.html#cb1386-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Sample)</span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Nakonec si vykresleme rozdíly.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1387-1"><a href="aplikace-na-reálných-datech-4.html#cb1387-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">lambda =</span> <span class="fu">c</span>(Lambda.RKHS[, <span class="dv">1</span>] <span class="sc">-</span> Lambda.RKHS[, <span class="dv">2</span>]),</span>
+<span id="cb1387-2"><a href="aplikace-na-reálných-datech-4.html#cb1387-2" tabindex="-1"></a>           <span class="at">Time =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>d.RKHS)) <span class="sc">|&gt;</span></span>
+<span id="cb1387-3"><a href="aplikace-na-reálných-datech-4.html#cb1387-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">xend =</span> Time, <span class="at">x =</span> Time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> lambda)) <span class="sc">+</span> </span>
+<span id="cb1387-4"><a href="aplikace-na-reálných-datech-4.html#cb1387-4" tabindex="-1"></a>  <span class="fu">geom_segment</span>() <span class="sc">+</span> </span>
+<span id="cb1387-5"><a href="aplikace-na-reálných-datech-4.html#cb1387-5" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb1387-6"><a href="aplikace-na-reálných-datech-4.html#cb1387-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Index&#39;</span>,</span>
+<span id="cb1387-7"><a href="aplikace-na-reálných-datech-4.html#cb1387-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">widehat</span>(<span class="fu">bold</span>(lambda))[<span class="dv">1</span>] <span class="sc">-</span> <span class="fu">widehat</span>(<span class="fu">bold</span>(lambda))[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb1387-8"><a href="aplikace-na-reálných-datech-4.html#cb1387-8" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">3</span>))</span></code></pre></div>
+</details>
+<p><img src="12-Application_4_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="8">
+<li id="fn8"><p>Muñoz, A. and González, J. (2010) <em>Representing functional data using support vector machines</em>, Pattern Recognition Letters, 31(6), pp. 511–516. <a href="https://www.sciencedirect.com/science/article/pii/S0167865509001913">doi:10.1016/j.patrec.2009.07.014</a>.<a href="aplikace-na-reálných-datech-4.html#fnref8" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="aplikace-na-reálných-datech-3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="podpůrné-materiály-pro-diplomovou-práci.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/Tomas-Pompa/MastersThesis/blob/main/12-Application_4.Rmd",
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"info": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
