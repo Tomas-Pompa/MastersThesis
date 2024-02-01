@@ -102,7 +102,7 @@ data[c(1, 2, 3, 5, 9), ] |>
   theme(aspect.ratio = 1,
         legend.position = "none")
 
-ggsave('figures/app_02_log_periodogramy.pdf', width = 20, height = 5)
+ggsave('figures/app_02_log_periodogramy.pdf', width = 12, height = 5)
 ```
 
 Vytvořme si ještě vhodné proměnné v `R`, do kterých uložíme trénovací a testovací záznamy a také informaci o druhu fonému.

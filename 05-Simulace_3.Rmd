@@ -4790,11 +4790,27 @@ Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi st�
 
 Nakonec ještě můžeme graficky zobrazit vypočtené hodnoty ze simulace pro jednotlivé klasifikační metody pomocí krabicových diagramů, zvlášť pro testovací a trénovací chybovosti.
 
+```{r include=FALSE}
+methods2 <- c('KNN', 'LDA', 'QDA', 'LR-functional', 'LR-score', 'Tree-discr',
+             'Tree-score', 'Tree-Bbasis', 'RF-discr', 'RF-score', 'RF-Bbasis', 
+             'SVM linear - diskr', 'SVM poly - diskr', 'SVM rbf - diskr', 
+             'SVM linear - PCA', 'SVM poly - PCA', 'SVM rbf - PCA', 
+             'SVM linear - Bbasis', 'SVM poly - Bbasis', 'SVM rbf - Bbasis',
+             'SVM linear - projection', 'SVM poly - projection', 
+             'SVM rbf - projection', 'SVM linear - RKHS - radial', 
+             'SVM poly - RKHS - radial', 'SVM rbf - RKHS - radial', 
+             'SVM linear - RKHS - poly', 'SVM poly - RKHS - poly', 
+             'SVM rbf - RKHS - poly', 'SVM linear - RKHS - linear', 
+             'SVM poly - RKHS - linear', 'SVM rbf - RKHS - linear')
+```
+
+
 ```{r fig.cap='Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.', warning=FALSE, eval=T}
 # pro trenovaci data
+# tikz(file = "figures/DP_sim_03_boxplot_train.tex", width = 10, height = 6)
 SIMULACE$train |> 
   pivot_longer(cols = methods, names_to = 'method', values_to = 'Err') |>
-  mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE)) |> 
+  mutate(method = factor(method, levels = methods, labels = methods2, ordered = TRUE)) |> 
   as.data.frame() |>
   ggplot(aes(x = method, y = Err, fill = method, colour = method, alpha = 0.3)) + 
   geom_boxplot(outlier.colour = "white", outlier.shape = 16, outlier.size = 0, 
@@ -4810,6 +4826,7 @@ SIMULACE$train |>
                size = 4, color = "black", alpha = 0.9)+ 
   geom_hline(yintercept = min(SIMULACE.df$Err.train), 
              linetype = 'dashed', colour = 'grey')
+# dev.off()
 ```
 
 ```{r echo=FALSE, eval=T}
