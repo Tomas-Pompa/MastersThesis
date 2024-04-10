@@ -4931,11 +4931,15 @@ Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi st�
 Nakonec ještě můžeme graficky zobrazit vypočtené hodnoty ze simulace pro jednotlivé klasifikační metody pomocí krabicových diagramů, zvlášť pro testovací a trénovací chybovosti.
 
 
+
+
+
 ```r
 # pro trenovaci data
+# tikz(file = "figures/DP_sim_03_boxplot_train.tex", width = 10, height = 6)
 SIMULACE$train |> 
   pivot_longer(cols = methods, names_to = 'method', values_to = 'Err') |>
-  mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE)) |> 
+  mutate(method = factor(method, levels = methods, labels = methods2, ordered = TRUE)) |> 
   as.data.frame() |>
   ggplot(aes(x = method, y = Err, fill = method, colour = method, alpha = 0.3)) + 
   geom_boxplot(outlier.colour = "white", outlier.shape = 16, outlier.size = 0, 
@@ -4954,9 +4958,13 @@ SIMULACE$train |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-129-1.png" alt="Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-129)Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-130-1.png" alt="Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-130)Krabicové diagramy trénovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
 </div>
+
+```r
+# dev.off()
+```
 
 
 
@@ -4984,8 +4992,8 @@ SIMULACE$test |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-131-1.png" alt="Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-131)Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-132-1.png" alt="Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-132)Krabicové diagramy testovacích chybovostí pro 100 simulací zvlášť pro jednotlivé klasifikační metody. Černými symboly $+$ jsou vyznačeny průměry.</p>
 </div>
 
 
@@ -4993,7 +5001,7 @@ SIMULACE$test |>
 Nakonec se podívejme, jaké hodnoty hyperparametrů byly nejčastější volbou.
 
 
-Table: (\#tab:unnamed-chunk-133)Mediány hodnot hyperparametrů pro vybrané metody, u nichž se určoval nějaký hyperparametr pomocí cross-validace.
+Table: (\#tab:unnamed-chunk-134)Mediány hodnot hyperparametrů pro vybrané metody, u nichž se určoval nějaký hyperparametr pomocí cross-validace.
 
                           Mediánová hodnota hyperparametru
 -----------------------  ---------------------------------
@@ -5041,8 +5049,8 @@ CV_res |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-134-1.png" alt="Histogramy hodnot hyperparametrů pro KNN, funkcionální logistickou regresi a také histogram pro počet hlavních komponent." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-134)Histogramy hodnot hyperparametrů pro KNN, funkcionální logistickou regresi a také histogram pro počet hlavních komponent.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-135-1.png" alt="Histogramy hodnot hyperparametrů pro KNN, funkcionální logistickou regresi a také histogram pro počet hlavních komponent." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-135)Histogramy hodnot hyperparametrů pro KNN, funkcionální logistickou regresi a také histogram pro počet hlavních komponent.</p>
 </div>
 
 
@@ -5062,8 +5070,8 @@ CV_res |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-136-1.png" alt="Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-136)Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-137-1.png" alt="Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-137)Histogramy hodnot hyperparametrů metody SVM s projekcí na B-splinovou bázi.</p>
 </div>
 
 
@@ -5085,8 +5093,8 @@ CV_res |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-138-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s radiálním jádrem." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-138)Histogramy hodnot hyperparametrů metody RKHS + SVM s radiálním jádrem.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-139-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s radiálním jádrem." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-139)Histogramy hodnot hyperparametrů metody RKHS + SVM s radiálním jádrem.</p>
 </div>
 
 
@@ -5108,8 +5116,8 @@ CV_res |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-140-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s polynomiálním jádrem." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-140)Histogramy hodnot hyperparametrů metody RKHS + SVM s polynomiálním jádrem.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-141-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s polynomiálním jádrem." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-141)Histogramy hodnot hyperparametrů metody RKHS + SVM s polynomiálním jádrem.</p>
 </div>
 
 
@@ -5131,8 +5139,8 @@ CV_res |>
 ```
 
 <div class="figure">
-<img src="05-Simulace_3_files/figure-html/unnamed-chunk-142-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s lineárním jádrem." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-142)Histogramy hodnot hyperparametrů metody RKHS + SVM s lineárním jádrem.</p>
+<img src="05-Simulace_3_files/figure-html/unnamed-chunk-143-1.png" alt="Histogramy hodnot hyperparametrů metody RKHS + SVM s lineárním jádrem." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-143)Histogramy hodnot hyperparametrů metody RKHS + SVM s lineárním jádrem.</p>
 </div>
 
 

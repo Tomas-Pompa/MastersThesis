@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitola 8 Závislost na diskretizaci | Diplomová práce</title>
+  <meta name="description" content="Kapitola 8 Závislost na diskretizaci | Diplomová práce" />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitola 8 Závislost na diskretizaci | Diplomová práce" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitola 8 Závislost na diskretizaci | Diplomová práce" />
+  
+  
+  
+
+<meta name="author" content="Tomáš Pompa" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="simulace3shift.html"/>
+<link rel="next" href="simulace4.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/codefolding-lua-1.1/codefolding-lua.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.3/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="toc-logo"><a href="./"><img src="sci-lg-eng-rgb.png"></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>SVM pro funkcionální data</a></li>
+<li class="part"><span><b>Simulační studie</b></span></li>
+<li class="chapter" data-level="1" data-path="simulace1.html"><a href="simulace1.html"><i class="fa fa-check"></i><b>1</b> Simulace 1</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="simulace1.html"><a href="simulace1.html#simulace-funkcionálních-dat"><i class="fa fa-check"></i><b>1.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="1.2" data-path="simulace1.html"><a href="simulace1.html#vyhlazení-pozorovaných-křivek"><i class="fa fa-check"></i><b>1.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="1.3" data-path="simulace1.html"><a href="simulace1.html#klasifikace-křivek"><i class="fa fa-check"></i><b>1.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="simulace1.html"><a href="simulace1.html#k-nejbližších-sousedů"><i class="fa fa-check"></i><b>1.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="1.3.2" data-path="simulace1.html"><a href="simulace1.html#lineární-diskriminační-analýza"><i class="fa fa-check"></i><b>1.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="1.3.3" data-path="simulace1.html"><a href="simulace1.html#kvadratická-diskriminační-analýza"><i class="fa fa-check"></i><b>1.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="1.3.4" data-path="simulace1.html"><a href="simulace1.html#logistická-regrese"><i class="fa fa-check"></i><b>1.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="1.3.5" data-path="simulace1.html"><a href="simulace1.html#rozhodovací-stromy"><i class="fa fa-check"></i><b>1.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="1.3.6" data-path="simulace1.html"><a href="simulace1.html#náhodné-lesy"><i class="fa fa-check"></i><b>1.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="1.3.7" data-path="simulace1.html"><a href="simulace1.html#support-vector-machines"><i class="fa fa-check"></i><b>1.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="simulace1.html"><a href="simulace1.html#tabulka-výsledků"><i class="fa fa-check"></i><b>1.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="1.5" data-path="simulace1.html"><a href="simulace1.html#simulační-studie"><i class="fa fa-check"></i><b>1.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="simulace1.html"><a href="simulace1.html#výsledky"><i class="fa fa-check"></i><b>1.5.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="simulace2.html"><a href="simulace2.html"><i class="fa fa-check"></i><b>2</b> Simulace 2</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="simulace2.html"><a href="simulace2.html#simulace-funkcionálních-dat-1"><i class="fa fa-check"></i><b>2.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="2.2" data-path="simulace2.html"><a href="simulace2.html#vyhlazení-pozorovaných-křivek-1"><i class="fa fa-check"></i><b>2.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="2.3" data-path="simulace2.html"><a href="simulace2.html#klasifikace-křivek-1"><i class="fa fa-check"></i><b>2.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="simulace2.html"><a href="simulace2.html#k-nejbližších-sousedů-1"><i class="fa fa-check"></i><b>2.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="2.3.2" data-path="simulace2.html"><a href="simulace2.html#lineární-diskriminační-analýza-1"><i class="fa fa-check"></i><b>2.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="2.3.3" data-path="simulace2.html"><a href="simulace2.html#kvadratická-diskriminační-analýza-1"><i class="fa fa-check"></i><b>2.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="2.3.4" data-path="simulace2.html"><a href="simulace2.html#logistická-regrese-1"><i class="fa fa-check"></i><b>2.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="2.3.5" data-path="simulace2.html"><a href="simulace2.html#rozhodovací-stromy-1"><i class="fa fa-check"></i><b>2.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="2.3.6" data-path="simulace2.html"><a href="simulace2.html#náhodné-lesy-1"><i class="fa fa-check"></i><b>2.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="2.3.7" data-path="simulace2.html"><a href="simulace2.html#support-vector-machines-1"><i class="fa fa-check"></i><b>2.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="simulace2.html"><a href="simulace2.html#tabulka-výsledků-1"><i class="fa fa-check"></i><b>2.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="2.5" data-path="simulace2.html"><a href="simulace2.html#simulační-studie-1"><i class="fa fa-check"></i><b>2.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="simulace2.html"><a href="simulace2.html#výsledky-1"><i class="fa fa-check"></i><b>2.5.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="simulace2sigma.html"><a href="simulace2sigma.html"><i class="fa fa-check"></i><b>3</b> Závislost na parametru <span class="math inline">\(\sigma^2\)</span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="simulace2sigma.html"><a href="simulace2sigma.html#simulace-funkcionálních-dat-2"><i class="fa fa-check"></i><b>3.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="3.2" data-path="simulace2sigma.html"><a href="simulace2sigma.html#vyhlazení-pozorovaných-křivek-2"><i class="fa fa-check"></i><b>3.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="3.3" data-path="simulace2sigma.html"><a href="simulace2sigma.html#klasifikace-křivek-2"><i class="fa fa-check"></i><b>3.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="simulace2sigma.html"><a href="simulace2sigma.html#k-nejbližších-sousedů-2"><i class="fa fa-check"></i><b>3.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="3.3.2" data-path="simulace2sigma.html"><a href="simulace2sigma.html#lineární-diskriminační-analýza-2"><i class="fa fa-check"></i><b>3.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="3.3.3" data-path="simulace2sigma.html"><a href="simulace2sigma.html#kvadratická-diskriminační-analýza-2"><i class="fa fa-check"></i><b>3.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="3.3.4" data-path="simulace2sigma.html"><a href="simulace2sigma.html#support-vector-machines-2"><i class="fa fa-check"></i><b>3.3.4</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="simulace2sigma.html"><a href="simulace2sigma.html#tabulka-výsledků-2"><i class="fa fa-check"></i><b>3.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="3.5" data-path="simulace2sigma.html"><a href="simulace2sigma.html#simulační-studie-2"><i class="fa fa-check"></i><b>3.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="simulace2sigma.html"><a href="simulace2sigma.html#grafický-výstup"><i class="fa fa-check"></i><b>3.5.1</b> Grafický výstup</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="simulace2shift.html"><a href="simulace2shift.html"><i class="fa fa-check"></i><b>4</b> Závislost na parametru <span class="math inline">\(\sigma_{shift}\)</span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="simulace2shift.html"><a href="simulace2shift.html#simulace-funkcionálních-dat-3"><i class="fa fa-check"></i><b>4.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="4.2" data-path="simulace2shift.html"><a href="simulace2shift.html#vyhlazení-pozorovaných-křivek-3"><i class="fa fa-check"></i><b>4.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="4.3" data-path="simulace2shift.html"><a href="simulace2shift.html#klasifikace-křivek-3"><i class="fa fa-check"></i><b>4.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="simulace2shift.html"><a href="simulace2shift.html#k-nejbližších-sousedů-3"><i class="fa fa-check"></i><b>4.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="4.3.2" data-path="simulace2shift.html"><a href="simulace2shift.html#lineární-diskriminační-analýza-3"><i class="fa fa-check"></i><b>4.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="4.3.3" data-path="simulace2shift.html"><a href="simulace2shift.html#kvadratická-diskriminační-analýza-3"><i class="fa fa-check"></i><b>4.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="4.3.4" data-path="simulace2shift.html"><a href="simulace2shift.html#support-vector-machines-3"><i class="fa fa-check"></i><b>4.3.4</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="simulace2shift.html"><a href="simulace2shift.html#tabulka-výsledků-3"><i class="fa fa-check"></i><b>4.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="4.5" data-path="simulace2shift.html"><a href="simulace2shift.html#simulační-studie-3"><i class="fa fa-check"></i><b>4.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="simulace2shift.html"><a href="simulace2shift.html#grafický-výstup-1"><i class="fa fa-check"></i><b>4.5.1</b> Grafický výstup</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulace3.html"><a href="simulace3.html"><i class="fa fa-check"></i><b>5</b> Simulace 3</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="simulace3.html"><a href="simulace3.html#simulace-funkcionálních-dat-4"><i class="fa fa-check"></i><b>5.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="5.2" data-path="simulace3.html"><a href="simulace3.html#vyhlazení-pozorovaných-křivek-4"><i class="fa fa-check"></i><b>5.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="5.3" data-path="simulace3.html"><a href="simulace3.html#klasifikace-křivek-4"><i class="fa fa-check"></i><b>5.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="simulace3.html"><a href="simulace3.html#k-nejbližších-sousedů-4"><i class="fa fa-check"></i><b>5.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="5.3.2" data-path="simulace3.html"><a href="simulace3.html#lineární-diskriminační-analýza-4"><i class="fa fa-check"></i><b>5.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="5.3.3" data-path="simulace3.html"><a href="simulace3.html#kvadratická-diskriminační-analýza-4"><i class="fa fa-check"></i><b>5.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="5.3.4" data-path="simulace3.html"><a href="simulace3.html#logistická-regrese-2"><i class="fa fa-check"></i><b>5.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="5.3.5" data-path="simulace3.html"><a href="simulace3.html#rozhodovací-stromy-2"><i class="fa fa-check"></i><b>5.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="5.3.6" data-path="simulace3.html"><a href="simulace3.html#náhodné-lesy-2"><i class="fa fa-check"></i><b>5.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="5.3.7" data-path="simulace3.html"><a href="simulace3.html#support-vector-machines-4"><i class="fa fa-check"></i><b>5.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="simulace3.html"><a href="simulace3.html#tabulka-výsledků-4"><i class="fa fa-check"></i><b>5.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="5.5" data-path="simulace3.html"><a href="simulace3.html#simulační-studie-4"><i class="fa fa-check"></i><b>5.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="simulace3.html"><a href="simulace3.html#výsledky-2"><i class="fa fa-check"></i><b>5.5.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="simulace3sigma.html"><a href="simulace3sigma.html"><i class="fa fa-check"></i><b>6</b> Závislost na parametru <span class="math inline">\(\sigma^2\)</span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="simulace3sigma.html"><a href="simulace3sigma.html#simulace-funkcionálních-dat-5"><i class="fa fa-check"></i><b>6.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="6.2" data-path="simulace3sigma.html"><a href="simulace3sigma.html#vyhlazení-pozorovaných-křivek-5"><i class="fa fa-check"></i><b>6.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="6.3" data-path="simulace3sigma.html"><a href="simulace3sigma.html#klasifikace-křivek-5"><i class="fa fa-check"></i><b>6.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="simulace3sigma.html"><a href="simulace3sigma.html#k-nejbližších-sousedů-5"><i class="fa fa-check"></i><b>6.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="6.3.2" data-path="simulace3sigma.html"><a href="simulace3sigma.html#lineární-diskriminační-analýza-5"><i class="fa fa-check"></i><b>6.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="6.3.3" data-path="simulace3sigma.html"><a href="simulace3sigma.html#kvadratická-diskriminační-analýza-5"><i class="fa fa-check"></i><b>6.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="6.3.4" data-path="simulace3sigma.html"><a href="simulace3sigma.html#logistická-regrese-3"><i class="fa fa-check"></i><b>6.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="6.3.5" data-path="simulace3sigma.html"><a href="simulace3sigma.html#support-vector-machines-5"><i class="fa fa-check"></i><b>6.3.5</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="simulace3sigma.html"><a href="simulace3sigma.html#tabulka-výsledků-5"><i class="fa fa-check"></i><b>6.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="6.5" data-path="simulace3sigma.html"><a href="simulace3sigma.html#simulační-studie-5"><i class="fa fa-check"></i><b>6.5</b> Simulační studie</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="simulace3shift.html"><a href="simulace3shift.html"><i class="fa fa-check"></i><b>7</b> Závislost na parametru <span class="math inline">\(\sigma_{shift}\)</span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="simulace3shift.html"><a href="simulace3shift.html#simulace-funkcionálních-dat-6"><i class="fa fa-check"></i><b>7.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="7.2" data-path="simulace3shift.html"><a href="simulace3shift.html#vyhlazení-pozorovaných-křivek-6"><i class="fa fa-check"></i><b>7.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="7.3" data-path="simulace3shift.html"><a href="simulace3shift.html#klasifikace-křivek-6"><i class="fa fa-check"></i><b>7.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="simulace3shift.html"><a href="simulace3shift.html#k-nejbližších-sousedů-6"><i class="fa fa-check"></i><b>7.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="7.3.2" data-path="simulace3shift.html"><a href="simulace3shift.html#lineární-diskriminační-analýza-6"><i class="fa fa-check"></i><b>7.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="7.3.3" data-path="simulace3shift.html"><a href="simulace3shift.html#kvadratická-diskriminační-analýza-6"><i class="fa fa-check"></i><b>7.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="7.3.4" data-path="simulace3shift.html"><a href="simulace3shift.html#logistická-regrese-4"><i class="fa fa-check"></i><b>7.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="7.3.5" data-path="simulace3shift.html"><a href="simulace3shift.html#support-vector-machines-6"><i class="fa fa-check"></i><b>7.3.5</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="simulace3shift.html"><a href="simulace3shift.html#tabulka-výsledků-6"><i class="fa fa-check"></i><b>7.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="7.5" data-path="simulace3shift.html"><a href="simulace3shift.html#simulační-studie-6"><i class="fa fa-check"></i><b>7.5</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="simulace3shift.html"><a href="simulace3shift.html#grafický-výstup-2"><i class="fa fa-check"></i><b>7.5.1</b> Grafický výstup</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="simulace3diskr.html"><a href="simulace3diskr.html"><i class="fa fa-check"></i><b>8</b> Závislost na diskretizaci</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="simulace3diskr.html"><a href="simulace3diskr.html#simulace-funkcionálních-dat-7"><i class="fa fa-check"></i><b>8.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="8.2" data-path="simulace3diskr.html"><a href="simulace3diskr.html#vyhlazení-pozorovaných-křivek-7"><i class="fa fa-check"></i><b>8.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="8.3" data-path="simulace3diskr.html"><a href="simulace3diskr.html#klasifikace-křivek-7"><i class="fa fa-check"></i><b>8.3</b> Klasifikace křivek</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="simulace4.html"><a href="simulace4.html"><i class="fa fa-check"></i><b>9</b> Simulace 4</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="simulace4.html"><a href="simulace4.html#simulace-funkcionálních-dat-8"><i class="fa fa-check"></i><b>9.1</b> Simulace funkcionálních dat</a></li>
+<li class="chapter" data-level="9.2" data-path="simulace4.html"><a href="simulace4.html#vyhlazení-pozorovaných-křivek-8"><i class="fa fa-check"></i><b>9.2</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="9.3" data-path="simulace4.html"><a href="simulace4.html#výpočet-derivací"><i class="fa fa-check"></i><b>9.3</b> Výpočet derivací</a></li>
+<li class="chapter" data-level="9.4" data-path="simulace4.html"><a href="simulace4.html#klasifikace-křivek-8"><i class="fa fa-check"></i><b>9.4</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="simulace4.html"><a href="simulace4.html#k-nejbližších-sousedů-7"><i class="fa fa-check"></i><b>9.4.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="9.4.2" data-path="simulace4.html"><a href="simulace4.html#lineární-diskriminační-analýza-7"><i class="fa fa-check"></i><b>9.4.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="9.4.3" data-path="simulace4.html"><a href="simulace4.html#kvadratická-diskriminační-analýza-7"><i class="fa fa-check"></i><b>9.4.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="9.4.4" data-path="simulace4.html"><a href="simulace4.html#logistická-regrese-5"><i class="fa fa-check"></i><b>9.4.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="9.4.5" data-path="simulace4.html"><a href="simulace4.html#rozhodovací-stromy-3"><i class="fa fa-check"></i><b>9.4.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="9.4.6" data-path="simulace4.html"><a href="simulace4.html#náhodné-lesy-3"><i class="fa fa-check"></i><b>9.4.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="9.4.7" data-path="simulace4.html"><a href="simulace4.html#support-vector-machines-7"><i class="fa fa-check"></i><b>9.4.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="simulace4.html"><a href="simulace4.html#tabulka-výsledků-7"><i class="fa fa-check"></i><b>9.5</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="9.6" data-path="simulace4.html"><a href="simulace4.html#simulační-studie-7"><i class="fa fa-check"></i><b>9.6</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="9.6.1" data-path="simulace4.html"><a href="simulace4.html#výsledky-3"><i class="fa fa-check"></i><b>9.6.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>Aplikace na datech</b></span></li>
+<li class="chapter" data-level="10" data-path="aplikace1.html"><a href="aplikace1.html"><i class="fa fa-check"></i><b>10</b> Aplikace na reálných datech 1</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="aplikace1.html"><a href="aplikace1.html#vyhlazení-pozorovaných-křivek-9"><i class="fa fa-check"></i><b>10.1</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="10.2" data-path="aplikace1.html"><a href="aplikace1.html#klasifikace-křivek-9"><i class="fa fa-check"></i><b>10.2</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="aplikace1.html"><a href="aplikace1.html#k-nejbližších-sousedů-8"><i class="fa fa-check"></i><b>10.2.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="10.2.2" data-path="aplikace1.html"><a href="aplikace1.html#lineární-diskriminační-analýza-8"><i class="fa fa-check"></i><b>10.2.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="10.2.3" data-path="aplikace1.html"><a href="aplikace1.html#kvadratická-diskriminační-analýza-8"><i class="fa fa-check"></i><b>10.2.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="10.2.4" data-path="aplikace1.html"><a href="aplikace1.html#logistická-regrese-6"><i class="fa fa-check"></i><b>10.2.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="10.2.5" data-path="aplikace1.html"><a href="aplikace1.html#rozhodovací-stromy-4"><i class="fa fa-check"></i><b>10.2.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="10.2.6" data-path="aplikace1.html"><a href="aplikace1.html#náhodné-lesy-4"><i class="fa fa-check"></i><b>10.2.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="10.2.7" data-path="aplikace1.html"><a href="aplikace1.html#support-vector-machines-8"><i class="fa fa-check"></i><b>10.2.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="aplikace1.html"><a href="aplikace1.html#tabulka-výsledků-8"><i class="fa fa-check"></i><b>10.3</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="10.4" data-path="aplikace1.html"><a href="aplikace1.html#simstudyA1"><i class="fa fa-check"></i><b>10.4</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="aplikace1.html"><a href="aplikace1.html#výsledky-4"><i class="fa fa-check"></i><b>10.4.1</b> Výsledky</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="aplikace2.html"><a href="aplikace2.html"><i class="fa fa-check"></i><b>11</b> Aplikace na reálných datech 2</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="aplikace2.html"><a href="aplikace2.html#vyhlazení-pozorovaných-křivek-10"><i class="fa fa-check"></i><b>11.1</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="11.2" data-path="aplikace2.html"><a href="aplikace2.html#klasifikace-křivek-10"><i class="fa fa-check"></i><b>11.2</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="11.2.1" data-path="aplikace2.html"><a href="aplikace2.html#k-nejbližších-sousedů-9"><i class="fa fa-check"></i><b>11.2.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="11.2.2" data-path="aplikace2.html"><a href="aplikace2.html#lineární-diskriminační-analýza-9"><i class="fa fa-check"></i><b>11.2.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="11.2.3" data-path="aplikace2.html"><a href="aplikace2.html#kvadratická-diskriminační-analýza-9"><i class="fa fa-check"></i><b>11.2.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="11.2.4" data-path="aplikace2.html"><a href="aplikace2.html#logistická-regrese-7"><i class="fa fa-check"></i><b>11.2.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="11.2.5" data-path="aplikace2.html"><a href="aplikace2.html#rozhodovací-stromy-5"><i class="fa fa-check"></i><b>11.2.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="11.2.6" data-path="aplikace2.html"><a href="aplikace2.html#náhodné-lesy-5"><i class="fa fa-check"></i><b>11.2.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="11.2.7" data-path="aplikace2.html"><a href="aplikace2.html#support-vector-machines-9"><i class="fa fa-check"></i><b>11.2.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="aplikace2.html"><a href="aplikace2.html#tabulka-výsledků-9"><i class="fa fa-check"></i><b>11.3</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="11.4" data-path="aplikace2.html"><a href="aplikace2.html#klasifikace-dalších-fonémů"><i class="fa fa-check"></i><b>11.4</b> Klasifikace dalších fonémů</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="aplikace2.html"><a href="aplikace2.html#ao-proti-dcl"><i class="fa fa-check"></i><b>11.4.1</b> <em>ao</em> proti <em>dcl</em></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="aplikace3.html"><a href="aplikace3.html"><i class="fa fa-check"></i><b>12</b> Aplikace na reálných datech 3</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="aplikace3.html"><a href="aplikace3.html#vyhlazení-pozorovaných-křivek-12"><i class="fa fa-check"></i><b>12.1</b> Vyhlazení pozorovaných křivek</a></li>
+<li class="chapter" data-level="12.2" data-path="aplikace3.html"><a href="aplikace3.html#výpočet-derivací-1"><i class="fa fa-check"></i><b>12.2</b> Výpočet derivací</a></li>
+<li class="chapter" data-level="12.3" data-path="aplikace3.html"><a href="aplikace3.html#klasifikace-křivek-12"><i class="fa fa-check"></i><b>12.3</b> Klasifikace křivek</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="aplikace3.html"><a href="aplikace3.html#k-nejbližších-sousedů-10"><i class="fa fa-check"></i><b>12.3.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="12.3.2" data-path="aplikace3.html"><a href="aplikace3.html#lineární-diskriminační-analýza-11"><i class="fa fa-check"></i><b>12.3.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="12.3.3" data-path="aplikace3.html"><a href="aplikace3.html#kvadratická-diskriminační-analýza-10"><i class="fa fa-check"></i><b>12.3.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="12.3.4" data-path="aplikace3.html"><a href="aplikace3.html#logistická-regrese-9"><i class="fa fa-check"></i><b>12.3.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="12.3.5" data-path="aplikace3.html"><a href="aplikace3.html#rozhodovací-stromy-6"><i class="fa fa-check"></i><b>12.3.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="12.3.6" data-path="aplikace3.html"><a href="aplikace3.html#náhodné-lesy-6"><i class="fa fa-check"></i><b>12.3.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="12.3.7" data-path="aplikace3.html"><a href="aplikace3.html#support-vector-machines-11"><i class="fa fa-check"></i><b>12.3.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="aplikace3.html"><a href="aplikace3.html#tabulka-výsledků-11"><i class="fa fa-check"></i><b>12.4</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="12.5" data-path="aplikace3.html"><a href="aplikace3.html#klasA3deriv"><i class="fa fa-check"></i><b>12.5</b> Klasifikace pomocí druhé derivace</a>
+<ul>
+<li class="chapter" data-level="12.5.1" data-path="aplikace3.html"><a href="aplikace3.html#k-nejbližších-sousedů-11"><i class="fa fa-check"></i><b>12.5.1</b> <span class="math inline">\(K\)</span> nejbližších sousedů</a></li>
+<li class="chapter" data-level="12.5.2" data-path="aplikace3.html"><a href="aplikace3.html#lineární-diskriminační-analýza-12"><i class="fa fa-check"></i><b>12.5.2</b> Lineární diskriminační analýza</a></li>
+<li class="chapter" data-level="12.5.3" data-path="aplikace3.html"><a href="aplikace3.html#kvadratická-diskriminační-analýza-11"><i class="fa fa-check"></i><b>12.5.3</b> Kvadratická diskriminační analýza</a></li>
+<li class="chapter" data-level="12.5.4" data-path="aplikace3.html"><a href="aplikace3.html#logistická-regrese-10"><i class="fa fa-check"></i><b>12.5.4</b> Logistická regrese</a></li>
+<li class="chapter" data-level="12.5.5" data-path="aplikace3.html"><a href="aplikace3.html#rozhodovací-stromy-7"><i class="fa fa-check"></i><b>12.5.5</b> Rozhodovací stromy</a></li>
+<li class="chapter" data-level="12.5.6" data-path="aplikace3.html"><a href="aplikace3.html#náhodné-lesy-7"><i class="fa fa-check"></i><b>12.5.6</b> Náhodné lesy</a></li>
+<li class="chapter" data-level="12.5.7" data-path="aplikace3.html"><a href="aplikace3.html#support-vector-machines-12"><i class="fa fa-check"></i><b>12.5.7</b> Support Vector Machines</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="aplikace3.html"><a href="aplikace3.html#tabulka-výsledků-12"><i class="fa fa-check"></i><b>12.6</b> Tabulka výsledků</a></li>
+<li class="chapter" data-level="12.7" data-path="aplikace3.html"><a href="aplikace3.html#simstudyA3"><i class="fa fa-check"></i><b>12.7</b> Simulační studie</a>
+<ul>
+<li class="chapter" data-level="12.7.1" data-path="aplikace3.html"><a href="aplikace3.html#simulace-pro-nederivovaná-data"><i class="fa fa-check"></i><b>12.7.1</b> Simulace pro nederivovaná data</a></li>
+<li class="chapter" data-level="12.7.2" data-path="aplikace3.html"><a href="aplikace3.html#simulace-pro-derivovaná-data"><i class="fa fa-check"></i><b>12.7.2</b> Simulace pro derivovaná data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="aplikace-na-reálných-datech-4.html"><a href="aplikace-na-reálných-datech-4.html"><i class="fa fa-check"></i><b>13</b> Aplikace na reálných datech 4</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="aplikace-na-reálných-datech-4.html"><a href="aplikace-na-reálných-datech-4.html#handwrit-data"><i class="fa fa-check"></i><b>13.1</b> <code>handwrit</code> data</a></li>
+<li class="chapter" data-level="13.2" data-path="aplikace-na-reálných-datech-4.html"><a href="aplikace-na-reálných-datech-4.html#growth-data"><i class="fa fa-check"></i><b>13.2</b> <code>growth</code> data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html"><i class="fa fa-check"></i><b>14</b> Podpůrné materiály pro diplomovou práci</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-1"><i class="fa fa-check"></i><b>14.1</b> Materiály pro Kapitolu 1</a>
+<ul>
+<li class="chapter" data-level="14.1.1" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#funkcionální-průměr"><i class="fa fa-check"></i><b>14.1.1</b> Funkcionální průměr</a></li>
+<li class="chapter" data-level="14.1.2" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#variance"><i class="fa fa-check"></i><b>14.1.2</b> Variance</a></li>
+<li class="chapter" data-level="14.1.3" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#kovariance-a-korelace"><i class="fa fa-check"></i><b>14.1.3</b> Kovariance a Korelace</a></li>
+<li class="chapter" data-level="14.1.4" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#b-splinová-báze"><i class="fa fa-check"></i><b>14.1.4</b> B-splinová báze</a></li>
+<li class="chapter" data-level="14.1.5" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#fourierova-báze"><i class="fa fa-check"></i><b>14.1.5</b> Fourierova báze</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-2"><i class="fa fa-check"></i><b>14.2</b> Materiály pro Kapitolu 2</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#počet-bázových-funkcí-a-výsledný-odhad"><i class="fa fa-check"></i><b>14.2.1</b> Počet bázových funkcí a výsledný odhad</a></li>
+<li class="chapter" data-level="14.2.2" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#volba-lambda"><i class="fa fa-check"></i><b>14.2.2</b> Volba <span class="math inline">\(\lambda\)</span></a></li>
+<li class="chapter" data-level="14.2.3" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#vyhlazení-s-optimální-lambda"><i class="fa fa-check"></i><b>14.2.3</b> Vyhlazení s optimální <span class="math inline">\(\lambda\)</span></a></li>
+<li class="chapter" data-level="14.2.4" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#funkcionální-pca"><i class="fa fa-check"></i><b>14.2.4</b> Funkcionální PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-3"><i class="fa fa-check"></i><b>14.3</b> Materiály pro Kapitolu 3</a></li>
+<li class="chapter" data-level="14.4" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-4"><i class="fa fa-check"></i><b>14.4</b> Materiály pro Kapitolu 4</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#maximal-margin-classifier"><i class="fa fa-check"></i><b>14.4.1</b> Maximal margin classifier</a></li>
+<li class="chapter" data-level="14.4.2" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#support-vector-classifier"><i class="fa fa-check"></i><b>14.4.2</b> Support vector classifier</a></li>
+<li class="chapter" data-level="14.4.3" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#support-vector-machines-13"><i class="fa fa-check"></i><b>14.4.3</b> Support vector machines</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-5"><i class="fa fa-check"></i><b>14.5</b> Materiály pro Kapitolu 5</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#diskretizace-intervalu-22"><i class="fa fa-check"></i><b>14.5.1</b> Diskretizace intervalu</a></li>
+<li class="chapter" data-level="14.5.2" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#support-vector-regression-svr"><i class="fa fa-check"></i><b>14.5.2</b> Support vector regression (SVR)</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-6"><i class="fa fa-check"></i><b>14.6</b> Materiály pro Kapitolu 6</a></li>
+<li class="chapter" data-level="14.7" data-path="podpůrné-materiály-pro-diplomovou-práci.html"><a href="podpůrné-materiály-pro-diplomovou-práci.html#materiály-pro-kapitolu-7"><i class="fa fa-check"></i><b>14.7</b> Materiály pro Kapitolu 7</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Diplomová práce</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="simulace3diskr" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Kapitola 8</span> Závislost na diskretizaci<a href="simulace3diskr.html#simulace3diskr" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>V této části se budeme zabývat závislostí výsledků z předchozí sekce <a href="simulace3.html#simulace3">5</a> na hodnotě <span class="math inline">\(p\)</span>, která definuje délku ekvidistantní posloupnosti bodů, které jsou použity k diskretizaci pozorovaných funkcionálních objektů. Bude nás zajímat, jak se mění chybovosti jednotlivých klasifikačních metod při zjemňování dělení intervalu, tedy při zvětšující se dimenzi diskretizovaných vektorů.</p>
+<div id="simulace-funkcionálních-dat-7" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Simulace funkcionálních dat<a href="simulace3diskr.html#simulace-funkcionálních-dat-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Nejprve si simulujeme funkce, které budeme následně chtít klasifikovat.
+Budeme uvažovat pro jednoduchost dvě klasifikační třídy.
+Pro simulaci nejprve:</p>
+<ul>
+<li><p>zvolíme vhodné funkce,</p></li>
+<li><p>generujeme body ze zvoleného intervalu, které obsahují, například gaussovský, šum,</p></li>
+<li><p>takto získané diskrétní body vyhladíme do podoby funkcionálního objektu pomocí nějakého vhodného bázového systému.</p></li>
+</ul>
+<p>Tímto postupem získáme funkcionální objekty společně s hodnotou kategoriální proměnné <span class="math inline">\(Y\)</span>, která rozlišuje příslušnost do klasifikační třídy.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb684-1"><a href="simulace3diskr.html#cb684-1" tabindex="-1"></a><span class="co"># nacteme potrebne balicky </span></span>
+<span id="cb684-2"><a href="simulace3diskr.html#cb684-2" tabindex="-1"></a></span>
+<span id="cb684-3"><a href="simulace3diskr.html#cb684-3" tabindex="-1"></a><span class="fu">library</span>(fda)</span>
+<span id="cb684-4"><a href="simulace3diskr.html#cb684-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb684-5"><a href="simulace3diskr.html#cb684-5" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb684-6"><a href="simulace3diskr.html#cb684-6" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb684-7"><a href="simulace3diskr.html#cb684-7" tabindex="-1"></a><span class="fu">library</span>(ddalpha)</span>
+<span id="cb684-8"><a href="simulace3diskr.html#cb684-8" tabindex="-1"></a><span class="fu">library</span>(polynom)</span>
+<span id="cb684-9"><a href="simulace3diskr.html#cb684-9" tabindex="-1"></a></span>
+<span id="cb684-10"><a href="simulace3diskr.html#cb684-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span></code></pre></div>
+</details>
+<p>Uvažujme tedy dvě klasifikační třídy, <span class="math inline">\(Y \in \{0, 1\}\)</span>, pro každou ze tříd stejný počet <code>n</code> generovaných funkcí.
+Definujme si nejprve dvě funkce, každá bude pro jednu třídu.
+Funkce budeme uvažovat na intervalu <span class="math inline">\(I = [0, 6]\)</span>.</p>
+<p>Nyní vytvoříme funkce pomocí interpolačních polynomů. Nejprve si definujeme body, kterými má procházet naše křivka, a následně jimi proložíme interpolační polynom, který použijeme pro generování křivek pro klasifikaci.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb685"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb685-1"><a href="simulace3diskr.html#cb685-1" tabindex="-1"></a><span class="co"># definujici body pro tridu 0</span></span>
+<span id="cb685-2"><a href="simulace3diskr.html#cb685-2" tabindex="-1"></a>x<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.00</span>, <span class="fl">0.65</span>, <span class="fl">0.94</span>, <span class="fl">1.42</span>, <span class="fl">2.26</span>, <span class="fl">2.84</span>, <span class="fl">3.73</span>, <span class="fl">4.50</span>, <span class="fl">5.43</span>, <span class="fl">6.00</span>)</span>
+<span id="cb685-3"><a href="simulace3diskr.html#cb685-3" tabindex="-1"></a>y<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.86</span>, <span class="fl">1.49</span>, <span class="fl">1.1</span>, <span class="fl">0.15</span>, <span class="sc">-</span><span class="fl">0.11</span>, <span class="sc">-</span><span class="fl">0.36</span>, <span class="fl">0.23</span>, <span class="dv">0</span>)</span>
+<span id="cb685-4"><a href="simulace3diskr.html#cb685-4" tabindex="-1"></a></span>
+<span id="cb685-5"><a href="simulace3diskr.html#cb685-5" tabindex="-1"></a><span class="co"># definujici body pro tridu 1</span></span>
+<span id="cb685-6"><a href="simulace3diskr.html#cb685-6" tabindex="-1"></a>x<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.00</span>, <span class="fl">0.51</span>, <span class="fl">0.91</span>, <span class="fl">1.25</span>, <span class="fl">1.51</span>, <span class="fl">2.14</span>, <span class="fl">2.43</span>, <span class="fl">2.96</span>, <span class="fl">3.70</span>, <span class="fl">4.60</span>,</span>
+<span id="cb685-7"><a href="simulace3diskr.html#cb685-7" tabindex="-1"></a>         <span class="fl">5.25</span>, <span class="fl">5.67</span>, <span class="fl">6.00</span>)</span>
+<span id="cb685-8"><a href="simulace3diskr.html#cb685-8" tabindex="-1"></a>y<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.4</span>, <span class="fl">0.71</span>, <span class="fl">1.08</span>, <span class="fl">1.47</span>, <span class="fl">1.39</span>, <span class="fl">0.81</span>, <span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.4</span>,</span>
+<span id="cb685-9"><a href="simulace3diskr.html#cb685-9" tabindex="-1"></a>         <span class="fl">0.3</span>, <span class="fl">0.37</span>, <span class="dv">0</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb686"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb686-1"><a href="simulace3diskr.html#cb686-1" tabindex="-1"></a><span class="co"># graf bodu</span></span>
+<span id="cb686-2"><a href="simulace3diskr.html#cb686-2" tabindex="-1"></a>dat_points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(x<span class="fl">.0</span>, x<span class="fl">.1</span>),</span>
+<span id="cb686-3"><a href="simulace3diskr.html#cb686-3" tabindex="-1"></a>                         <span class="at">y =</span> <span class="fu">c</span>(y<span class="fl">.0</span>, y<span class="fl">.1</span>),</span>
+<span id="cb686-4"><a href="simulace3diskr.html#cb686-4" tabindex="-1"></a>                         <span class="at">Class =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>), </span>
+<span id="cb686-5"><a href="simulace3diskr.html#cb686-5" tabindex="-1"></a>                                     <span class="fu">c</span>(<span class="fu">length</span>(x<span class="fl">.0</span>), <span class="fu">length</span>(x<span class="fl">.1</span>))))</span>
+<span id="cb686-6"><a href="simulace3diskr.html#cb686-6" tabindex="-1"></a></span>
+<span id="cb686-7"><a href="simulace3diskr.html#cb686-7" tabindex="-1"></a><span class="fu">ggplot</span>(dat_points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Class)) <span class="sc">+</span> </span>
+<span id="cb686-8"><a href="simulace3diskr.html#cb686-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb686-9"><a href="simulace3diskr.html#cb686-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb686-10"><a href="simulace3diskr.html#cb686-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&#39;Klasifikační</span><span class="sc">\n</span><span class="st">      třída&#39;</span>)</span></code></pre></div>
+</details>
+<p><img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Pro výpočet interpolačních polynomů využijeme funkci <code>poly.calc()</code> z knihovny <code>polynom</code>. Dále definujeme funkce <code>poly.0()</code> a <code>poly.1()</code>, které budou počítat hodnoty polynomů v daném bodě intervalu. K jejich vytvoření použijeme funkci <code>predict()</code>, na jejíž vstup zadáme příslušný polynom a bod, ve kterám chceme polynom vyhodnotit.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="simulace3diskr.html#cb687-1" tabindex="-1"></a><span class="co"># vypocet polynomu</span></span>
+<span id="cb687-2"><a href="simulace3diskr.html#cb687-2" tabindex="-1"></a>polynom<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">poly.calc</span>(x<span class="fl">.0</span>, y<span class="fl">.0</span>)</span>
+<span id="cb687-3"><a href="simulace3diskr.html#cb687-3" tabindex="-1"></a>polynom<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">poly.calc</span>(x<span class="fl">.1</span>, y<span class="fl">.1</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb688-1"><a href="simulace3diskr.html#cb688-1" tabindex="-1"></a>poly<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">return</span>(<span class="fu">predict</span>(polynom<span class="fl">.0</span>, x))</span>
+<span id="cb688-2"><a href="simulace3diskr.html#cb688-2" tabindex="-1"></a>poly<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">return</span>(<span class="fu">predict</span>(polynom<span class="fl">.1</span>, x))</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="simulace3diskr.html#cb689-1" tabindex="-1"></a><span class="co"># vykresleni polynomu</span></span>
+<span id="cb689-2"><a href="simulace3diskr.html#cb689-2" tabindex="-1"></a>xx <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(x<span class="fl">.0</span>), <span class="fu">max</span>(x<span class="fl">.0</span>), <span class="at">length =</span> <span class="dv">501</span>)</span>
+<span id="cb689-3"><a href="simulace3diskr.html#cb689-3" tabindex="-1"></a>yy<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">poly.0</span>(xx)</span>
+<span id="cb689-4"><a href="simulace3diskr.html#cb689-4" tabindex="-1"></a>yy<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">poly.1</span>(xx)</span>
+<span id="cb689-5"><a href="simulace3diskr.html#cb689-5" tabindex="-1"></a></span>
+<span id="cb689-6"><a href="simulace3diskr.html#cb689-6" tabindex="-1"></a>dat_poly_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(xx, xx),</span>
+<span id="cb689-7"><a href="simulace3diskr.html#cb689-7" tabindex="-1"></a>                            <span class="at">y =</span> <span class="fu">c</span>(yy<span class="fl">.0</span>, yy<span class="fl">.1</span>),</span>
+<span id="cb689-8"><a href="simulace3diskr.html#cb689-8" tabindex="-1"></a>                            <span class="at">Class =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>), </span>
+<span id="cb689-9"><a href="simulace3diskr.html#cb689-9" tabindex="-1"></a>                                        <span class="fu">c</span>(<span class="fu">length</span>(xx), <span class="fu">length</span>(xx))))</span>
+<span id="cb689-10"><a href="simulace3diskr.html#cb689-10" tabindex="-1"></a></span>
+<span id="cb689-11"><a href="simulace3diskr.html#cb689-11" tabindex="-1"></a><span class="fu">ggplot</span>(dat_points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Class)) <span class="sc">+</span> </span>
+<span id="cb689-12"><a href="simulace3diskr.html#cb689-12" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb689-13"><a href="simulace3diskr.html#cb689-13" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb689-14"><a href="simulace3diskr.html#cb689-14" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dat_poly_plot,</span>
+<span id="cb689-15"><a href="simulace3diskr.html#cb689-15" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> Class),</span>
+<span id="cb689-16"><a href="simulace3diskr.html#cb689-16" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb689-17"><a href="simulace3diskr.html#cb689-17" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&#39;Klasifikační</span><span class="sc">\n</span><span class="st">      třída&#39;</span>)</span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-8-1.png" alt="Znázornění dvou funkcí na intervalu $I = [0, 6]$, ze kterých generujeme pozorování ze tříd 0 a 1." width="672" />
+<p class="caption">
+Obrázek 3.2: Znázornění dvou funkcí na intervalu <span class="math inline">\(I = [0, 6]\)</span>, ze kterých generujeme pozorování ze tříd 0 a 1.
+</p>
+</div>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb690-1"><a href="simulace3diskr.html#cb690-1" tabindex="-1"></a><span class="co"># generujici funkce pro Y = 0 a Y = 1</span></span>
+<span id="cb690-2"><a href="simulace3diskr.html#cb690-2" tabindex="-1"></a>funkce_0 <span class="ot">&lt;-</span> poly<span class="fl">.0</span></span>
+<span id="cb690-3"><a href="simulace3diskr.html#cb690-3" tabindex="-1"></a>funkce_1 <span class="ot">&lt;-</span> poly<span class="fl">.1</span></span></code></pre></div>
+</details>
+<p>Nyní si vytvoříme funkci pro generování náhodných funkcí s přidaným šumem (resp. bodů na předem dané síti) ze zvolené generující funkce.
+Argument <code>t</code> označuje vektor hodnot, ve kterých chceme dané funkce vyhodnotit, <code>fun</code> značí generující funkci, <code>n</code> počet funkcí a <code>sigma</code> směrodatnou odchylku <span class="math inline">\(\sigma\)</span> normálního rozdělení <span class="math inline">\(\text{N}(\mu, \sigma^2)\)</span>, ze kterého náhodně generujeme gaussovský bílý šum s <span class="math inline">\(\mu = 0\)</span>.
+Abychom ukázali výhodu použití metod, které pracují s funkcionálními daty, přidáme při generování ke každému simulovanému pozorování navíc i náhodný člen, který bude mít význam vertikálního posunu celé funkce (parametr <code>sigma_shift</code>).
+Tento posun budeme generovat s normálního rozdělení s parametrem <span class="math inline">\(\sigma^2 = 4\)</span>.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb691-1"><a href="simulace3diskr.html#cb691-1" tabindex="-1"></a>generate_values <span class="ot">&lt;-</span> <span class="cf">function</span>(t, fun, n, sigma, <span class="at">sigma_shift =</span> <span class="dv">0</span>) {</span>
+<span id="cb691-2"><a href="simulace3diskr.html#cb691-2" tabindex="-1"></a>  <span class="co"># Arguments:</span></span>
+<span id="cb691-3"><a href="simulace3diskr.html#cb691-3" tabindex="-1"></a>  <span class="co"># t ... vector of values, where the function will be evaluated</span></span>
+<span id="cb691-4"><a href="simulace3diskr.html#cb691-4" tabindex="-1"></a>  <span class="co"># fun ... generating function of t </span></span>
+<span id="cb691-5"><a href="simulace3diskr.html#cb691-5" tabindex="-1"></a>  <span class="co"># n ... the number of generated functions / objects</span></span>
+<span id="cb691-6"><a href="simulace3diskr.html#cb691-6" tabindex="-1"></a>  <span class="co"># sigma ... standard deviation of normal distribution to add noise to data</span></span>
+<span id="cb691-7"><a href="simulace3diskr.html#cb691-7" tabindex="-1"></a>  <span class="co"># sigma_shift ... parameter of normal distribution for generating shift</span></span>
+<span id="cb691-8"><a href="simulace3diskr.html#cb691-8" tabindex="-1"></a>  </span>
+<span id="cb691-9"><a href="simulace3diskr.html#cb691-9" tabindex="-1"></a>  <span class="co"># Value:</span></span>
+<span id="cb691-10"><a href="simulace3diskr.html#cb691-10" tabindex="-1"></a>  <span class="co"># X ... matrix of dimension length(t) times n with generated values of one </span></span>
+<span id="cb691-11"><a href="simulace3diskr.html#cb691-11" tabindex="-1"></a>  <span class="co"># function in a column </span></span>
+<span id="cb691-12"><a href="simulace3diskr.html#cb691-12" tabindex="-1"></a>  </span>
+<span id="cb691-13"><a href="simulace3diskr.html#cb691-13" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(t, <span class="at">times =</span> n), <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t), <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb691-14"><a href="simulace3diskr.html#cb691-14" tabindex="-1"></a>  noise <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> <span class="fu">length</span>(t), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma),</span>
+<span id="cb691-15"><a href="simulace3diskr.html#cb691-15" tabindex="-1"></a>                  <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t), <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb691-16"><a href="simulace3diskr.html#cb691-16" tabindex="-1"></a>  shift <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma_shift), <span class="at">each =</span> <span class="fu">length</span>(t)),</span>
+<span id="cb691-17"><a href="simulace3diskr.html#cb691-17" tabindex="-1"></a>                  <span class="at">ncol =</span> n, <span class="at">nrow =</span> <span class="fu">length</span>(t))</span>
+<span id="cb691-18"><a href="simulace3diskr.html#cb691-18" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">fun</span>(X) <span class="sc">+</span> noise <span class="sc">+</span> shift)</span>
+<span id="cb691-19"><a href="simulace3diskr.html#cb691-19" tabindex="-1"></a>}</span></code></pre></div>
+</details>
+<p>Nyní můžeme generovat funkce.
+V každé ze dvou tříd budeme uvažovat 100 pozorování, tedy <code>n = 100</code>.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb692-1"><a href="simulace3diskr.html#cb692-1" tabindex="-1"></a><span class="co"># pocet vygenerovanych pozorovani pro kazdou tridu</span></span>
+<span id="cb692-2"><a href="simulace3diskr.html#cb692-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb692-3"><a href="simulace3diskr.html#cb692-3" tabindex="-1"></a><span class="co"># vektor casu ekvidistantni na intervalu [0, 6]</span></span>
+<span id="cb692-4"><a href="simulace3diskr.html#cb692-4" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="at">length =</span> <span class="dv">51</span>)</span>
+<span id="cb692-5"><a href="simulace3diskr.html#cb692-5" tabindex="-1"></a></span>
+<span id="cb692-6"><a href="simulace3diskr.html#cb692-6" tabindex="-1"></a><span class="co"># pro Y = 0</span></span>
+<span id="cb692-7"><a href="simulace3diskr.html#cb692-7" tabindex="-1"></a>X0 <span class="ot">&lt;-</span> <span class="fu">generate_values</span>(t, funkce_0, n, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb692-8"><a href="simulace3diskr.html#cb692-8" tabindex="-1"></a><span class="co"># pro Y = 1</span></span>
+<span id="cb692-9"><a href="simulace3diskr.html#cb692-9" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">generate_values</span>(t, funkce_1, n, <span class="dv">1</span>, <span class="dv">2</span>)</span></code></pre></div>
+</details>
+<p>Vykreslíme vygenerované (ještě nevyhlazené) funkce barevně v závislosti na třídě (pouze prvních 10 pozorování z každé třídy pro přehlednost).</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb693-1"><a href="simulace3diskr.html#cb693-1" tabindex="-1"></a>n_curves_plot <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># pocet krivek, ktere chceme vykreslit z kazde skupiny</span></span>
+<span id="cb693-2"><a href="simulace3diskr.html#cb693-2" tabindex="-1"></a></span>
+<span id="cb693-3"><a href="simulace3diskr.html#cb693-3" tabindex="-1"></a>DF0 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, X0[, <span class="dv">1</span><span class="sc">:</span>n_curves_plot]) <span class="sc">|&gt;</span> </span>
+<span id="cb693-4"><a href="simulace3diskr.html#cb693-4" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb693-5"><a href="simulace3diskr.html#cb693-5" tabindex="-1"></a>  <span class="fu">reshape</span>(<span class="at">varying =</span> <span class="dv">2</span><span class="sc">:</span>(n_curves_plot <span class="sc">+</span> <span class="dv">1</span>), <span class="at">direction =</span> <span class="st">&#39;long&#39;</span>, <span class="at">sep =</span> <span class="st">&#39;&#39;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb693-6"><a href="simulace3diskr.html#cb693-6" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="sc">-</span>id) <span class="sc">|&gt;</span> </span>
+<span id="cb693-7"><a href="simulace3diskr.html#cb693-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb693-8"><a href="simulace3diskr.html#cb693-8" tabindex="-1"></a>  <span class="at">time =</span> time <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb693-9"><a href="simulace3diskr.html#cb693-9" tabindex="-1"></a>  <span class="at">group =</span> <span class="dv">0</span></span>
+<span id="cb693-10"><a href="simulace3diskr.html#cb693-10" tabindex="-1"></a>  )</span>
+<span id="cb693-11"><a href="simulace3diskr.html#cb693-11" tabindex="-1"></a></span>
+<span id="cb693-12"><a href="simulace3diskr.html#cb693-12" tabindex="-1"></a>DF1 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, X1[, <span class="dv">1</span><span class="sc">:</span>n_curves_plot]) <span class="sc">|&gt;</span> </span>
+<span id="cb693-13"><a href="simulace3diskr.html#cb693-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb693-14"><a href="simulace3diskr.html#cb693-14" tabindex="-1"></a>  <span class="fu">reshape</span>(<span class="at">varying =</span> <span class="dv">2</span><span class="sc">:</span>(n_curves_plot <span class="sc">+</span> <span class="dv">1</span>), <span class="at">direction =</span> <span class="st">&#39;long&#39;</span>, <span class="at">sep =</span> <span class="st">&#39;&#39;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb693-15"><a href="simulace3diskr.html#cb693-15" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="sc">-</span>id) <span class="sc">|&gt;</span> </span>
+<span id="cb693-16"><a href="simulace3diskr.html#cb693-16" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb693-17"><a href="simulace3diskr.html#cb693-17" tabindex="-1"></a>  <span class="at">time =</span> time <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb693-18"><a href="simulace3diskr.html#cb693-18" tabindex="-1"></a>  <span class="at">group =</span> <span class="dv">1</span></span>
+<span id="cb693-19"><a href="simulace3diskr.html#cb693-19" tabindex="-1"></a>  )</span>
+<span id="cb693-20"><a href="simulace3diskr.html#cb693-20" tabindex="-1"></a></span>
+<span id="cb693-21"><a href="simulace3diskr.html#cb693-21" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(DF0, DF1) <span class="sc">|&gt;</span></span>
+<span id="cb693-22"><a href="simulace3diskr.html#cb693-22" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">factor</span>(group))</span>
+<span id="cb693-23"><a href="simulace3diskr.html#cb693-23" tabindex="-1"></a></span>
+<span id="cb693-24"><a href="simulace3diskr.html#cb693-24" tabindex="-1"></a>DF <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> V, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
+<span id="cb693-25"><a href="simulace3diskr.html#cb693-25" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
+<span id="cb693-26"><a href="simulace3diskr.html#cb693-26" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb693-27"><a href="simulace3diskr.html#cb693-27" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb693-28"><a href="simulace3diskr.html#cb693-28" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(x[<span class="dv">1</span>]),</span>
+<span id="cb693-29"><a href="simulace3diskr.html#cb693-29" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(x[<span class="dv">2</span>]),</span>
+<span id="cb693-30"><a href="simulace3diskr.html#cb693-30" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Klasifikační</span><span class="sc">\n</span><span class="st">      třída&#39;</span>) <span class="sc">+</span></span>
+<span id="cb693-31"><a href="simulace3diskr.html#cb693-31" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-13"></span>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-13-1.png" alt="Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená." width="672" />
+<p class="caption">
+Obrázek 2.2: Prvních 10 vygenerovaných pozorování z každé ze dvou klasifikačních tříd. Pozorovaná data nejsou vyhlazená.
+</p>
+</div>
+</div>
+<div id="vyhlazení-pozorovaných-křivek-7" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Vyhlazení pozorovaných křivek<a href="simulace3diskr.html#vyhlazení-pozorovaných-křivek-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Nyní převedeme pozorované diskrétní hodnoty (vektory hodnot) na funkcionální objekty, se kterými budeme následně pracovat.
+Opět využijeme k vyhlazení B-sline bázi.</p>
+<p>Za uzly bereme celý vektor <code>t</code>, standardně uvažujeme kubické spliny, proto volíme (implicitní volba v <code>R</code>) <code>norder = 4</code>.
+Budeme penalizovat druhou derivaci funkcí.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb694"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb694-1"><a href="simulace3diskr.html#cb694-1" tabindex="-1"></a>rangeval <span class="ot">&lt;-</span> <span class="fu">range</span>(t)</span>
+<span id="cb694-2"><a href="simulace3diskr.html#cb694-2" tabindex="-1"></a>breaks <span class="ot">&lt;-</span> t</span>
+<span id="cb694-3"><a href="simulace3diskr.html#cb694-3" tabindex="-1"></a>norder <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb694-4"><a href="simulace3diskr.html#cb694-4" tabindex="-1"></a></span>
+<span id="cb694-5"><a href="simulace3diskr.html#cb694-5" tabindex="-1"></a>bbasis <span class="ot">&lt;-</span> <span class="fu">create.bspline.basis</span>(<span class="at">rangeval =</span> rangeval, </span>
+<span id="cb694-6"><a href="simulace3diskr.html#cb694-6" tabindex="-1"></a>                               <span class="at">norder =</span> norder, </span>
+<span id="cb694-7"><a href="simulace3diskr.html#cb694-7" tabindex="-1"></a>                               <span class="at">breaks =</span> breaks)</span>
+<span id="cb694-8"><a href="simulace3diskr.html#cb694-8" tabindex="-1"></a></span>
+<span id="cb694-9"><a href="simulace3diskr.html#cb694-9" tabindex="-1"></a>curv.Lfd <span class="ot">&lt;-</span> <span class="fu">int2Lfd</span>(<span class="dv">2</span>) <span class="co"># penalizujeme 2. derivaci</span></span></code></pre></div>
+</details>
+<p>Najdeme vhodnou hodnotu vyhlazovacího parametru <span class="math inline">\(\lambda &gt; 0\)</span> pomocí <span class="math inline">\(GCV(\lambda)\)</span>, tedy pomocí zobecněné cross–validace.
+Hodnotu <span class="math inline">\(\lambda\)</span> budeme uvažovat pro obě klasifikační skupiny stejnou, neboť pro testovací pozorování bychom dopředu nevěděli, kterou hodnotu <span class="math inline">\(\lambda\)</span>, v případě rozdílné volby pro každou třídu, máme volit.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb695"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb695-1"><a href="simulace3diskr.html#cb695-1" tabindex="-1"></a><span class="co"># spojeni pozorovani do jedne matice</span></span>
+<span id="cb695-2"><a href="simulace3diskr.html#cb695-2" tabindex="-1"></a>XX <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X0, X1)</span>
+<span id="cb695-3"><a href="simulace3diskr.html#cb695-3" tabindex="-1"></a></span>
+<span id="cb695-4"><a href="simulace3diskr.html#cb695-4" tabindex="-1"></a>lambda.vect <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">50</span>) <span class="co"># vektor lambd</span></span>
+<span id="cb695-5"><a href="simulace3diskr.html#cb695-5" tabindex="-1"></a>gcv <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="at">length =</span> <span class="fu">length</span>(lambda.vect)) <span class="co"># prazdny vektor pro ulozebi GCV</span></span>
+<span id="cb695-6"><a href="simulace3diskr.html#cb695-6" tabindex="-1"></a></span>
+<span id="cb695-7"><a href="simulace3diskr.html#cb695-7" tabindex="-1"></a><span class="cf">for</span>(index <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(lambda.vect)) {</span>
+<span id="cb695-8"><a href="simulace3diskr.html#cb695-8" tabindex="-1"></a>  curv.Fdpar <span class="ot">&lt;-</span> <span class="fu">fdPar</span>(bbasis, curv.Lfd, lambda.vect[index])</span>
+<span id="cb695-9"><a href="simulace3diskr.html#cb695-9" tabindex="-1"></a>  BSmooth <span class="ot">&lt;-</span> <span class="fu">smooth.basis</span>(t, XX, curv.Fdpar) <span class="co"># vyhlazeni</span></span>
+<span id="cb695-10"><a href="simulace3diskr.html#cb695-10" tabindex="-1"></a>  gcv[index] <span class="ot">&lt;-</span> <span class="fu">mean</span>(BSmooth<span class="sc">$</span>gcv) <span class="co"># prumer pres vsechny pozorovane krivky</span></span>
+<span id="cb695-11"><a href="simulace3diskr.html#cb695-11" tabindex="-1"></a>}</span>
+<span id="cb695-12"><a href="simulace3diskr.html#cb695-12" tabindex="-1"></a></span>
+<span id="cb695-13"><a href="simulace3diskr.html#cb695-13" tabindex="-1"></a>GCV <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb695-14"><a href="simulace3diskr.html#cb695-14" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">round</span>(<span class="fu">log10</span>(lambda.vect), <span class="dv">3</span>),</span>
+<span id="cb695-15"><a href="simulace3diskr.html#cb695-15" tabindex="-1"></a>  <span class="at">GCV =</span> gcv</span>
+<span id="cb695-16"><a href="simulace3diskr.html#cb695-16" tabindex="-1"></a>)</span>
+<span id="cb695-17"><a href="simulace3diskr.html#cb695-17" tabindex="-1"></a></span>
+<span id="cb695-18"><a href="simulace3diskr.html#cb695-18" tabindex="-1"></a><span class="co"># najdeme hodnotu minima</span></span>
+<span id="cb695-19"><a href="simulace3diskr.html#cb695-19" tabindex="-1"></a>lambda.opt <span class="ot">&lt;-</span> lambda.vect[<span class="fu">which.min</span>(gcv)]</span></code></pre></div>
+</details>
+<p>Pro lepší znázornění si vykreslíme průběh <span class="math inline">\(GCV(\lambda)\)</span>.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb696"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb696-1"><a href="simulace3diskr.html#cb696-1" tabindex="-1"></a>GCV <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lambda, <span class="at">y =</span> GCV)) <span class="sc">+</span> </span>
+<span id="cb696-2"><a href="simulace3diskr.html#cb696-2" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linetype =</span> <span class="st">&#39;solid&#39;</span>, <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb696-3"><a href="simulace3diskr.html#cb696-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb696-4"><a href="simulace3diskr.html#cb696-4" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb696-5"><a href="simulace3diskr.html#cb696-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">bquote</span>(<span class="fu">paste</span>(log[<span class="dv">10</span>](lambda), <span class="st">&#39; ;   &#39;</span>, </span>
+<span id="cb696-6"><a href="simulace3diskr.html#cb696-6" tabindex="-1"></a>                        lambda[optimal] <span class="sc">==</span> .(<span class="fu">round</span>(lambda.opt, <span class="dv">4</span>)))),</span>
+<span id="cb696-7"><a href="simulace3diskr.html#cb696-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">GCV</span>(lambda))) <span class="sc">+</span> </span>
+<span id="cb696-8"><a href="simulace3diskr.html#cb696-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log10</span>(lambda.opt), <span class="at">y =</span> <span class="fu">min</span>(gcv)), <span class="at">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="at">size =</span> <span class="fl">2.5</span>)</span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-16-1.png" alt="Průběh $GCV(\lambda)$ pro zvolený vektor $\boldsymbol\lambda$. Na ose $x$ jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru $\lambda_{optimal}$." width="672" />
+<p class="caption">
+Obrázek 5.1: Průběh <span class="math inline">\(GCV(\lambda)\)</span> pro zvolený vektor <span class="math inline">\(\boldsymbol\lambda\)</span>. Na ose <span class="math inline">\(x\)</span> jsou hodnoty vyneseny v logaritmické škále. Červeně je znázorněna optimální hodnota vyhlazovacího parametru <span class="math inline">\(\lambda_{optimal}\)</span>.
+</p>
+</div>
+<p>S touto optimální volbou vyhlazovacího parametru <span class="math inline">\(\lambda\)</span> nyní vyhladíme všechny funkce a opět znázorníme graficky prvních 10 pozorovaných křivek z každé klasifikační třídy.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb697"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb697-1"><a href="simulace3diskr.html#cb697-1" tabindex="-1"></a>curv.fdPar <span class="ot">&lt;-</span> <span class="fu">fdPar</span>(bbasis, curv.Lfd, lambda.opt)</span>
+<span id="cb697-2"><a href="simulace3diskr.html#cb697-2" tabindex="-1"></a>BSmooth <span class="ot">&lt;-</span> <span class="fu">smooth.basis</span>(t, XX, curv.fdPar)</span>
+<span id="cb697-3"><a href="simulace3diskr.html#cb697-3" tabindex="-1"></a>XXfd <span class="ot">&lt;-</span> BSmooth<span class="sc">$</span>fd</span>
+<span id="cb697-4"><a href="simulace3diskr.html#cb697-4" tabindex="-1"></a></span>
+<span id="cb697-5"><a href="simulace3diskr.html#cb697-5" tabindex="-1"></a>fdobjSmootheval <span class="ot">&lt;-</span> <span class="fu">eval.fd</span>(<span class="at">fdobj =</span> XXfd, <span class="at">evalarg =</span> t)</span>
+<span id="cb697-6"><a href="simulace3diskr.html#cb697-6" tabindex="-1"></a>DF<span class="sc">$</span>Vsmooth <span class="ot">&lt;-</span> <span class="fu">c</span>(fdobjSmootheval[, <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">:</span> n_curves_plot, </span>
+<span id="cb697-7"><a href="simulace3diskr.html#cb697-7" tabindex="-1"></a>                                    (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (n <span class="sc">+</span> n_curves_plot))])</span>
+<span id="cb697-8"><a href="simulace3diskr.html#cb697-8" tabindex="-1"></a></span>
+<span id="cb697-9"><a href="simulace3diskr.html#cb697-9" tabindex="-1"></a>DF <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Vsmooth, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
+<span id="cb697-10"><a href="simulace3diskr.html#cb697-10" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
+<span id="cb697-11"><a href="simulace3diskr.html#cb697-11" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb697-12"><a href="simulace3diskr.html#cb697-12" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb697-13"><a href="simulace3diskr.html#cb697-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(x[<span class="dv">1</span>]),</span>
+<span id="cb697-14"><a href="simulace3diskr.html#cb697-14" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(x[<span class="dv">2</span>]),</span>
+<span id="cb697-15"><a href="simulace3diskr.html#cb697-15" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Klasifikační</span><span class="sc">\n</span><span class="st">      třída&#39;</span>) <span class="sc">+</span></span>
+<span id="cb697-16"><a href="simulace3diskr.html#cb697-16" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>))</span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-17"></span>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-17-1.png" alt="Prvních 10 vyhlazených křivek z každé klasifikační třídy." width="672" />
+<p class="caption">
+Obrázek 5.2: Prvních 10 vyhlazených křivek z každé klasifikační třídy.
+</p>
+</div>
+<p>Ještě znázorněme všechny křivky včetně průměru zvlášť pro každou třídu.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb698"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb698-1"><a href="simulace3diskr.html#cb698-1" tabindex="-1"></a>DFsmooth <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb698-2"><a href="simulace3diskr.html#cb698-2" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span> <span class="sc">*</span> n),</span>
+<span id="cb698-3"><a href="simulace3diskr.html#cb698-3" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> <span class="fu">length</span>(t)), <span class="dv">2</span>),</span>
+<span id="cb698-4"><a href="simulace3diskr.html#cb698-4" tabindex="-1"></a>  <span class="at">Smooth =</span> <span class="fu">c</span>(fdobjSmootheval),</span>
+<span id="cb698-5"><a href="simulace3diskr.html#cb698-5" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n], <span class="dv">1</span>, mean), n),</span>
+<span id="cb698-6"><a href="simulace3diskr.html#cb698-6" tabindex="-1"></a>            <span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">2</span> <span class="sc">*</span> n)], <span class="dv">1</span>, mean), n)),</span>
+<span id="cb698-7"><a href="simulace3diskr.html#cb698-7" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">each =</span> n <span class="sc">*</span> <span class="fu">length</span>(t)))</span>
+<span id="cb698-8"><a href="simulace3diskr.html#cb698-8" tabindex="-1"></a>)</span>
+<span id="cb698-9"><a href="simulace3diskr.html#cb698-9" tabindex="-1"></a></span>
+<span id="cb698-10"><a href="simulace3diskr.html#cb698-10" tabindex="-1"></a>DFmean <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb698-11"><a href="simulace3diskr.html#cb698-11" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span>),</span>
+<span id="cb698-12"><a href="simulace3diskr.html#cb698-12" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n], <span class="dv">1</span>, mean), </span>
+<span id="cb698-13"><a href="simulace3diskr.html#cb698-13" tabindex="-1"></a>            <span class="fu">apply</span>(fdobjSmootheval[ , (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">2</span> <span class="sc">*</span> n)], <span class="dv">1</span>, mean)),</span>
+<span id="cb698-14"><a href="simulace3diskr.html#cb698-14" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">each =</span> <span class="fu">length</span>(t)))</span>
+<span id="cb698-15"><a href="simulace3diskr.html#cb698-15" tabindex="-1"></a>)</span>
+<span id="cb698-16"><a href="simulace3diskr.html#cb698-16" tabindex="-1"></a></span>
+<span id="cb698-17"><a href="simulace3diskr.html#cb698-17" tabindex="-1"></a>DFsmooth <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Smooth, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
+<span id="cb698-18"><a href="simulace3diskr.html#cb698-18" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
+<span id="cb698-19"><a href="simulace3diskr.html#cb698-19" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.25</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb698-20"><a href="simulace3diskr.html#cb698-20" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb698-21"><a href="simulace3diskr.html#cb698-21" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(x[<span class="dv">1</span>]),</span>
+<span id="cb698-22"><a href="simulace3diskr.html#cb698-22" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(x[<span class="dv">2</span>]),</span>
+<span id="cb698-23"><a href="simulace3diskr.html#cb698-23" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Klasifikační</span><span class="sc">\n</span><span class="st">      třída&#39;</span>) <span class="sc">+</span></span>
+<span id="cb698-24"><a href="simulace3diskr.html#cb698-24" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>)) <span class="sc">+</span> </span>
+<span id="cb698-25"><a href="simulace3diskr.html#cb698-25" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Mean, <span class="at">colour =</span> group), </span>
+<span id="cb698-26"><a href="simulace3diskr.html#cb698-26" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">linetype =</span> <span class="st">&#39;solid&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb698-27"><a href="simulace3diskr.html#cb698-27" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>)) <span class="sc">+</span> </span>
+<span id="cb698-28"><a href="simulace3diskr.html#cb698-28" tabindex="-1"></a>  <span class="co">#ylim(c(-1, 2)) + </span></span>
+<span id="cb698-29"><a href="simulace3diskr.html#cb698-29" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>))<span class="co">#, limits = c(-1, 2))</span></span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-18"></span>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-18-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
+<p class="caption">
+Obrázek 1.6: Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.
+</p>
+</div>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb699"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb699-1"><a href="simulace3diskr.html#cb699-1" tabindex="-1"></a>DFsmooth <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb699-2"><a href="simulace3diskr.html#cb699-2" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span> <span class="sc">*</span> n),</span>
+<span id="cb699-3"><a href="simulace3diskr.html#cb699-3" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> <span class="fu">length</span>(t)), <span class="dv">2</span>),</span>
+<span id="cb699-4"><a href="simulace3diskr.html#cb699-4" tabindex="-1"></a>  <span class="at">Smooth =</span> <span class="fu">c</span>(fdobjSmootheval),</span>
+<span id="cb699-5"><a href="simulace3diskr.html#cb699-5" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n], <span class="dv">1</span>, mean), n),</span>
+<span id="cb699-6"><a href="simulace3diskr.html#cb699-6" tabindex="-1"></a>            <span class="fu">rep</span>(<span class="fu">apply</span>(fdobjSmootheval[ , (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">2</span> <span class="sc">*</span> n)], <span class="dv">1</span>, mean), n)),</span>
+<span id="cb699-7"><a href="simulace3diskr.html#cb699-7" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">each =</span> n <span class="sc">*</span> <span class="fu">length</span>(t)))</span>
+<span id="cb699-8"><a href="simulace3diskr.html#cb699-8" tabindex="-1"></a>)</span>
+<span id="cb699-9"><a href="simulace3diskr.html#cb699-9" tabindex="-1"></a></span>
+<span id="cb699-10"><a href="simulace3diskr.html#cb699-10" tabindex="-1"></a>DFmean <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb699-11"><a href="simulace3diskr.html#cb699-11" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">rep</span>(t, <span class="dv">2</span>),</span>
+<span id="cb699-12"><a href="simulace3diskr.html#cb699-12" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(<span class="fu">apply</span>(fdobjSmootheval[ , <span class="dv">1</span> <span class="sc">:</span> n], <span class="dv">1</span>, mean), </span>
+<span id="cb699-13"><a href="simulace3diskr.html#cb699-13" tabindex="-1"></a>            <span class="fu">apply</span>(fdobjSmootheval[ , (n <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">2</span> <span class="sc">*</span> n)], <span class="dv">1</span>, mean)),</span>
+<span id="cb699-14"><a href="simulace3diskr.html#cb699-14" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">each =</span> <span class="fu">length</span>(t)))</span>
+<span id="cb699-15"><a href="simulace3diskr.html#cb699-15" tabindex="-1"></a>)</span>
+<span id="cb699-16"><a href="simulace3diskr.html#cb699-16" tabindex="-1"></a></span>
+<span id="cb699-17"><a href="simulace3diskr.html#cb699-17" tabindex="-1"></a>DFsmooth <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Smooth, <span class="at">group =</span> <span class="fu">interaction</span>(time, group), </span>
+<span id="cb699-18"><a href="simulace3diskr.html#cb699-18" tabindex="-1"></a>                 <span class="at">colour =</span> group)) <span class="sc">+</span> </span>
+<span id="cb699-19"><a href="simulace3diskr.html#cb699-19" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.25</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb699-20"><a href="simulace3diskr.html#cb699-20" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb699-21"><a href="simulace3diskr.html#cb699-21" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(x[<span class="dv">1</span>]),</span>
+<span id="cb699-22"><a href="simulace3diskr.html#cb699-22" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(x[<span class="dv">2</span>]),</span>
+<span id="cb699-23"><a href="simulace3diskr.html#cb699-23" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">&#39;Klasifikační</span><span class="sc">\n</span><span class="st">      třída&#39;</span>) <span class="sc">+</span></span>
+<span id="cb699-24"><a href="simulace3diskr.html#cb699-24" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;Y = 0&#39;</span>, <span class="st">&#39;Y = 1&#39;</span>)) <span class="sc">+</span> </span>
+<span id="cb699-25"><a href="simulace3diskr.html#cb699-25" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Mean, <span class="at">colour =</span> group), </span>
+<span id="cb699-26"><a href="simulace3diskr.html#cb699-26" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">linetype =</span> <span class="st">&#39;solid&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb699-27"><a href="simulace3diskr.html#cb699-27" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>)) <span class="sc">+</span> </span>
+<span id="cb699-28"><a href="simulace3diskr.html#cb699-28" tabindex="-1"></a>  <span class="co">#ylim(c(-1, 2)) + </span></span>
+<span id="cb699-29"><a href="simulace3diskr.html#cb699-29" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-19"></span>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-19-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled." width="672" />
+<p class="caption">
+Obrázek 5.3: Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.
+</p>
+</div>
+</div>
+<div id="klasifikace-křivek-7" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Klasifikace křivek<a href="simulace3diskr.html#klasifikace-křivek-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Nejprve načteme potřebné knihovny pro klasifikaci.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb700-1"><a href="simulace3diskr.html#cb700-1" tabindex="-1"></a><span class="fu">library</span>(caTools) <span class="co"># pro rozdeleni na testovaci a trenovaci</span></span>
+<span id="cb700-2"><a href="simulace3diskr.html#cb700-2" tabindex="-1"></a><span class="fu">library</span>(caret) <span class="co"># pro k-fold CV</span></span>
+<span id="cb700-3"><a href="simulace3diskr.html#cb700-3" tabindex="-1"></a><span class="fu">library</span>(fda.usc) <span class="co"># pro KNN, fLR</span></span>
+<span id="cb700-4"><a href="simulace3diskr.html#cb700-4" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># pro LDA</span></span>
+<span id="cb700-5"><a href="simulace3diskr.html#cb700-5" tabindex="-1"></a><span class="fu">library</span>(fdapace)</span>
+<span id="cb700-6"><a href="simulace3diskr.html#cb700-6" tabindex="-1"></a><span class="fu">library</span>(pracma)</span>
+<span id="cb700-7"><a href="simulace3diskr.html#cb700-7" tabindex="-1"></a><span class="fu">library</span>(refund) <span class="co"># pro LR na skorech</span></span>
+<span id="cb700-8"><a href="simulace3diskr.html#cb700-8" tabindex="-1"></a><span class="fu">library</span>(nnet) <span class="co"># pro LR na skorech</span></span>
+<span id="cb700-9"><a href="simulace3diskr.html#cb700-9" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb700-10"><a href="simulace3diskr.html#cb700-10" tabindex="-1"></a><span class="fu">library</span>(rpart) <span class="co"># stromy</span></span>
+<span id="cb700-11"><a href="simulace3diskr.html#cb700-11" tabindex="-1"></a><span class="fu">library</span>(rattle) <span class="co"># grafika</span></span>
+<span id="cb700-12"><a href="simulace3diskr.html#cb700-12" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb700-13"><a href="simulace3diskr.html#cb700-13" tabindex="-1"></a><span class="fu">library</span>(randomForest) <span class="co"># nahodny les</span></span></code></pre></div>
+</details>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="simulace3shift.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="simulace4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/Tomas-Pompa/MastersThesis/blob/main/08-Simulace_3_discretisation.Rmd",
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"info": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

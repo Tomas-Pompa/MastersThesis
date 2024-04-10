@@ -92,7 +92,7 @@ data[c(1, 2, 3, 5, 9), ] |>
 </div>
 
 ```r
-ggsave('figures/app_02_log_periodogramy.pdf', width = 20, height = 5)
+# ggsave('figures/app_02_log_periodogramy.pdf', width = 12, height = 5)
 ```
 
 Vytvořme si ještě vhodné proměnné v `R`, do kterých uložíme trénovací a testovací záznamy a také informaci o druhu fonému.
@@ -226,6 +226,7 @@ Ještě znázorněme křivky včetně průměru zvlášť pro každou třídu.
 
 
 ```r
+library(tikzDevice)
 n <- dim(XX)[2]
 y <- c(y_train, y_test)
 DFsmooth <- data.frame(
@@ -236,32 +237,37 @@ DFsmooth <- data.frame(
 
 DFmean <- data.frame(
   t = rep(t, 2),
-  Mean = c(apply(fdobjSmootheval[ , y == phoneme_subset[1]], 1, mean),
-            apply(fdobjSmootheval[ , y == phoneme_subset[2]], 1, mean)),
+  Mean = c(eval.fd(fdobj = mean.fd(XXfd[y == phoneme_subset[1]]), evalarg = t),
+           eval.fd(fdobj = mean.fd(XXfd[y == phoneme_subset[2]]), evalarg = t)),
   Phoneme = factor(rep(phoneme_subset, each = length(t)),
                  levels = levels(y))
 )
 
 DFsmooth |> 
-  filter(time %in% as.character(1:100)) |>
+  filter(time %in% as.character(1:50)) |>
   ggplot(aes(x = t, y = Smooth, color = Phoneme)) + 
-  geom_line(aes(group = time), linewidth = 0.2) +
+  geom_line(aes(group = time), linewidth = 0.05, alpha = 0.7) +
   theme_bw() +
-  labs(x = 'Frekvence [Hz]',
-       y = 'log-periodogram',
+  labs(x = 'Frekvence',
+       y = 'Log-periodogram',
        colour = 'Phoneme') +
-  scale_colour_discrete(labels = phoneme_subset) + 
   geom_line(data = DFmean, aes(x = t, y = Mean, 
                                group = Phoneme), 
-            linewidth = 1, linetype = 'solid', colour = 'grey2') + 
+            linewidth = 1.25, linetype = 'solid', colour = 'grey2') + 
   facet_wrap(~Phoneme) + 
-  theme(legend.position = 'none')
+  theme(legend.position = 'none') +
+  scale_colour_manual(values = c('tomato', 'deepskyblue2'),
+                      labels = phoneme_subset)
 ```
 
 <div class="figure">
 <img src="10-Application_2_files/figure-html/unnamed-chunk-11-1.png" alt="Vykreslení prvních 100 vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čarou je zakreslen průměr pro každou třídu." width="672" />
 <p class="caption">(\#fig:unnamed-chunk-11)Vykreslení prvních 100 vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čarou je zakreslen průměr pro každou třídu.</p>
 </div>
+
+```r
+# ggsave("figures/kap7_phoneme_curves_mean.tex", device = tikz, width = 9, height = 4.5)
+```
 
 Nakonec této podkapitoly si ještě vykresleme vyhlazené křivky pro vybrané záznamy z grafu pro všechny fonémy výše.
 
@@ -1084,19 +1090,37 @@ data.frame(
   response = model.glm$fitted.values,
   Y = factor(y.train)
 ) |> ggplot(aes(x = linear.predictor, y = response, colour = Y)) + 
-  geom_point(size = .5) + 
-  scale_colour_discrete(labels = phoneme_subset) +
-  geom_abline(aes(slope = 0, intercept = 0.5), linetype = 'dashed') + 
+  geom_abline(aes(slope = 0, intercept = 0.5), linetype = 'dashed', colour = 'grey', linewidth = 0.3) + 
+  geom_point(aes(x = linear.predictor,
+                 y = response + rnorm(length(response), sd = 0.02), 
+                 colour = Y),
+             size = 0.5, alpha = 0.75) + 
+  geom_line(aes(x = linear.predictor, y = response), colour = 'grey2') +
+  # scale_colour_discrete(labels = phoneme_subset) +
   theme_bw() + 
   labs(x = 'Lineární prediktor',
        y = 'Odhadnuté pravděpodobnosti Pr(Y = 1|X = x)',
-       colour = 'Foném') 
+       colour = 'Foném') +
+  scale_colour_manual(values = c('tomato', 'deepskyblue2'),
+                      labels = phoneme_subset) + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = c(0.85, 0.18)) + 
+  scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1)#,
+                     # labels = c('0', '0.25', '0.5', '0.75', '1')
+                     ) + 
+  scale_x_continuous(breaks = c(-6, -3, 0, 3, 6))
 ```
 
 <div class="figure">
 <img src="10-Application_2_files/figure-html/unnamed-chunk-41-1.png" alt="Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy." width="672" />
 <p class="caption">(\#fig:unnamed-chunk-41)Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.</p>
 </div>
+
+```r
+# library(tikzDevice)
+# ggsave("figures/DP_kap3_linearpredictor.tex", width = 4, height = 3.5, device = tikz)
+```
 
 Můžeme si ještě pro informaci zobrazit průběh odhadnuté parametrické funkce $\beta(t)$.
 
@@ -1109,7 +1133,7 @@ data.frame(t = t.seq, beta = beta.seq) |>
   ggplot(aes(t, beta)) + 
   geom_abline(aes(slope = 0, intercept = 0), linetype = 'dashed', 
               linewidth = 0.5, colour = 'grey') +
-  geom_line() + 
+  geom_line(colour = 'deepskyblue2', linewidth = 0.8) + 
   theme_bw() +
   labs(x = expression(t),
        y = expression(widehat(beta)(t))) + 
@@ -1121,6 +1145,11 @@ data.frame(t = t.seq, beta = beta.seq) |>
 <img src="10-Application_2_files/figure-html/unnamed-chunk-42-1.png" alt="Průběh odhadu parametrické funkce $\beta(t), t \in [1, 256]$." width="672" />
 <p class="caption">(\#fig:unnamed-chunk-42)Průběh odhadu parametrické funkce $\beta(t), t \in [1, 256]$.</p>
 </div>
+
+```r
+# ggsave("figures/DP_kap3_betahat.tex", width = 4, height = 3.5,
+#        device = tikz)
+```
 
 Vidíme, že hodnoty funkce $\hat\beta(t)$ se drží kolem nuly pro frekvence $t$ z prostředka  a konce intervalu $[1, 256]$, zatímco pro počáteční frekvence jsou hodnoty vyšší.
 To implikuje rozdílnost funkcí z klasifikačních tříd zejména na začátku intervalu, zatímco uprostřed intervalu jsou funkce velmi podobné.
@@ -1499,7 +1528,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost náhodného lesu na trénovacích datech je tedy 99.84 % a na testovacích datech 80.87 %.
+Přesnost náhodného lesu na trénovacích datech je tedy 99.77 % a na testovacích datech 80.18 %.
 
 
 ```r
@@ -1533,7 +1562,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy 99.53 % a na testovacích datech 79.04 %.
+Přesnost rozhodovacího stromu na trénovacích datech je tedy 99.69 % a na testovacích datech 77.68 %.
 
 
 ```r
@@ -1567,7 +1596,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost tohoto klasifikátoru na trénovacích datech je 99.84 % a na testovacích datech 79.95 %.
+Přesnost tohoto klasifikátoru na trénovacích datech je 99.92 % a na testovacích datech 81.09 %.
 
 
 ```r
@@ -1621,6 +1650,35 @@ Jednak můžeme místo klasifikace původní křivky využít její derivaci (p�
 Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [1, 256]$), přičemž budeme uvažovat všechny tři výše zmíněné jádrové funkce.
 
 
+```r
+# set norm equal to one
+norms <- c()
+for (i in 1:dim(XXfd$coefs)[2]) {
+  norms <- c(norms, as.numeric(1 / norm.fd(BSmooth$fd[i])))
+  }
+XXfd_norm <- XXfd 
+XXfd_norm$coefs <- XXfd_norm$coefs * matrix(norms, 
+                                            ncol = dim(XXfd$coefs)[2],
+                                            nrow = dim(XXfd$coefs)[1],
+                                            byrow = T)
+
+# rozdeleni na testovaci a trenovaci cast
+split_norm <- ifelse(substr(XXfd_norm$fdnames$reps, 1, 2) == 'tr', TRUE, FALSE)
+
+X.train_norm <- subset(XXfd_norm, split_norm == TRUE)
+X.test_norm <- subset(XXfd_norm, split_norm == FALSE)
+
+Y.train_norm <- subset(y, split_norm == TRUE)
+Y.test_norm <- subset(y, split_norm == FALSE)
+
+grid.data <- eval.fd(fdobj = X.train_norm, evalarg = t.seq)
+grid.data <- as.data.frame(t(grid.data)) 
+grid.data$Y <- Y.train_norm |> factor()
+
+grid.data.test <- eval.fd(fdobj = X.test_norm, evalarg = t.seq)
+grid.data.test <- as.data.frame(t(grid.data.test))
+grid.data.test$Y <- Y.test_norm |> factor()
+```
 
 Nyní se pokusme, na rozdíl od postupu v předchozích kapitolách, hyperparametry klasifikátorů odhadnout z dat pomocí 10-násobné cross-validace. Vzhledem k tomu, že každé jádro má ve své definici jiné hyperparametry, budeme ke každé jádrové funkci přistupovat zvlášť. Nicméně hyperparametr $C$ vystupuje u všech jádrových funkcí, přičemž ale připouštíme, že se může jeho optimální hodnota mezi jádry lišit.
 
@@ -1633,10 +1691,10 @@ set.seed(42)
 k_cv <- 10 #  k-fold CV
 
 # rozdelime trenovaci data na k casti
-folds <- createMultiFolds(1:sum(split), k = k_cv, time = 1)
+folds <- createMultiFolds(1:sum(split_norm), k = k_cv, time = 1)
 
 # ktere hodnoty gamma chceme uvazovat
-gamma.cv <- 10^seq(-3, 2, length = 10)
+gamma.cv <- 10^seq(-5, 1, length = 10)
 C.cv <- 10^seq(-3, 3, length = 10)
 p.cv <- 3
 coef0 <- 1
@@ -1756,7 +1814,7 @@ presnost.opt.cv <- c(max(CV.results$SVM.l),
                      max(CV.results$SVM.r))
 ```
 
-Podívejme se, jak dopadly optimální hodnoty. Pro *lineární jádro* máme optimální hodnotu $C$ rovnu 0.4642, pro *polynomiální jádro* je $C$ rovno 0.1 a pro *radiální jádro* máme dvě optimální hodnoty, pro $C$ je optimální hodnota 10 a pro $\gamma$ je to 0.001. Validační přesnosti jsou postupně 0.8387795 pro lineární, 0.8113989 pro polynomiální a 0.8223487 pro radiální jádro.
+Podívejme se, jak dopadly optimální hodnoty. Pro *lineární jádro* máme optimální hodnotu $C$ rovnu 0.1, pro *polynomiální jádro* je $C$ rovno 0.1 a pro *radiální jádro* máme dvě optimální hodnoty, pro $C$ je optimální hodnota 1000 a pro $\gamma$ je to 0. Validační přesnosti jsou postupně 0.8348794 pro lineární, 0.8153297 pro polynomiální a 0.8333169 pro radiální jádro.
 
 Konečně můžeme sestrojit finální klasifikátory na celých trénovacích datech s hodnotami hyperparametrů určenými pomocí 10-násobné CV. Určíme také chybovosti na testovacích a také na trénovacích datech.
 
@@ -1811,8 +1869,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM na trénovacích datech je tedy 84.4288 % pro lineární jádro, 84.4288 % pro polynomiální jádro a 84.1941 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 79.9544 % pro lineární jádro, 80.8656 % pro polynomiální jádro a 80.41 % pro radiální jádro.
+Přesnost metody SVM na trénovacích datech je tedy 84.3505 % pro lineární jádro, 86.072 % pro polynomiální jádro a 84.4288 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 79.9544 % pro lineární jádro, 81.0934 % pro polynomiální jádro a 79.4989 % pro radiální jádro.
 
 
 ```r
@@ -1838,7 +1896,7 @@ U všech třech jader projdeme hodnoty hyperparametru $C$ v intervalu $[10^{-3},
 set.seed(42)
 
 # ktere hodnoty gamma chceme uvazovat
-gamma.cv <- 10^seq(-3, 2, length = 10)
+gamma.cv <- 10^seq(-5, 1, length = 10)
 C.cv <- 10^seq(-3, 3, length = 10)
 p.cv <- 3
 coef0 <- 1
@@ -1958,7 +2016,7 @@ presnost.opt.cv <- c(max(CV.results$SVM.l),
                      max(CV.results$SVM.r))
 ```
 
-Podívejme se, jak dopadly optimální hodnoty. Pro *lineární jádro* máme optimální hodnotu $C$ rovnu 0.0046, pro *polynomiální jádro* je $C$ rovno 0.1 a pro *radiální jádro* máme dvě optimální hodnoty, pro $C$ je optimální hodnota 1000 a pro $\gamma$ je to 0.001. Validační přesnosti jsou postupně 0.7965367 pro lineární, 0.7934178 pro polynomiální a 0.8012365 pro radiální jádro.
+Podívejme se, jak dopadly optimální hodnoty. Pro *lineární jádro* máme optimální hodnotu $C$ rovnu 0.0046, pro *polynomiální jádro* je $C$ rovno 0.1 a pro *radiální jádro* máme dvě optimální hodnoty, pro $C$ je optimální hodnota 46.4159 a pro $\gamma$ je to 0.0046. Validační přesnosti jsou postupně 0.7965367 pro lineární, 0.7934178 pro polynomiální a 0.8012426 pro radiální jádro.
 
 Konečně můžeme sestrojit finální klasifikátory na celých trénovacích datech s hodnotami hyperparametrů určenými pomocí 10-násobné CV. Určíme také chybovosti na testovacích a také na trénovacích datech.
 
@@ -1976,6 +2034,7 @@ clf.SVM.p.PCA <- svm(Y ~ ., data = data.PCA.train,
                      scale = TRUE,
                      cost = C.opt[2],
                      degree = p.opt,
+                     coef0 = coef0,
                      kernel = 'polynomial')
 
 clf.SVM.r.PCA <- svm(Y ~ ., data = data.PCA.train,
@@ -2012,8 +2071,8 @@ presnost.test.r <- table(data.PCA.test$Y, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 80.05 % pro lineární jádro, 77.62 % pro polynomiální jádro a 81.61 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 79.2711 % pro lineární jádro, 74.9431 % pro polynomiální jádro a 80.1822 % pro radiální jádro.
+Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 80.05 % pro lineární jádro, 82.86 % pro polynomiální jádro a 81.53 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 79.2711 % pro lineární jádro, 81.3212 % pro polynomiální jádro a 79.9544 % pro radiální jádro.
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v předchozích případech, kdy jsme také vykreslovali klasifikační hranici.
@@ -2070,7 +2129,7 @@ U všech třech jader projdeme hodnoty hyperparametru $C$ v intervalu $[10^{-3},
 set.seed(42)
 
 # ktere hodnoty gamma chceme uvazovat
-gamma.cv <- 10^seq(-3, 2, length = 10)
+gamma.cv <- 10^seq(-5, 1, length = 10)
 C.cv <- 10^seq(-3, 3, length = 10)
 p.cv <- 3
 coef0 <- 1
@@ -2192,7 +2251,7 @@ presnost.opt.cv <- c(max(CV.results$SVM.l),
                      max(CV.results$SVM.r))
 ```
 
-Podívejme se, jak dopadly optimální hodnoty. Pro *lineární jádro* máme optimální hodnotu $C$ rovnu 0.1, pro *polynomiální jádro* je $C$ rovno 0.1 a pro *radiální jádro* máme dvě optimální hodnoty, pro $C$ je optimální hodnota 0.4642 a pro $\gamma$ je to 0.001. Validační přesnosti jsou postupně 0.8372109 pro lineární, 0.8113989 pro polynomiální a 0.8168861 pro radiální jádro.
+Podívejme se, jak dopadly optimální hodnoty. Pro *lineární jádro* máme optimální hodnotu $C$ rovnu 0.1, pro *polynomiální jádro* je $C$ rovno 0.1 a pro *radiální jádro* máme dvě optimální hodnoty, pro $C$ je optimální hodnota 1000 a pro $\gamma$ je to 0. Validační přesnosti jsou postupně 0.8372109 pro lineární, 0.8113989 pro polynomiální a 0.831736 pro radiální jádro.
 
 Konečně můžeme sestrojit finální klasifikátory na celých trénovacích datech s hodnotami hyperparametrů určenými pomocí 10-násobné CV. Určíme také chybovosti na testovacích a také na trénovacích datech.
 
@@ -2210,6 +2269,7 @@ clf.SVM.p.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                         scale = TRUE,
                         cost = C.opt[2],
                         degree = p.opt,
+                        coef0 = coef0,
                         kernel = 'polynomial')
 
 clf.SVM.r.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
@@ -2246,8 +2306,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 84.74 % pro lineární jádro, 74.41 % pro polynomiální jádro a 82.79 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 80.41 % pro lineární jádro, 69.4761 % pro polynomiální jádro a 80.8656 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 84.74 % pro lineární jádro, 84.35 % pro polynomiální jádro a 84.66 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 80.41 % pro lineární jádro, 80.8656 % pro polynomiální jádro a 80.1822 % pro radiální jádro.
 
 
 ```r
@@ -2358,6 +2418,7 @@ for (d in dimensions) {
                             type = 'C-classification',
                             scale = TRUE,
                             cost = C,
+                            coef0 = coef0,
                             degree = p,
                             kernel = 'polynomial')
     
@@ -2410,11 +2471,11 @@ data.frame(d_opt = d.opt, ERR = 1 - presnost.opt.cv,
 ```
 ##        d_opt       ERR
 ## linear    40 0.1643270
-## poly      38 0.1846518
+## poly      43 0.1925320
 ## radial    38 0.1690453
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d$ jako 40 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8357, 38 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8153 a 38 pro radiální jádro s hodnotou přesnosti 0.831.
+Vidíme, že nejlépe vychází hodnota parametru $d$ jako 40 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8357, 43 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8075 a 38 pro radiální jádro s hodnotou přesnosti 0.831.
 Pro přehlednost si ještě vykresleme průběh validačních chybovostí v závislosti na dimenzi $d$.
 
 
@@ -2495,6 +2556,7 @@ for (kernel_number in 1:3) {
                             scale = TRUE,
                             cost = C,
                             degree = p,
+                            coef0 = coef0,
                             gamma = gamma,
                             kernel = kernel_type)
   
@@ -2513,8 +2575,8 @@ for (kernel_number in 1:3) {
 }
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 15.1 % pro lineární jádro, 40.61 % pro polynomiální jádro a 16.12 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 19.59 % pro lineární jádro, 40.09 % pro polynomiální jádro a 17.54 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 15.1 % pro lineární jádro, 16.12 % pro polynomiální jádro a 16.12 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 19.59 % pro lineární jádro, 18.45 % pro polynomiální jádro a 17.54 % pro radiální jádro.
 
 
 ```r
@@ -2996,11 +3058,11 @@ Table: (\#tab:unnamed-chunk-98)Souhrnné výsledky cross-validace pro metodu SVM
 
           $\quad\quad\quad\quad\quad d$   $\quad\quad\quad\quad\quad\gamma$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ----------------------------------  ----------------------------------  ----------------------------------
-linear                               15                              0.3162                              0.1745  linear                            
+linear                               15                              0.3162                              0.1737  linear                            
 poly                                 19                              3.1623                              0.1924  polynomial                        
 radial                               23                             10.0000                              0.1862  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 15 a $\gamma={}$ 0.3162 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8255, $d={}$ 19 a $\gamma={}$ 3.1623 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8076 a $d={}$ 23 a $\gamma={}$ 10 pro radiální jádro s hodnotou přesnosti 0.8138.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 15 a $\gamma={}$ 0.3162 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8263, $d={}$ 19 a $\gamma={}$ 3.1623 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8076 a $d={}$ 23 a $\gamma={}$ 10 pro radiální jádro s hodnotou přesnosti 0.8138.
 Pro zajímavost si ještě vykresleme funkci validační chybovosti v závislosti na dimenzi $d$ a hodnotě hyperparametru $\gamma$.
 
 
@@ -3135,12 +3197,12 @@ Table: (\#tab:unnamed-chunk-102)Souhrnné výsledky metody SVM v kombinaci s RKH
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - radial                                                           0.1721                                                   0.2210
-SVM poly - RKHS - radial                                                             0.0743                                                   0.2255
-SVM rbf - RKHS - radial                                                              0.1142                                                   0.2096
+SVM linear - RKHS - radial                                                           0.1714                                                   0.2187
+SVM poly - RKHS - radial                                                             0.0736                                                   0.2255
+SVM rbf - RKHS - radial                                                              0.1150                                                   0.2073
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 17.21 % pro lineární jádro, 7.43 % pro polynomiální jádro a 11.42 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 22.1 % pro lineární jádro, 22.55 % pro polynomiální jádro a 20.96 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 17.14 % pro lineární jádro, 7.36 % pro polynomiální jádro a 11.5 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 21.87 % pro lineární jádro, 22.55 % pro polynomiální jádro a 20.73 % pro radiální jádro.
 
 
 ```r
@@ -3320,10 +3382,10 @@ Table: (\#tab:unnamed-chunk-107)Souhrnné výsledky cross-validace pro metodu SV
           $\quad\quad\quad\quad\quad d$   $\quad\quad\quad\quad\quad p$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ------------------------------  ----------------------------------  ----------------------------------
 linear                               33                               2                              0.1674  linear                            
-poly                                 33                               3                              0.1940  polynomial                        
+poly                                 13                               3                              0.1956  polynomial                        
 radial                               28                               2                              0.1792  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 33 a $p={}$ 2 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8326, $d={}$ 33 a $p={}$ 3 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.806 a $d={}$ 28 a $p={}$ 2 pro radiální jádro s hodnotou přesnosti 0.8208.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 33 a $p={}$ 2 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8326, $d={}$ 13 a $p={}$ 3 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8044 a $d={}$ 28 a $p={}$ 2 pro radiální jádro s hodnotou přesnosti 0.8208.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3425,12 +3487,12 @@ Table: (\#tab:unnamed-chunk-110)Souhrnné výsledky metody SVM v kombinaci s RKH
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-SVM linear - RKHS - poly                                                             0.1612                                                   0.2301
-SVM poly - RKHS - poly                                                               0.0845                                                   0.2460
+SVM linear - RKHS - poly                                                             0.1612                                                   0.2323
+SVM poly - RKHS - poly                                                               0.1432                                                   0.2392
 SVM rbf - RKHS - poly                                                                0.1236                                                   0.2164
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 16.12 % pro lineární jádro, 8.45 % pro polynomiální jádro a 12.36 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 23.01 % pro lineární jádro, 24.6 % pro polynomiální jádro a 21.64 % pro radiální jádro.
+Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna 16.12 % pro lineární jádro, 14.32 % pro polynomiální jádro a 12.36 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 23.23 % pro lineární jádro, 23.92 % pro polynomiální jádro a 21.64 % pro radiální jádro.
 
 
 ```r
@@ -3594,11 +3656,11 @@ Table: (\#tab:unnamed-chunk-115)Souhrnné výsledky cross-validace pro metodu SV
 
           $\quad\quad\quad\quad\quad d$   $\widehat{Err}_{cross\_validace}$  Model                             
 -------  ------------------------------  ----------------------------------  ----------------------------------
-linear                               39                              0.1878  linear                            
+linear                               39                              0.1870  linear                            
 poly                                 40                              0.2066  polynomial                        
 radial                               37                              0.1941  radial                            
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ 39 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8122, $d={}$ 40 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.7934 a $d={}$ 37 pro radiální jádro s hodnotou přesnosti 0.8059.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ 39 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.813, $d={}$ 40 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.7934 a $d={}$ 37 pro radiální jádro s hodnotou přesnosti 0.8059.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3728,26 +3790,26 @@ LR score                                                                        
 Tree - diskr.                                                                        0.1776                                                   0.2141
 Tree - score                                                                         0.2527                                                   0.3121
 Tree - Bbasis                                                                        0.1588                                                   0.2210
-RForest - diskr                                                                      0.0016                                                   0.1913
-RForest - score                                                                      0.0047                                                   0.2096
-RForest - Bbasis                                                                     0.0016                                                   0.2005
-SVM linear - diskr                                                                   0.1557                                                   0.2005
-SVM poly - diskr                                                                     0.1557                                                   0.1913
-SVM rbf - diskr                                                                      0.1581                                                   0.1959
+RForest - diskr                                                                      0.0023                                                   0.1982
+RForest - score                                                                      0.0031                                                   0.2232
+RForest - Bbasis                                                                     0.0008                                                   0.1891
+SVM linear - diskr                                                                   0.1565                                                   0.2005
+SVM poly - diskr                                                                     0.1393                                                   0.1891
+SVM rbf - diskr                                                                      0.1557                                                   0.2050
 SVM linear - PCA                                                                     0.1995                                                   0.2073
-SVM poly - PCA                                                                       0.2238                                                   0.2506
-SVM rbf - PCA                                                                        0.1839                                                   0.1982
+SVM poly - PCA                                                                       0.1714                                                   0.1868
+SVM rbf - PCA                                                                        0.1847                                                   0.2005
 SVM linear - Bbasis                                                                  0.1526                                                   0.1959
-SVM poly - Bbasis                                                                    0.2559                                                   0.3052
-SVM rbf - Bbasis                                                                     0.1721                                                   0.1913
+SVM poly - Bbasis                                                                    0.1565                                                   0.1913
+SVM rbf - Bbasis                                                                     0.1534                                                   0.1982
 SVM linear - projection                                                              0.1510                                                   0.1959
-SVM poly - projection                                                                0.4061                                                   0.4009
+SVM poly - projection                                                                0.1612                                                   0.1845
 SVM rbf - projection                                                                 0.1612                                                   0.1754
-SVM linear - RKHS - radial                                                           0.1721                                                   0.2210
-SVM poly - RKHS - radial                                                             0.0743                                                   0.2255
-SVM rbf - RKHS - radial                                                              0.1142                                                   0.2096
-SVM linear - RKHS - poly                                                             0.1612                                                   0.2301
-SVM poly - RKHS - poly                                                               0.0845                                                   0.2460
+SVM linear - RKHS - radial                                                           0.1714                                                   0.2187
+SVM poly - RKHS - radial                                                             0.0736                                                   0.2255
+SVM rbf - RKHS - radial                                                              0.1150                                                   0.2073
+SVM linear - RKHS - poly                                                             0.1612                                                   0.2323
+SVM poly - RKHS - poly                                                               0.1432                                                   0.2392
 SVM rbf - RKHS - poly                                                                0.1236                                                   0.2164
 SVM linear - RKHS - linear                                                           0.1784                                                   0.2255
 SVM poly - RKHS - linear                                                             0.0696                                                   0.2346
@@ -4510,6 +4572,7 @@ clf.SVM.l <- svm(Y ~ ., data = grid.data,
 clf.SVM.p <- svm(Y ~ ., data = grid.data,
                  type = 'C-classification',
                  scale = TRUE,
+                 coef0 = coef0,
                  kernel = 'polynomial')
 
 clf.SVM.r <- svm(Y ~ ., data = grid.data,
@@ -4544,8 +4607,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM na trénovacích datech je tedy 100 % pro lineární jádro, 96.82 % pro polynomiální jádro a 100 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 100 % pro lineární jádro, 96.07 % pro polynomiální jádro a 99.13 % pro radiální jádro.
+Přesnost metody SVM na trénovacích datech je tedy 100 % pro lineární jádro, 100 % pro polynomiální jádro a 100 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 100 % pro lineární jádro, 99.78 % pro polynomiální jádro a 99.13 % pro radiální jádro.
 
 
 ```r
@@ -4573,6 +4636,7 @@ clf.SVM.l.PCA <- svm(Y ~ ., data = data.PCA.train,
 clf.SVM.p.PCA <- svm(Y ~ ., data = data.PCA.train,
                      type = 'C-classification',
                      scale = TRUE,
+                     coef0 = coef0,
                      kernel = 'polynomial')
 
 clf.SVM.r.PCA <- svm(Y ~ ., data = data.PCA.train,
@@ -4607,8 +4671,8 @@ presnost.test.r <- table(data.PCA.test$Y, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 99.92 % pro lineární jádro, 99.7 % pro polynomiální jádro a 100 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 100 % pro lineární jádro, 99.78 % pro polynomiální jádro a 100 % pro radiální jádro.
+Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 99.92 % pro lineární jádro, 100 % pro polynomiální jádro a 100 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 100 % pro lineární jádro, 100 % pro polynomiální jádro a 100 % pro radiální jádro.
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v předchozích případech, kdy jsme také vykreslovali klasifikační hranici.
@@ -4684,6 +4748,7 @@ clf.SVM.l.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
 clf.SVM.p.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                         type = 'C-classification',
                         scale = TRUE,
+                        coef0 = coef0,
                         kernel = 'polynomial')
 
 clf.SVM.r.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
@@ -4718,8 +4783,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 100 % pro lineární jádro, 96.9 % pro polynomiální jádro a 100 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 100 % pro lineární jádro, 96.29 % pro polynomiální jádro a 99.13 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 100 % pro lineární jádro, 100 % pro polynomiální jádro a 100 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 100 % pro lineární jádro, 99.78 % pro polynomiální jádro a 99.13 % pro radiální jádro.
 
 
 ```r
@@ -4804,6 +4869,7 @@ for (d in dimensions) {
                             scale = TRUE,
                             cost = C,
                             degree = p,
+                            coef0 = coef0,
                             kernel = 'polynomial')
     
     clf.SVM.r.projection <- svm(Y ~ ., data = data.projection.train.cv,
@@ -4855,11 +4921,11 @@ data.frame(d_opt = d.opt, ERR = 1 - presnost.opt.cv,
 ```
 ##        d_opt          ERR
 ## linear    33 0.0000000000
-## poly      37 0.0310378218
+## poly      36 0.0000000000
 ## radial    45 0.0007518797
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d$ jako 33 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 1, 37 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.969 a 45 pro radiální jádro s hodnotou přesnosti 0.9992.
+Vidíme, že nejlépe vychází hodnota parametru $d$ jako 33 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 1, 36 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 1 a 45 pro radiální jádro s hodnotou přesnosti 0.9992.
 Pro přehlednost si ještě vykresleme průběh validačních chybovostí v závislosti na dimenzi $d$.
 
 
@@ -4940,6 +5006,7 @@ for (kernel_number in 1:3) {
                             scale = TRUE,
                             cost = C,
                             degree = p,
+                            coef0 = coef0,
                             gamma = gamma,
                             kernel = kernel_type)
   
@@ -4958,8 +5025,8 @@ for (kernel_number in 1:3) {
 }
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 0 % pro lineární jádro, 2.35 % pro polynomiální jádro a 0 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 0.22 % pro lineární jádro, 3.93 % pro polynomiální jádro a 0.87 % pro radiální jádro.
+Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 0 % pro lineární jádro, 0 % pro polynomiální jádro a 0 % pro gaussovské jádro.
+Na testovacích datech je potom přesnost metody 0.22 % pro lineární jádro, 0.22 % pro polynomiální jádro a 0.87 % pro radiální jádro.
 
 
 ```r
@@ -4973,18 +5040,18 @@ Table: (\#tab:unnamed-chunk-159)Souhrnné výsledky použitých metod na simulov
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$       
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------
-LDA                                                                                  0.0000                                                   0.0022
-LR functional                                                                        0.0000                                                   0.0000
-SVM linear - diskr                                                                   0.0000                                                   0.0000
-SVM poly - diskr                                                                     0.0318                                                   0.0393
-SVM rbf - diskr                                                                      0.0000                                                   0.0087
-SVM linear - PCA                                                                     0.0008                                                   0.0000
-SVM poly - PCA                                                                       0.0030                                                   0.0022
-SVM rbf - PCA                                                                        0.0000                                                   0.0000
-SVM linear - Bbasis                                                                  0.0000                                                   0.0000
-SVM poly - Bbasis                                                                    0.0310                                                   0.0371
-SVM rbf - Bbasis                                                                     0.0000                                                   0.0087
-SVM linear - projection                                                              0.0000                                                   0.0022
-SVM poly - projection                                                                0.0235                                                   0.0393
-SVM rbf - projection                                                                 0.0000                                                   0.0087
+LDA                                                                                   0e+00                                                   0.0022
+LR functional                                                                         0e+00                                                   0.0000
+SVM linear - diskr                                                                    0e+00                                                   0.0000
+SVM poly - diskr                                                                      0e+00                                                   0.0022
+SVM rbf - diskr                                                                       0e+00                                                   0.0087
+SVM linear - PCA                                                                      8e-04                                                   0.0000
+SVM poly - PCA                                                                        0e+00                                                   0.0000
+SVM rbf - PCA                                                                         0e+00                                                   0.0000
+SVM linear - Bbasis                                                                   0e+00                                                   0.0000
+SVM poly - Bbasis                                                                     0e+00                                                   0.0022
+SVM rbf - Bbasis                                                                      0e+00                                                   0.0087
+SVM linear - projection                                                               0e+00                                                   0.0022
+SVM poly - projection                                                                 0e+00                                                   0.0022
+SVM rbf - projection                                                                  0e+00                                                   0.0087
 
