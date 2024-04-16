@@ -8503,6 +8503,8 @@ knitr::kable(SIMULACE.df,
 V tabulce výše jsou uvedeny všechny vypočtené charakteristiky.
 Jsou zde uvedeny také směrodatné odchylky, abychom mohli porovnat jakousi stálost či míru variability jednotlivých metod.
 
+Můžeme také formálně otestovat, zda jsou některé metody úspěšnější než jiné. Vzhledem k nesplnění předpokladu normality nemůžeme použít klasický párový t-test. Využijeme jeho neparametrickou alternativu - Wilcoxonův test.
+
 ```{r}
 wilcox.test(SIMULACE$test[, 'SVM poly - RKHS - radial'], SIMULACE$test[, 'SVM linear - diskr'], alternative = 't', paired = T)$p.value
 
@@ -8570,7 +8572,7 @@ box_col <- c('#4dd2ff', '#0099cc', '#00ace6', '#00bfff',
 # alpha pro boxploty
 box_alpha <- c(0.9, 0.9, 0.8, 0.9, 0.8, 0.9, 0.8, 0.7, 0.9, 0.8, 0.7,
                0.9, 0.8, 0.7, 0.9, 0.8, 0.7, 0.9, 0.8, 0.7, 0.9, 0.8, 0.7,
-               seq(0.9, 0.6, length = 9)) - 0.3
+               seq(0.9, 0.6, length = 9)) #- 0.3
 ```
 
 
@@ -8607,25 +8609,25 @@ SIMULACE$test |>
   mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE)) |> 
   as.data.frame() |>
   ggplot(aes(x = method, y = Err, fill = method, colour = method, alpha = method)) + 
-  geom_hline(yintercept = min(SIMULACE.df$Err.test), 
-             linetype = 'dashed', colour = 'grey') +
   geom_boxplot(outlier.colour = "white", outlier.shape = 16, outlier.size = 0, 
                notch = FALSE, colour = 'black') + 
   theme_bw() + 
   labs(x = 'Klasifikační metoda',
-       # y = "$\\widehat{\\textnormal{Err}}_{test}$"
-       y = expression(widehat(Err)[test])
+       y = "$\\widehat{\\textnormal{Err}}_{test}$"
+       # y = expression(widehat(Err)[test])
        ) + 
   theme(legend.position = 'none',
         axis.text.x = element_text(angle = 50, hjust = 1)) +
   geom_jitter(position = position_jitter(0.15), alpha = 0.6, size = 0.9, pch = 21,
               colour = "black") +
   stat_summary(fun = "mean", geom = "point", shape = '+',
-               size = 3, color = "black", alpha = 0.9)# +
-  # scale_x_discrete(labels = methods_names) +
-  # theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
-  # scale_fill_manual(values = box_col) +
-  # scale_alpha_manual(values = box_alpha)
+               size = 3, color = "black", alpha = 0.9) +
+  scale_x_discrete(labels = methods_names) +
+  theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
+  scale_fill_manual(values = box_col) +
+  scale_alpha_manual(values = box_alpha) +
+  geom_hline(yintercept = min(SIMULACE.df$Err.test), 
+             linetype = 'dashed', colour = 'gray25', alpha = 0.8)
 
 # ggsave("figures/kap7_tecator_box_test_neder.tex", device = tikz, width = 9, height = 7)
 ```
@@ -10729,26 +10731,27 @@ SIMULACE$test |>
   pivot_longer(cols = methods, names_to = 'method', values_to = 'Err') |>
   mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE)) |> 
   as.data.frame() |>
-  ggplot(aes(x = method, y = Err, fill = method, colour = method, alpha = method)) + 
-  geom_hline(yintercept = min(SIMULACE.df$Err.test), 
-             linetype = 'dashed', colour = 'grey') +
+  ggplot(aes(x = method, y = Err, fill = method, colour = method, alpha = method)) +
   geom_boxplot(outlier.colour = "white", outlier.shape = 16, outlier.size = 0, 
                notch = FALSE, colour = 'black') + 
   theme_bw() + 
   labs(x = 'Klasifikační metoda',
-       # y = "$\\widehat{\\textnormal{Err}}_{test}$"
-       y = expression(widehat(Err)[train])) + 
+       y = "$\\widehat{\\textnormal{Err}}_{test}$"
+       # y = expression(widehat(Err)[train])
+       ) + 
   theme(legend.position = 'none',
         axis.text.x = element_text(angle = 50, hjust = 1)) +
   geom_jitter(position = position_jitter(0.15), alpha = 0.6, size = 0.9, pch = 21,
               colour = "black") +
   stat_summary(fun = "mean", geom = "point", shape = '+',
-               size = 3, color = "black", alpha = 0.9) #+
-  # scale_x_discrete(labels = methods_names) +
-  # theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
-  # coord_cartesian(ylim = c(0, 0.15)) +
-  # scale_fill_manual(values = box_col) +
-  # scale_alpha_manual(values = box_alpha)
+               size = 3, color = "black", alpha = 0.9) +
+  scale_x_discrete(labels = methods_names) +
+  theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
+  coord_cartesian(ylim = c(0, 0.15)) +
+  scale_fill_manual(values = box_col) +
+  scale_alpha_manual(values = box_alpha) + 
+  geom_hline(yintercept = min(SIMULACE.df$Err.test), 
+             linetype = 'dashed', colour = 'grey20', alpha = 0.8)
 
 # ggsave("figures/kap7_tecator_box_test_der.tex", device = tikz, width = 9, height = 7)
 ```

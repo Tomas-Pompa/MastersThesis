@@ -35,21 +35,6 @@ Funkce budeme uvažovat na intervalu $I = [0, 6]$.
 
 Nyní vytvoříme funkce pomocí interpolačních polynomů. Nejprve si definujeme body, kterými má procházet naše křivka, a následně jimi proložíme interpolační polynom, který použijeme pro generování křivek pro klasifikaci.
 
-```{r include=FALSE, eval=FALSE, echo=FALSE}
-# definujici body pro tridu 0
-x.0 <- c(-2, -1.35, -1.06, -0.58, 0.26, 0.84, 1.73, 2.5, 3.2, 3.43, 4) + 2
-y.0 <- c(0, 0.25, 0.86, 1.49, 1.1, 0.15, -0.11, -0.36, -0.1, 0.23, 0)
-
-# definujici body pro tridu 1
-x.1 <- c(-2, -1.8, -1.3, -1.09, -0.75, -0.49, 0.14, 0.43, 0.96, 1.7, 2.1, 2.6, 3, 3.43, 3.7, 4) + 2
-y.1 <- c(0.1, -0.45, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1,-0.12, -0.4, -0.35, 0.25, 0.4, 0)
-# {{0,0},{0.65,0.25},{0.94,0.76},{1.42,1.2},{2.26,0.94},{2.84,0.1},{3.73,-0.01},{4.5,-0.1},{5.2, -0.1},{5.43,0.23},{6,0}}
-x.1 <- c(0, 0.65, 0.94, 1.42, 2.26, 2.84, 3.73, 4.5, 5.2, 5.43, 6)
-y.1 <- c(0, 0.25, 0.76, 1.2, 0.94, 0.1, -0.01, -0.1, -0.1, 0.23, 0)
-# h(x)=-9.1 x+37.2709 x^(2)-61.2594 x^(3)+58.0332 x^(4)-34.0338 x^(5)+12.5556 x^(6)-2.90164 x^(7)+0.406575 x^(8)-0.0315332 x^(9)+0.00103781 x^(10)
-# f(x)=-10.3075 x+43.5046 x^(2)+x^(3) (-72.7162)+67.8866 x^(4)+x^(5) (-38.5902)+13.7339 x^(6)+x^(7) (-3.06169)+0.41432 x^(8)+x^(9) (-0.0310725)+0.000989789 x^(10)
-```
-
 ```{r}
 # definujici body pro tridu 0
 x.0 <- c(0.00, 0.65, 0.94, 1.42, 2.26, 2.84, 3.73, 4.50, 5.43, 6.00)
@@ -61,8 +46,6 @@ x.1 <- c(0.00, 0.51, 0.91, 1.25, 1.51, 2.14, 2.43, 2.96, 3.70, 4.60,
 y.1 <- c(0.1, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1, -0.4,
          0.3, 0.37, 0)
 ```
-
-
 
 ```{r}
 # graf bodu
@@ -1137,16 +1120,34 @@ To je možné zejména proto, že v definici metody SVM pracujeme s libovolným 
 
 #### Diskretizace intervalu
 
-Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 1]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
+Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 6]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
 
-```{r include=FALSE, eval=TRUE}
-grid.data <- eval.fd(fdobj = X.train, evalarg = t.seq)
-grid.data <- as.data.frame(t(grid.data)) # transpozice kvuli funkcim v radku
-grid.data$Y <- Y.train |> factor()
+```{r}
+# set norm equal to one
+norms <- c()
+for (i in 1:dim(XXfd$coefs)[2]) {
+  norms <- c(norms, as.numeric(1 / norm.fd(XXfd[i])))
+  }
+XXfd_norm <- XXfd 
+XXfd_norm$coefs <- XXfd_norm$coefs * matrix(norms, 
+                                            ncol = dim(XXfd$coefs)[2],
+                                            nrow = dim(XXfd$coefs)[1],
+                                            byrow = T)
 
-grid.data.test <- eval.fd(fdobj = X.test, evalarg = t.seq)
+# rozdeleni na testovaci a trenovaci cast
+X.train_norm <- subset(XXfd_norm, split == TRUE)
+X.test_norm <- subset(XXfd_norm, split == FALSE)
+
+Y.train_norm <- subset(Y, split == TRUE)
+Y.test_norm <- subset(Y, split == FALSE)
+
+grid.data <- eval.fd(fdobj = X.train_norm, evalarg = t.seq)
+grid.data <- as.data.frame(t(grid.data)) 
+grid.data$Y <- Y.train_norm |> factor()
+
+grid.data.test <- eval.fd(fdobj = X.test_norm, evalarg = t.seq)
 grid.data.test <- as.data.frame(t(grid.data.test))
-grid.data.test$Y <- Y.test |> factor()
+grid.data.test$Y <- Y.test_norm |> factor()
 ```
 
 ```{r}
@@ -1154,16 +1155,21 @@ grid.data.test$Y <- Y.test |> factor()
 clf.SVM.l <- svm(Y ~ ., data = grid.data,
                  type = 'C-classification',
                  scale = TRUE,
+                 cost = 100,
                  kernel = 'linear')
 
 clf.SVM.p <- svm(Y ~ ., data = grid.data,
                  type = 'C-classification',
                  scale = TRUE,
+                 coef0 = 1,
+                 cost = 100,
                  kernel = 'polynomial')
 
 clf.SVM.r <- svm(Y ~ ., data = grid.data,
                  type = 'C-classification',
                  scale = TRUE,
+                 cost = 100000,
+                 gamma = 0.0001,
                  kernel = 'radial')
 
 # presnost na trenovacich datech
@@ -1215,16 +1221,21 @@ V tomto případě využijeme skóre prvních p = `r nharm` hlavních komponent.
 clf.SVM.l.PCA <- svm(Y ~ ., data = data.PCA.train,
                      type = 'C-classification',
                      scale = TRUE,
+                     cost = 0.01,
                      kernel = 'linear')
 
 clf.SVM.p.PCA <- svm(Y ~ ., data = data.PCA.train,
                      type = 'C-classification',
                      scale = TRUE,
+                     coef0 = 1,
+                     cost = 0.6,
                      kernel = 'polynomial')
 
 clf.SVM.r.PCA <- svm(Y ~ ., data = data.PCA.train,
                      type = 'C-classification',
                      scale = TRUE,
+                     cost = 1000,
+                     gamma = 0.01,
                      kernel = 'radial')
 
 # presnost na trenovacich datech
@@ -1354,16 +1365,21 @@ Nakonec použijeme vyjádření funkcí pomocí B-splinové báze.
 clf.SVM.l.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                         type = 'C-classification',
                         scale = TRUE,
+                        cost = 500,
                         kernel = 'linear')
 
 clf.SVM.p.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                         type = 'C-classification',
                         scale = TRUE,
+                        coef0 = 1,
+                        cost = 500,
                         kernel = 'polynomial')
 
 clf.SVM.r.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                         type = 'C-classification',
                         scale = TRUE,
+                        cost = 1000,
+                        gamma = 0.005,
                         kernel = 'radial')
 
 # presnost na trenovacich datech
@@ -1495,6 +1511,7 @@ for (d in dimensions) {
     clf.SVM.p.projection <- svm(Y ~ ., data = data.projection.train.cv,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
                             kernel = 'polynomial')
     
     clf.SVM.r.projection <- svm(Y ~ ., data = data.projection.train.cv,
@@ -1612,6 +1629,7 @@ for (kernel_number in 1:3) {
   clf.SVM.projection <- svm(Y ~ ., data = data.projection.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
                             kernel = kernel_type)
   
   # presnost na trenovacich datech
@@ -1745,6 +1763,7 @@ for (kernel_number in 1:3) {
   clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                       type = 'C-classification',
                       scale = TRUE,
+                      coef0 = 1,
                       kernel = kernel_type)
   
   # presnost na trenovacich datech
@@ -1859,6 +1878,7 @@ for (gamma in gamma.cv) {
         clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
                             kernel = kernel_type)
         
         # presnost na validacnich datech
@@ -2023,6 +2043,7 @@ for (kernel_number in 1:3) {
   clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                       type = 'C-classification',
                       scale = TRUE,
+                      coef0 = 1,
                       kernel = kernel_type)
   
   # presnost na trenovacich datech
@@ -2074,19 +2095,21 @@ knitr::kable(RESULTS,
 
 ```{r, echo=FALSE}
 # pocet simulaci pro kazdou hodnotu simulacniho parametru
-n.sim <- 10
+n.sim <- 25
 
-methods <- c('KNN', 'LDA', 'QDA', 'LR_functional',
+methods <- c('KNN', 'LDA', 'QDA', 'LR_functional', 
+             'RF_discr', 'RF_score', 'RF_Bbasis', 
              'SVM linear - diskr', 'SVM poly - diskr', 'SVM rbf - diskr', 
              'SVM linear - PCA', 'SVM poly - PCA', 'SVM rbf - PCA', 
-             'SVM linear - Bbasis', 'SVM poly - Bbasis', 
-             'SVM rbf - Bbasis', 'SVM linear - projection',
-             'SVM poly - projection', 'SVM rbf - projection', 
-             'SVM linear - RKHS - radial', 'SVM poly - RKHS - radial', 
-             'SVM rbf - RKHS - radial')
+             'SVM linear - Bbasis', 'SVM poly - Bbasis', 'SVM rbf - Bbasis', 
+             'SVM linear - projection', 'SVM poly - projection',
+             'SVM rbf - projection', 
+             'SVM linear - RKHS - radial', 
+             'SVM poly - RKHS - radial', 'SVM rbf - RKHS - radial'
+             )
 
 # vektor smerodatnych odchylek definujicich posunuti generovanych krivek
-shift_vector <- seq(0, 10, length = 21)
+shift_vector <- seq(0.1, 5, length = 30)
 ```
 
 V celé předchozí části jsme se zabývali pouze jedním náhodně vygenerovaným souborem funkcí ze dvou klasifikačních tříd, který jsme následně opět náhodně rozdělili na testovací a trénovací část.
@@ -2097,28 +2120,30 @@ Proto dělat jakékoli závěry o metodách a porovnávat je mezi sebou může b
 
 Z tohoto důvodu se v této části zaměříme na opakování celého předchozího postupu pro různé vygenerované soubory.
 Výsledky si budeme ukládat do tabulky a nakonec spočítáme průměrné charakteristiky modelů přes jednotlivá opakování.
-Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 10$.
+Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 25$.
 
 Nyní zopakujeme celou předchozí část `n.sim`-krát a hodnoty chybovostí si budeme ukládat to objektu `SIMUL_params`. Přitom budeme měnit hodnotu parametru $\sigma_{shift}$ a podíváme se, jak se mění výsledky jednotlivých vybraných klasifikačních metod v závislosti na této hodnotě.
 
-```{r eval=F, message=FALSE, warning=FALSE}
+```{r eval=T, message=T, warning=T}
 # nastaveni generatoru pseudonahodnych cisel
 set.seed(42)
 
 # pocet simulaci pro kazdou hodnotu simulacniho parametru
-n.sim <- 10
+n.sim <- 25
 
-methods <- c('KNN', 'LDA', 'QDA', 'LR_functional',
+methods <- c('KNN', 'LDA', 'QDA', 'LR_functional', 
+             'RF_discr', 'RF_score', 'RF_Bbasis', 
              'SVM linear - diskr', 'SVM poly - diskr', 'SVM rbf - diskr', 
              'SVM linear - PCA', 'SVM poly - PCA', 'SVM rbf - PCA', 
-             'SVM linear - Bbasis', 'SVM poly - Bbasis', 
-             'SVM rbf - Bbasis', 'SVM linear - projection',
-             'SVM poly - projection', 'SVM rbf - projection', 
-             'SVM linear - RKHS - radial', 'SVM poly - RKHS - radial', 
-             'SVM rbf - RKHS - radial')
+             'SVM linear - Bbasis', 'SVM poly - Bbasis', 'SVM rbf - Bbasis', 
+             'SVM linear - projection', 'SVM poly - projection',
+             'SVM rbf - projection', 
+             'SVM linear - RKHS - radial', 
+             'SVM poly - RKHS - radial', 'SVM rbf - RKHS - radial'
+             )
 
 # vektor smerodatnych odchylek definujicich posunuti generovanych krivek
-shift_vector <- seq(0, 10, length = 21)
+shift_vector <- seq(0.1, 5, length = 30)
 
 # vysledny objekt, do nehoz ukladame vysledky simulaci
 SIMUL_params <- array(data = NA, dim = c(length(methods), 4, length(shift_vector)),
@@ -2172,7 +2197,7 @@ for (n_shift in 1:length(shift_vector)) {
     # spojeni pozorovani do jedne matice
     XX <- cbind(X0, X1)
     
-    lambda.vect <- 10^seq(from = -5, to = 3, length.out = 25) # vektor lambd
+    lambda.vect <- 10^seq(from = -4, to = 2, length.out = 25) # vektor lambd
     gcv <- rep(NA, length = length(lambda.vect)) # prazdny vektor pro ulozebi GCV
     
     for(index in 1:length(lambda.vect)) {
@@ -2211,8 +2236,8 @@ for (n_shift in 1:length(shift_vector)) {
     
     ## 1) K nejbližších sousedů
     
-    k_cv <- 10 # k-fold CV
-    neighbours <- c(1:(2 * ceiling(sqrt(length(y.train))))) # pocet sousedu 
+    k_cv <- 5 # k-fold CV
+    neighbours <- 1:15 #c(1:(2 * ceiling(sqrt(length(y.train))))) # pocet sousedu 
     
     # rozdelime trenovaci data na k casti
     folds <- createMultiFolds(X.train$fdnames$reps, k = k_cv, time = 1)
@@ -2356,7 +2381,7 @@ for (n_shift in 1:length(shift_vector)) {
     ### 10-fold cross-validation
     n.basis.max <- 25
     n.basis <- 4:n.basis.max
-    k_cv <- 10 # k-fold CV
+    # k_cv <- 10 # k-fold CV
     # rozdelime trenovaci data na k casti
     folds <- createMultiFolds(X.train$fdnames$reps, k = k_cv, time = 1)
     ## prvky, ktere se behem cyklu nemeni
@@ -2451,10 +2476,10 @@ for (n_shift in 1:length(shift_vector)) {
                       Err.test = 1 - presnost.test)
     
     RESULTS <- rbind(RESULTS, Res)
-      
-    ## 7) SVM
     
-    ### 7.1) Diskretizace intervalu
+    ## 6) Náhodné lesy
+  
+    ### 6.1) Diskretizace intervalu
     
     # posloupnost bodu, ve kterych funkce vyhodnotime
     t.seq <- seq(0, 6, length = 101)
@@ -2467,6 +2492,54 @@ for (n_shift in 1:length(shift_vector)) {
     grid.data.test <- as.data.frame(t(grid.data.test))
     grid.data.test$Y <- Y.test |> factor()
     
+    # sestrojeni modelu
+    clf.RF <- randomForest(Y ~ ., data = grid.data, 
+                           ntree = 500, # pocet stromu
+                           importance = TRUE,
+                           nodesize = 5)
+    
+    # presnost na trenovacich datech
+    predictions.train <- predict(clf.RF, newdata = grid.data)
+    presnost.train <- table(Y.train, predictions.train) |>
+      prop.table() |> diag() |> sum()
+      
+    # presnost na trenovacich datech
+    predictions.test <- predict(clf.RF, newdata = grid.data.test)
+    presnost.test <- table(Y.test, predictions.test) |>
+      prop.table() |> diag() |> sum()
+    
+    Res <- data.frame(model = 'RF_discr', 
+                      Err.train = 1 - presnost.train,
+                      Err.test = 1 - presnost.test)
+    
+    RESULTS <- rbind(RESULTS, Res)
+    
+    ### 6.2) Skóre hlavních komponent
+    
+    # sestrojeni modelu
+    clf.RF.PCA <- randomForest(Y ~ ., data = data.PCA.train, 
+                               ntree = 500, # pocet stromu
+                               importance = TRUE,
+                               nodesize = 5)
+    
+    # presnost na trenovacich datech
+    predictions.train <- predict(clf.RF.PCA, newdata = data.PCA.train)
+    presnost.train <- table(Y.train, predictions.train) |>
+      prop.table() |> diag() |> sum()
+      
+    # presnost na trenovacich datech
+    predictions.test <- predict(clf.RF.PCA, newdata = data.PCA.test)
+    presnost.test <- table(Y.test, predictions.test) |>
+      prop.table() |> diag() |> sum()
+    
+    Res <- data.frame(model = 'RF_score', 
+                      Err.train = 1 - presnost.train,
+                      Err.test = 1 - presnost.test)
+    
+    RESULTS <- rbind(RESULTS, Res)
+    
+    ### 6.3) Bázové koeficienty
+
     # trenovaci dataset
     data.Bbasis.train <- t(X.train$coefs) |> as.data.frame()
     data.Bbasis.train$Y <- factor(Y.train)
@@ -2475,19 +2548,79 @@ for (n_shift in 1:length(shift_vector)) {
     data.Bbasis.test <- t(X.test$coefs) |> as.data.frame()
     data.Bbasis.test$Y <- factor(Y.test)
     
+    # sestrojeni modelu
+    clf.RF.Bbasis <- randomForest(Y ~ ., data = data.Bbasis.train, 
+                                  ntree = 500, # pocet stromu
+                                  importance = TRUE,
+                                  nodesize = 5)
+    
+    # presnost na trenovacich datech
+    predictions.train <- predict(clf.RF.Bbasis, newdata = data.Bbasis.train)
+    presnost.train <- table(Y.train, predictions.train) |>
+      prop.table() |> diag() |> sum()
+      
+    # presnost na trenovacich datech
+    predictions.test <- predict(clf.RF.Bbasis, newdata = data.Bbasis.test)
+    presnost.test <- table(Y.test, predictions.test) |>
+      prop.table() |> diag() |> sum()
+    
+    Res <- data.frame(model = 'RF_Bbasis', 
+                      Err.train = 1 - presnost.train,
+                      Err.test = 1 - presnost.test)
+    
+    RESULTS <- rbind(RESULTS, Res)
+      
+    ## 7) SVM
+    
+    ### 7.1) Diskretizace intervalu
+    
+    # posloupnost bodu, ve kterych funkce vyhodnotime
+    t.seq <- seq(0, 6, length = 101)
+    
+    # normovani dat
+    norms <- c()
+    for (i in 1:dim(XXfd$coefs)[2]) {
+      norms <- c(norms, as.numeric(1 / norm.fd(XXfd[i])))
+      }
+    XXfd_norm <- XXfd 
+    XXfd_norm$coefs <- XXfd_norm$coefs * matrix(norms, 
+                                                ncol = dim(XXfd$coefs)[2],
+                                                nrow = dim(XXfd$coefs)[1],
+                                                byrow = T)
+    
+    # rozdeleni na testovaci a trenovaci cast
+    X.train_norm <- subset(XXfd_norm, split == TRUE)
+    X.test_norm <- subset(XXfd_norm, split == FALSE)
+    
+    Y.train_norm <- subset(Y, split == TRUE)
+    Y.test_norm <- subset(Y, split == FALSE)
+    
+    grid.data <- eval.fd(fdobj = X.train_norm, evalarg = t.seq)
+    grid.data <- as.data.frame(t(grid.data)) 
+    grid.data$Y <- Y.train_norm |> factor()
+    
+    grid.data.test <- eval.fd(fdobj = X.test_norm, evalarg = t.seq)
+    grid.data.test <- as.data.frame(t(grid.data.test))
+    grid.data.test$Y <- Y.test_norm |> factor()
+    
     clf.SVM.l <- svm(Y ~ ., data = grid.data,
                      type = 'C-classification',
                      scale = TRUE,
+                     cost = 100,
                      kernel = 'linear')
     
     clf.SVM.p <- svm(Y ~ ., data = grid.data,
                      type = 'C-classification',
                      scale = TRUE,
+                     coef0 = 1,
+                     cost = 100,
                      kernel = 'polynomial')
     
     clf.SVM.r <- svm(Y ~ ., data = grid.data,
                      type = 'C-classification',
                      scale = TRUE,
+                     cost = 100000,
+                     gamma = 0.0001,
                      kernel = 'radial')
     
     # presnost na trenovacich datech
@@ -2532,16 +2665,21 @@ for (n_shift in 1:length(shift_vector)) {
     clf.SVM.l.PCA <- svm(Y ~ ., data = data.PCA.train,
                          type = 'C-classification',
                          scale = TRUE,
+                         cost = 0.01,
                          kernel = 'linear')
     
     clf.SVM.p.PCA <- svm(Y ~ ., data = data.PCA.train,
                          type = 'C-classification',
                          scale = TRUE,
+                         coef0 = 1,
+                         cost = 0.6,
                          kernel = 'polynomial')
     
     clf.SVM.r.PCA <- svm(Y ~ ., data = data.PCA.train,
                          type = 'C-classification',
                          scale = TRUE,
+                         cost = 1000,
+                         gamma = 0.01,
                          kernel = 'radial')
     
     # presnost na trenovacich datech
@@ -2586,16 +2724,21 @@ for (n_shift in 1:length(shift_vector)) {
     clf.SVM.l.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            cost = 500,
                             kernel = 'linear')
     
     clf.SVM.p.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
+                            cost = 500,
                             kernel = 'polynomial')
     
     clf.SVM.r.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            cost = 1000,
+                            gamma = 0.005,
                             kernel = 'radial')
     
     # presnost na trenovacich datech
@@ -2640,7 +2783,7 @@ for (n_shift in 1:length(shift_vector)) {
     rangeval <- range(t)
     norder <- 4
     n_basis_min <- norder
-    n_basis_max <- length(t) + norder - 2 - 10
+    n_basis_max <- 20 #length(t) + norder - 2 - 10
     dimensions <- n_basis_min:n_basis_max 
     folds <- createMultiFolds(1:sum(split), k = k_cv, time = 1)
     CV.results <- list(SVM.l = matrix(NA, nrow = length(dimensions), ncol = k_cv),
@@ -2671,6 +2814,7 @@ for (n_shift in 1:length(shift_vector)) {
         clf.SVM.p.projection <- svm(Y ~ ., data = data.projection.train.cv,
                                 type = 'C-classification',
                                 scale = TRUE,
+                                coef0 = 1,
                                 kernel = 'polynomial')
         
         clf.SVM.r.projection <- svm(Y ~ ., data = data.projection.train.cv,
@@ -2739,6 +2883,7 @@ for (n_shift in 1:length(shift_vector)) {
       clf.SVM.projection <- svm(Y ~ ., data = data.projection.train,
                                 type = 'C-classification',
                                 scale = TRUE,
+                                coef0 = 1,
                                 kernel = kernel_type)
       
       # presnost na trenovacich datech
@@ -2762,19 +2907,19 @@ for (n_shift in 1:length(shift_vector)) {
     ### Gaussovo jadro
     
     # jadro a jadrova matice ... Gaussovske s parametrem gamma
-    Gauss.kernel <- function(x, y, gamma) {
-      return(exp(-gamma * norm(c(x - y) |> t(), type = 'F')))
-    }
-    
-    Kernel.RKHS <- function(x, gamma) {
-      K <- matrix(NA, ncol = length(x), nrow = length(x))
-      for(i in 1:nrow(K)) {
-        for(j in 1:ncol(K)) {
-          K[i, j] <- Gauss.kernel(x = x[i], y = x[j], gamma = gamma)
-        }
-      }
-      return(K)
-    }
+    # Gauss.kernel <- function(x, y, gamma) {
+    #   return(exp(-gamma * norm(c(x - y) |> t(), type = 'F')))
+    # }
+    # 
+    # Kernel.RKHS <- function(x, gamma) {
+    #   K <- matrix(NA, ncol = length(x), nrow = length(x))
+    #   for(i in 1:nrow(K)) {
+    #     for(j in 1:ncol(K)) {
+    #       K[i, j] <- Gauss.kernel(x = x[i], y = x[j], gamma = gamma)
+    #     }
+    #   }
+    #   return(K)
+    # }
     
     # rozdelime trenovaci data na k casti
     folds <- createMultiFolds(1:sum(split), k = k_cv, time = 1)
@@ -2782,8 +2927,8 @@ for (n_shift in 1:length(shift_vector)) {
     data.RKHS <- grid.data[, -dim(grid.data)[2]] |> t()
     
     # hodnoty hyperparametru, ktere budeme prochazet
-    dimensions <- seq(3, 40, by =2) # rozumny rozsah hodnot d
-    gamma.cv <- 10^seq(-1, 2, length = 15)
+    dimensions <- seq(10, 40, by = 5) # rozumny rozsah hodnot d
+    gamma.cv <- 10^seq(-2, 2, length = 5)
     
     # list se tremi slozkami ... array pro jednotlive jadra -> linear, poly, radial
     # prazdna matice, do ktere vlozime jednotlive vysledky
@@ -2857,6 +3002,7 @@ for (n_shift in 1:length(shift_vector)) {
             clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                                 type = 'C-classification',
                                 scale = TRUE,
+                                coef0 = 1,
                                 kernel = kernel_type)
             
             # presnost na validacnich datech
@@ -2905,8 +3051,8 @@ for (n_shift in 1:length(shift_vector)) {
                Kernel = c('linear', 'polynomial', 'radial') |> factor(),
                row.names = c('linear', 'poly', 'radial'))
     
-    CV_RESULTS$SVM_RKHS_radial_gamma[sim] <- gamma.opt
-    CV_RESULTS$SVM_RKHS_radial_d[sim] <- d.opt
+    # CV_RESULTS$SVM_RKHS_radial_gamma[sim] <- gamma.opt
+    # CV_RESULTS$SVM_RKHS_radial_d[sim] <- d.opt
     
     # odstranime posledni sloupec, ve kterem jsou hodnoty Y
     data.RKHS <- grid.data[, -dim(grid.data)[2]] |> t()
@@ -2974,6 +3120,7 @@ for (n_shift in 1:length(shift_vector)) {
       clf.SVM.RKHS <- svm(Y ~ ., data = data.RKHS.train,
                           type = 'C-classification',
                           scale = TRUE,
+                          coef0 = 1,
                           kernel = kernel_type)
       
       # presnost na trenovacich datech
@@ -3012,32 +3159,64 @@ for (n_shift in 1:length(shift_vector)) {
 }
 
 # ulozime vysledne hodnoty 
-save(SIMUL_params, file = 'RData/simulace_parametry_shift_03b.RData')
+save(SIMUL_params, file = 'RData/simulace_parametry_shift_03_rf_cv.RData')
 ```
 
 ### Grafický výstup
 
 ```{r, echo=FALSE}
-load("RData/simulace_parametry_shift_03b.RData", verbose = F)
+load("RData/simulace_parametry_shift_03_rf_cv.RData", verbose = F)
 ```
 
-Podívejme se na závislost simulovaných výsledků na hodnotě parametru směrodatné odchylky vertikálního posunu.
+Podívejme se na závislost simulovaných výsledků na hodnotě parametru směrodatné odchylky normálního rozdělení pro chyby měření. Nejprve si vykresleme data pro trénovací chybovosti.
 
-```{r fig.cap='Graf závislosti testovací chybovosti pro jednotlivé klasifikační metody na hodnotě parametru $\\sigma_{shift}$, který definuje směrodatnou odchylku pro generování vertikálního posunutí simulovaných křivek.', warning=FALSE, eval=T}
+```{r fig.cap='Graf závislosti trénovací chybovosti pro jednotlivé klasifikační metody na hodnotě parametru $\\sigma_{shift}$, který definuje směrodatnou odchylku pro generování náhodného vertikálního posunu.', warning=FALSE, eval=T}
 # pro testovaci data
-SIMUL_params[, 2, ] |> 
-  as.data.frame() |> 
+SIMUL_params[, 1, ] |> 
+  as.data.frame() |>   
   mutate(method = methods) |>
   pivot_longer(cols = as.character(shift_vector), 
                names_to = 'shift', 
                values_to = 'Err') |>
   mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE), 
          shift = as.numeric(shift)) |> 
-  filter(method %in% c('KNN', 'LDA', 'LR_functional', 'SVM linear - diskr',
-                       'SVM linear - PCA', 'SVM linear - Bbasis',
-                       'SVM linear - projection', 'SVM rbf - projection',
-                       'SVM linear - RKHS - radial', 'SVM poly - RKHS - radial', 
-             'SVM rbf - RKHS - radial')) |>
+  # filter(method %in% c('KNN', 'QDA', 'LR_functional',# 'SVM linear - diskr',
+  #                      'SVM linear - PCA', 'SVM linear - Bbasis',
+  #                      'SVM linear - projection', 'SVM rbf - projection',
+  #                      'SVM linear - RKHS - radial', 'SVM poly - RKHS - radial', 
+  #            'SVM rbf - RKHS - radial')) |>
+  # filter(method %in% c('KNN', 'LR_functional', 'SVM linear - diskr',
+  #                      'RF_Bbasis', 'SVM linear - PCA', 'SVM linear - Bbasis',
+  #                      'SVM linear - projection', 'SVM linear - RKHS - radial')) |>
+  ggplot(aes(x = shift, y = Err, colour = method)) + 
+  geom_line() + 
+  theme_bw() + 
+  labs(x = expression(sigma[shift]),
+       y = expression(widehat(Err)[train]),
+       colour = 'Klasifikační metoda') + 
+  theme(legend.position = 'bottom')
+```
+
+Následně pro testovací chybovosti.
+
+```{r fig.cap='Graf závislosti testovací chybovosti pro jednotlivé klasifikační metody na hodnotě parametru $\\sigma_{shift}$, který definuje směrodatnou odchylku pro generování náhodných vertikálních posunutí.', warning=FALSE, eval=T}
+# pro testovaci data
+SIMUL_params[, 2, ] |> 
+  as.data.frame() |>   
+  mutate(method = methods) |>
+  pivot_longer(cols = as.character(shift_vector), 
+               names_to = 'shift', 
+               values_to = 'Err') |>
+  mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE), 
+         shift = as.numeric(shift)) |> 
+  # filter(method %in% c('KNN', 'QDA', 'LR_functional',# 'SVM linear - diskr',
+  #                      'SVM linear - PCA', 'SVM linear - Bbasis',
+  #                      'SVM linear - projection', 'SVM rbf - projection',
+  #                      'SVM linear - RKHS - radial', 'SVM poly - RKHS - radial', 
+  #            'SVM rbf - RKHS - radial')) |>
+  # filter(method %in% c('KNN', 'LR_functional', 'SVM linear - diskr',
+  #                      'RF_Bbasis', 'SVM linear - PCA', 'SVM linear - Bbasis',
+  #                      'SVM linear - projection', 'SVM linear - RKHS - radial')) |>
   ggplot(aes(x = shift, y = Err, colour = method)) + 
   geom_line() + 
   theme_bw() + 
@@ -3047,6 +3226,283 @@ SIMUL_params[, 2, ] |>
   theme(legend.position = 'bottom')
 ```
 
-```{r echo=FALSE, eval=T}
-ggsave('figures/sim_03b_dependence_on_shift.pdf', width = 10, height = 6)
+Jelikož jsou výsledky zatíženy náhodnými výchylkami a zvýšení počtu opakování `n.sim` by bylo výpočetně velmi náročné, vyhlaďme nyní křivky závislosti průměrné testovací a trénovací chybovosti. Jelikož chybovost je nezáporná veličina, budeme křivky vyhlazovat s tímto vědomím. Navíc (aby vyhlazené křivky dobře kopírovaly pozorované diskrétní hodnoty) uvažujeme jinou váhu pro malé a velké hodnoty $\sigma$. 
+
+```{r}
+methods_subset <- c('KNN', 'LR_functional', 'RF_Bbasis', 'SVM linear - diskr',
+                    'SVM linear - PCA', 'SVM linear - Bbasis',
+                    'SVM linear - projection', 'SVM linear - RKHS - radial')
+
+Dat <- SIMUL_params[, 1, ] |> 
+  as.data.frame() |> t()
+
+breaks <- shift_vector
+rangeval <- range(breaks)
+norder <- 4
+
+bbasis <- create.bspline.basis(rangeval = rangeval, 
+                               norder = norder, 
+                               breaks = breaks)
+
+curv.Lfd <- int2Lfd(2)
+
+lambda.vect <- 10^seq(from = -2, to = 1, length.out = 50) # vektor lambd
+gcv <- rep(NA, length = length(lambda.vect)) # prazdny vektor pro ulozebi GCV
+
+for(index in 1:length(lambda.vect)) {
+  curv.Fdpar <- fdPar(bbasis, curv.Lfd, lambda.vect[index])
+  BSmooth <- smooth.basis(breaks, Dat, curv.Fdpar) # vyhlazeni
+  gcv[index] <- mean(BSmooth$gcv) # prumer pres vsechny pozorovane krivky
+}
+
+GCV <- data.frame(
+  lambda = round(log10(lambda.vect), 3),
+  GCV = gcv
+)
+
+# najdeme hodnotu minima
+lambda.opt <- lambda.vect[which.min(gcv)]
+
+curv.fdPar <- fdPar(bbasis, curv.Lfd, lambda.opt)
+BSmooth <- smooth.basis(breaks, Dat, curv.fdPar) # smooth.pos
+XXfd <- BSmooth$fd # Wfdobj
+
+fdobjSmootheval <- eval.fd(fdobj = XXfd,  # eval.posfd
+                           evalarg = seq(min(breaks), max(breaks),
+                                         length = 101))
+
+# df_plot_smooth <- data.frame(
+#   method = rep(colnames(fdobjSmootheval), each = dim(fdobjSmootheval)[1]),
+#   value = c(fdobjSmootheval),
+#   sigma = rep(seq(min(sigma_vector), max(sigma_vector), length = 101), length(methods))
+# ) |> 
+#   mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE))
+
+## for positive smoothing
+
+# najdeme hodnotu minima
+# lambda.opt <- 1e-4
+# 
+# curv.fdPar <- fdPar(bbasis, curv.Lfd, lambda.opt)
+# BSmooth <- smooth.pos(breaks, Dat, curv.fdPar, dbglev = 0,
+#                       wtvec = c(rep(1000, 5), rep(8, 5), rep(1, 20))) # smooth.pos
+# XXfd <- BSmooth$Wfdobj # Wfdobj
+# 
+# fdobjSmootheval <- eval.posfd(Wfdobj = XXfd,  # eval.posfd
+#                            evalarg = seq(min(sigma_vector), max(sigma_vector), 
+#                                          length = 101))
+
+df_plot_smooth <- data.frame(
+  method = rep(methods, each = dim(fdobjSmootheval)[1]),
+  value = c(fdobjSmootheval),
+  shift = rep(seq(min(breaks), max(breaks), length = 101), length(methods))
+) |> 
+  filter(method %in% methods_subset) |>
+  mutate(method = factor(method, levels = methods_subset, 
+                         labels = methods_subset, ordered = TRUE)) 
 ```
+
+Grafy ke zvýšení přehlednosti vykreslíme pouze pro podmnožinu metod. 
+
+```{r}
+methods_names <- c(
+      '$K$ nejbližších sousedů',
+      'Funkcionální logistická regrese',
+      'Náhodný les -- bázové koeficienty',
+      'SVM (linear) -- diskretizace',
+      'SVM (linear) -- fPCA',
+      'SVM (linear) -- bázové koeficienty',
+      'SVM (linear) -- projekce',
+      'RKHS (radial SVR) $+$ SVM (linear)'
+)
+```
+
+
+```{r fig.cap='Graf závislosti testovací chybovosti pro jednotlivé klasifikační metody na hodnotě parametru $\\sigma_{x}$.', warning=FALSE, eval=T}
+# pro testovaci data
+SIMUL_params[, 1, ] |> 
+  as.data.frame() |> 
+  mutate(method = methods) |>
+  pivot_longer(cols = as.character(shift_vector), 
+               names_to = 'shift', 
+               values_to = 'Err') |>
+  mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE), 
+         shift = as.numeric(shift)) |> 
+  # filter(method %in% c('KNN', 'QDA', 'LR_functional', 
+  #                      'RF_discr', #'RF_score', 'RF_Bbasis', 
+  #                      'SVM linear - diskr',# 'SVM poly - diskr', 'SVM rbf - diskr', 
+  #                      # 'SVM linear - PCA',# 'SVM poly - PCA', 'SVM rbf - PCA', 
+  #                      'SVM linear - Bbasis',# 'SVM poly - Bbasis', 'SVM rbf - Bbasis',
+  #                      'SVM linear - projection',# 'SVM poly - projection',
+  #                      # 'SVM rbf - projection', 
+  #                      'SVM linear - RKHS - radial'#, 'SVM poly - RKHS - radial', 
+  #                      # 'SVM rbf - RKHS - radial'
+  #                      )) |>
+  filter(method %in% methods_subset) |>
+  mutate(method = factor(method, levels = methods_subset, 
+                         labels = methods_subset, ordered = TRUE)) |>
+  ggplot(aes(x = shift, y = Err, colour = method, shape = method)) + 
+  geom_point(alpha = 0.7, size = 0.6) + 
+  theme_bw() + 
+  labs(x = 'shift',
+       y = 'Trenovaci chybovost',
+       colour = 'Klasifikační metoda',
+       linetype = 'Klasifikační metoda',
+       shape = 'Klasifikační metoda') + 
+  theme(legend.position = 'right',
+        plot.margin = unit(c(0.1, 0.7, 0.3, 0.3), "cm"),
+        panel.grid.minor.x = element_blank()) +
+  # guides(colour=guide_legend(direction = 'vertical'),
+  #        linetype=guide_legend(direction = 'vertical'),
+  #        shape=guide_legend(direction = 'vertical')) + 
+    # scale_y_log10() +
+  geom_line(data = df_plot_smooth, aes(x = shift, y = value, col = method,
+                                       linetype = method),
+            linewidth = 0.95) + 
+  scale_colour_manual(values = rep(c('deepskyblue2', 'tomato'), c(4, 4)),
+                      labels = methods_names) + 
+  scale_linetype_manual(values = rep(c('dotdash', 'dashed', 'solid', 'dotted'), 2),
+                        labels = methods_names) + 
+  scale_shape_manual(values = rep(c(16, 1, 17, 4, 16, 1, 17, 4)),
+                     labels = methods_names) +
+  guides(colour = guide_legend(override.aes = list(size = 1.2, alpha = 0.7)),
+         linetype = guide_legend(override.aes = list(linewidth = 0.8)))
+
+# ggsave("figures/kap6_sim_03sigma_curvesErr.tex", device = tikz, width = 9, height = 4.5)
+```
+
+Nyní provedeme totéž pro testovací chybovosti.
+
+```{r}
+methods_subset <- c('KNN', 'LR_functional', 'RF_Bbasis', 'SVM linear - diskr',
+                    'SVM linear - PCA', 'SVM linear - Bbasis',
+                    'SVM linear - projection', 'SVM linear - RKHS - radial')
+
+Dat <- SIMUL_params[, 2, ] |> 
+  as.data.frame() |> t()
+
+breaks <- shift_vector
+rangeval <- range(breaks)
+norder <- 4
+
+bbasis <- create.bspline.basis(rangeval = rangeval, 
+                               norder = norder, 
+                               breaks = breaks)
+
+curv.Lfd <- int2Lfd(2)
+
+lambda.vect <- 10^seq(from = -2, to = 1, length.out = 50) # vektor lambd
+gcv <- rep(NA, length = length(lambda.vect)) # prazdny vektor pro ulozebi GCV
+
+for(index in 1:length(lambda.vect)) {
+  curv.Fdpar <- fdPar(bbasis, curv.Lfd, lambda.vect[index])
+  BSmooth <- smooth.basis(breaks, Dat, curv.Fdpar) # vyhlazeni
+  gcv[index] <- mean(BSmooth$gcv) # prumer pres vsechny pozorovane krivky
+}
+
+GCV <- data.frame(
+  lambda = round(log10(lambda.vect), 3),
+  GCV = gcv
+)
+
+# najdeme hodnotu minima
+lambda.opt <- lambda.vect[which.min(gcv)]
+
+curv.fdPar <- fdPar(bbasis, curv.Lfd, lambda.opt)
+BSmooth <- smooth.basis(breaks, Dat, curv.fdPar) # smooth.pos
+XXfd <- BSmooth$fd # Wfdobj
+
+fdobjSmootheval <- eval.fd(fdobj = XXfd,  # eval.posfd
+                           evalarg = seq(min(breaks), max(breaks),
+                                         length = 101))
+
+# df_plot_smooth <- data.frame(
+#   method = rep(colnames(fdobjSmootheval), each = dim(fdobjSmootheval)[1]),
+#   value = c(fdobjSmootheval),
+#   sigma = rep(seq(min(sigma_vector), max(sigma_vector), length = 101), length(methods))
+# ) |> 
+#   mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE))
+
+## for positive smoothing
+
+# najdeme hodnotu minima
+# lambda.opt <- 1e-4
+# 
+# curv.fdPar <- fdPar(bbasis, curv.Lfd, lambda.opt)
+# BSmooth <- smooth.pos(breaks, Dat, curv.fdPar, dbglev = 0,
+#                       wtvec = c(rep(1000, 5), rep(8, 5), rep(1, 20))) # smooth.pos
+# XXfd <- BSmooth$Wfdobj # Wfdobj
+# 
+# fdobjSmootheval <- eval.posfd(Wfdobj = XXfd,  # eval.posfd
+#                            evalarg = seq(min(sigma_vector), max(sigma_vector), 
+#                                          length = 101))
+
+df_plot_smooth <- data.frame(
+  method = rep(methods, each = dim(fdobjSmootheval)[1]),
+  value = c(fdobjSmootheval),
+  shift = rep(seq(min(breaks), max(breaks), length = 101), length(methods))
+) |> 
+  filter(method %in% methods_subset) |>
+  mutate(method = factor(method, levels = methods_subset, 
+                         labels = methods_subset, ordered = TRUE)) 
+```
+
+```{r fig.cap='Graf závislosti testovací chybovosti pro jednotlivé klasifikační metody na hodnotě parametru $\\sigma_{x}$.', warning=FALSE, eval=T}
+# pro testovaci data
+SIMUL_params[, 2, ] |> 
+  as.data.frame() |> 
+  mutate(method = methods) |>
+  pivot_longer(cols = as.character(shift_vector), 
+               names_to = 'shift', 
+               values_to = 'Err') |>
+  mutate(method = factor(method, levels = methods, labels = methods, ordered = TRUE), 
+         shift = as.numeric(shift)) |> 
+  # filter(method %in% c('KNN', 'QDA', 'LR_functional', 
+  #                      'RF_discr', #'RF_score', 'RF_Bbasis', 
+  #                      'SVM linear - diskr',# 'SVM poly - diskr', 'SVM rbf - diskr', 
+  #                      # 'SVM linear - PCA',# 'SVM poly - PCA', 'SVM rbf - PCA', 
+  #                      'SVM linear - Bbasis',# 'SVM poly - Bbasis', 'SVM rbf - Bbasis',
+  #                      'SVM linear - projection',# 'SVM poly - projection',
+  #                      # 'SVM rbf - projection', 
+  #                      'SVM linear - RKHS - radial'#, 'SVM poly - RKHS - radial', 
+  #                      # 'SVM rbf - RKHS - radial'
+  #                      )) |>
+  filter(method %in% methods_subset) |>
+  mutate(method = factor(method, levels = methods_subset, 
+                         labels = methods_subset, ordered = TRUE)) |>
+  ggplot(aes(x = shift, y = Err, colour = method, shape = method)) + 
+  geom_point(alpha = 0.7, size = 0.6) + 
+  theme_bw() + 
+  labs(x = 'sigma',
+       y = 'Testovaci chybovost',
+       colour = 'Klasifikační metoda',
+       linetype = 'Klasifikační metoda',
+       shape = 'Klasifikační metoda') + 
+  theme(legend.position = 'right',
+        plot.margin = unit(c(0.1, 0.7, 0.3, 0.3), "cm"),
+        panel.grid.minor.x = element_blank()) +
+  # guides(colour=guide_legend(direction = 'vertical'),
+  #        linetype=guide_legend(direction = 'vertical'),
+  #        shape=guide_legend(direction = 'vertical')) + 
+    # scale_y_log10() +
+  geom_line(data = df_plot_smooth, aes(x = shift, y = value, col = method,
+                                       linetype = method),
+            linewidth = 0.95) + 
+  scale_colour_manual(values = rep(c('deepskyblue2', 'tomato'), c(4, 4)),
+                      labels = methods_names) + 
+  scale_linetype_manual(values = rep(c('dotdash', 'dashed', 'solid', 'dotted'), 2),
+                        labels = methods_names) + 
+  scale_shape_manual(values = rep(c(16, 1, 17, 4, 16, 1, 17, 4)),
+                     labels = methods_names) +
+  guides(colour = guide_legend(override.aes = list(size = 1.2, alpha = 0.7)),
+         linetype = guide_legend(override.aes = list(linewidth = 0.8)))
+
+# ggsave("figures/kap6_sim_03shift_curvesErr.tex", device = tikz, width = 9, height = 4.5)
+```
+
+```{r echo=FALSE, eval=T}
+ggsave('figures/sim_03a_dependence_on_sigma.pdf', width = 10, height = 6)
+```
+
+Komentáře ke grafům lze najít v Diplomové práci. My si jen všimněme, že s rostoucí hodnotou $\sigma$ roste u všech metod i testovací chybovost. Nejlépe si vede funkcionální logistická regrese a projekce na B-splinovou bázi v kombinaci s metodou SVM s lineárním jádrem.
+

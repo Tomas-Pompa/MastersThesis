@@ -1327,7 +1327,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{si
 
 Nyní zopakujeme celou předchozí část `n.sim`-krát a hodnoty chybovostí si budeme ukládat to objektu `SIMUL_params`. Přitom budeme měnit hodnotu parametru $\sigma$ a podíváme se, jak se mění výsledky jednotlivých vybraných klasifikačních metod v závislosti na této hodnotě.
 
-```{r eval=F, message=FALSE, warning=FALSE}
+```{r eval=T, message=FALSE, warning=FALSE}
 # nastaveni generatoru pseudonahodnych cisel
 set.seed(42)
 

@@ -575,3 +575,15 @@ tecator-data-1
 phoneme-data-1
 materiály-pro-kapitolu-6
 materiály-pro-kapitolu-7
+tab:unnamed-chunk-35
+klasif3diskr
+simul3diskr
+grafický-výstup-3
+rozhodovací-stromy-8
+náhodné-lesy-8
+tabulka-výsledků-13
+support-vector-machines-14
+lem:unlabeled-div-1
+tab:unnamed-chunk-140
+fig:unnamed-chunk-147
+fig:unnamed-chunk-149
