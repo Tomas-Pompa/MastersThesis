@@ -2230,7 +2230,7 @@ Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{si
 
 Nyní zopakujeme celou předchozí část `n.sim`-krát a hodnoty chybovostí si budeme ukládat to objektu `SIMUL_params`. Přitom budeme měnit hodnotu parametru $\sigma$ a podíváme se, jak se mění výsledky jednotlivých vybraných klasifikačních metod v závislosti na této hodnotě.
 
-```{r eval=T, message=FALSE, warning=FALSE}
+```{r eval=F, message=FALSE, warning=FALSE}
 # nastaveni generatoru pseudonahodnych cisel
 set.seed(42)
 
@@ -3532,11 +3532,13 @@ curv.Lfd <- int2Lfd(2)
 ## for positive smoothing
 
 # najdeme hodnotu minima
-lambda.opt <- 1e-4
+lambda.opt <- 3e-4
 
 curv.fdPar <- fdPar(bbasis, curv.Lfd, lambda.opt)
 BSmooth <- smooth.pos(breaks, Dat, curv.fdPar, dbglev = 0,
-                      wtvec = c(rep(1000, 5), rep(8, 5), rep(1, 20))) # smooth.pos
+                      # wtvec = c(rep(1000, 5), rep(100, 5), rep(1, 20))
+                      wtvec = c(rep(1000, 5), seq(100, 10, length = 5), rep(1, 20))
+                      ) # smooth.pos
 XXfd <- BSmooth$Wfdobj # Wfdobj
 
 fdobjSmootheval <- eval.posfd(Wfdobj = XXfd,  # eval.posfd
@@ -3593,17 +3595,17 @@ SIMUL_params[, 2, ] |>
     # scale_y_log10() +
   geom_line(data = df_plot_smooth, aes(x = sigma, y = value, col = method,
                                        linetype = method),
-            linewidth = 0.95) + 
+            linewidth = 1.05) + 
   scale_colour_manual(values = rep(c('deepskyblue2', 'tomato'), c(4, 4)),
                       labels = methods_names) + 
   scale_linetype_manual(values = rep(c('dotdash', 'dashed', 'solid', 'dotted'), 2),
                         labels = methods_names) + 
   scale_shape_manual(values = rep(c(16, 1, 17, 4, 16, 1, 17, 4)),
                      labels = methods_names) +
-  guides(colour = guide_legend(override.aes = list(size = 1.2, alpha = 0.7)),
-         linetype = guide_legend(override.aes = list(linewidth = 0.8)))
+  guides(colour = guide_legend(override.aes = list(size = 1.4, alpha = 0.6)),
+         linetype = guide_legend(override.aes = list(linewidth = 0.7)))
 
-# ggsave("figures/kap6_sim_03sigma_curvesErr.tex", device = tikz, width = 9, height = 4.5)
+# ggsave("figures/kap6_sim_03sigma_curvesErr.tex", device = tikz, width = 8, height = 4)
 ```
 
 ```{r echo=FALSE, eval=T}
