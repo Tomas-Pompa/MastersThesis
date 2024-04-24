@@ -2,7 +2,7 @@
 
 V této poslední kapitole jsou uvedeny zdrojové kódy pro vygenerování grafů a dalších případných materiálů, které jsou použity v diplomové práci. Jedná se především o ilustrativní grafy určitých vlastností a fenoménů spojených s funkcionálními daty. 
 
-Kapitola je členěna do sekcí, které odpovídají jednotlivým kapitolám v diplomové práci. Všechny grafy jsou vytvořeny pomocí balíčku `ggplot2`, který poskytuje celou řadu grafických funkcionalit, pomocí kterých jsme (alespoň subjektivně) schopni dosáhnout podstatně lépe a profesionálněni vypadajících grafických výstupů v porovnání s klasickou grafikou v `R`.
+Kapitola je členěna do sekcí, které odpovídají jednotlivým kapitolám v diplomové práci. Všechny grafy jsou vytvořeny pomocí balíčku `ggplot2`, který poskytuje celou řadu grafických funkcionalit, pomocí kterých jsme (alespoň subjektivně) schopni dosáhnout podstatně lépe a profesionálněji vypadajících grafických výstupů v porovnání s klasickou grafikou v `R`.
 
 Všechny grafy jsou uloženy pomocí funkce `ggsave()` ve formátu **pdf** nebo **tikz**, který umožňuje lepší kombinaci grafiky a symbolů v $\LaTeX$u.
 
@@ -66,7 +66,7 @@ V této sekci uvedeme podpůrné grafy pro první kapitolu diplomové práce.
 
 ### Funkcionální průměr
 
-Nyní pro data `phoneme` spočítáme průměr.
+Pro data `phoneme` spočítáme průměrný průběh log-periodogramů.
 
 ```{r}
 t <- 1:256
@@ -153,7 +153,7 @@ DFmean <- data.frame(
                  levels = levels(y))
 ) |> filter(Phoneme == 'aa')
 
-# tikz(file = "figures/DP_kap1_mean.tex", width = 6, height = 5)
+# tikz(file = "figures/DP_kap1_mean.tex", width = 4.2, height = 3.5)
 
 DFsmooth |> 
   filter(time %in% as.character(1:100)) |>
@@ -161,8 +161,8 @@ DFsmooth |>
   geom_line(aes(group = time), linewidth = 0.2, colour = 'deepskyblue2',
             alpha = 0.6) +
   theme_bw() +
-  labs(x = 'Frekvence [Hz]',
-       y = 'log-periodogram',
+  labs(x = 'Frekvence',
+       y = 'Log-periodogram',
        colour = 'Phoneme') +
   scale_colour_discrete(labels = phoneme_subset) + 
   geom_line(data = DFmean, aes(x = t, y = Mean, 
@@ -176,12 +176,14 @@ DFsmooth |>
 
 ### Variance
 
+Pro data `phoneme` spočítáme průběh varianční funkce.
+
 ```{r}
 varfd <- var.fd(XXfdaa)
 fdvar <- eval.bifd(t, t, varfd)
 ```
 
-```{r}
+```{r fig.cap="Varianční funkce."}
 dfs <- data.frame(
   time = t, 
   value = c(fdobjSmoothevalaa))
@@ -192,15 +194,17 @@ df <- data.frame(dfs, fdmean = fdmean, fdvar = diag(fdvar))
 
 ggplot(data = df, aes(x = time, y = fdvar)) +
   geom_line(color = 'deepskyblue2', linewidth = 0.8) +
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Variance',
        colour = 'Phoneme') +
   theme_bw()
  # dev.off()
-# ggsave("figures/DP_kap1_variance.tex", width = 6, height = 5, device = tikz)
+# ggsave("figures/DP_kap1_variance.tex", width = 4.2, height = 3.5, device = tikz)
 ```
 
 ### Kovariance a Korelace
+
+Pro data `phoneme` spočítáme kovarianční a korelační funkce.
 
 ```{r}
 fdcor <- cor.fd(t, XXfdaa) 
@@ -209,13 +213,13 @@ df <- merge(t, t)
 df <- data.frame(df, fdcov = c(fdvar), fdcor = c(fdcor))
 df <- df[seq(1, length(df$x), length = 68001), ]
 
-# tikz(file = "figures/DP_kap1_cov.tex", width = 6, height = 6)
+# tikz(file = "figures/DP_kap1_cov.tex", width = 4, height = 4)
 
 p1 <- ggplot(data = df, aes (x, y, z = fdcov)) +
   geom_raster(aes(fill = fdcov)) +
   geom_contour(colour = "white") +
-  labs(x = 'Frekvence [Hz]',
-       y = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
+       y = 'Frekvence',
        fill = 'Kovariance') +
   coord_fixed(ratio = 1) + 
   theme_bw() + 
@@ -225,12 +229,12 @@ p1 <- ggplot(data = df, aes (x, y, z = fdcov)) +
 p1
 # dev.off()
 # ggsave("figures/DP_kap1_cov.tex", width = 6, height = 6, device = tikz)
-# tikz(file = "figures/DP_kap1_cor.tex", width = 6, height = 6)
+# tikz(file = "figures/DP_kap1_cor.tex", width = 4, height = 4)
 p2 <- ggplot(data = df, aes (x, y, z = fdcor)) +
   geom_raster(aes(fill = fdcor)) +
   geom_contour(colour = "white") +
-  labs(x = 'Frekvence [Hz]',
-       y = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
+       y = 'Frekvence',
        fill = 'Korelace') +
   coord_fixed(ratio = 1) + 
   theme_bw() + 
@@ -247,7 +251,7 @@ p2
 
 Podívejme se na princip, jak se pomocí splinové báze dostaneme od diskrétních naměřených hodnot k funkcionálním datům.
 
-Uvažujme pro přehlednost opět data `phoneme` a pouze malý počet bázových funkcí. Uvedeme tři obrázky, jeden se znárorněnými bázovými funkcemi, druhý s bázovými funkcemi přenásobenými vypočtenou hodnotou parametru a třetí výslednou křivku poskládanou sečtením jednotlivých přeškálovaných bázových funkcí.
+Uvažujme pro přehlednost opět data `phoneme` a pouze malý počet bázových funkcí. Uvedeme tři obrázky, jeden se znázorněnými bázovými funkcemi, druhý s bázovými funkcemi přenásobenými vypočtenou hodnotou parametru a třetí výslednou křivku poskládanou sečtením jednotlivých přeškálovaných bázových funkcí.
 
 ```{r}
 # definice barev 
@@ -284,13 +288,13 @@ basisdf2 <-  data.frame(bs = c(ebchan),
 
 library(RColorBrewer)
 
-# tikz(file = "figures/DP_kap1_Bbasis_norder2.tex", width = 12, height = 4)
+# tikz(file = "figures/DP_kap1_Bbasis_norder2.tex", width = 9, height = 3)
 
 # samotna baze
 p1 <- ggplot(data = basisdf1, aes(x = x, y = bs * 10, colour = basis)) +
   geom_vline(xintercept = breaks, linetype = "dotted", linewidth = 0.1, colour = 'grey2') +
   geom_line() +
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'B-splajnová báze',
        colour = 'Foném') +
   theme_classic() + 
@@ -304,7 +308,7 @@ p1 <- ggplot(data = basisdf1, aes(x = x, y = bs * 10, colour = basis)) +
 p2 <- ggplot(data = basisdf2, aes(x = x, y = bs, colour = basis)) +
   geom_vline(xintercept = breaks, linetype = "dotted", linewidth = 0.1, colour = 'grey2') +
   geom_line() + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'B-splajnová báze (škálovaná)',
        colour = 'Foném') +
   theme_classic() + 
@@ -322,7 +326,7 @@ p3 <- ggplot(data = df, aes(x, y)) +
   theme_classic() + 
   #guides (colour = FALSE) + 
   ylim(c(0, 22)) + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném')
 
@@ -358,13 +362,13 @@ basisdf2 <-  data.frame(bs = c(ebchan),
                         x = df$x, 
                         basis = rep(colnames(fdB), each = length(df$x)))
 
-# tikz(file = "figures/DP_kap1_Bbasis_norder4.tex", width = 12, height = 4)
+# tikz(file = "figures/DP_kap1_Bbasis_norder4.tex", width = 9, height = 3)
 
 # samotna baze
 p1 <- ggplot(data = basisdf1, aes(x = x, y = bs * 10, colour = basis)) +
   geom_vline(xintercept = breaks, linetype = "dotted", linewidth = 0.1, colour = 'grey2') +
   geom_line() +
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'B-splajnová báze',
        colour = 'Foném') +
   theme_classic() + 
@@ -378,7 +382,7 @@ p1 <- ggplot(data = basisdf1, aes(x = x, y = bs * 10, colour = basis)) +
 p2 <- ggplot(data = basisdf2, aes(x = x, y = bs, colour = basis)) +
   geom_vline(xintercept = breaks, linetype = "dotted", linewidth = 0.1, colour = 'grey2') +
   geom_line() + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'B-splajnová báze (škálovaná)',
        colour = 'Foném') +
   theme_classic() + 
@@ -397,7 +401,7 @@ p3 <- ggplot(data = df, aes(x, y)) +
   theme_classic() + 
   #guides (colour = FALSE) + 
   ylim(c(0, 22)) + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném')
 
@@ -410,7 +414,7 @@ p3 <- ggplot(data = df, aes(x, y)) +
 
 Podívejme se na princip, jak se pomocí Fourierovské báze dostaneme od diskrétních naměřených hodnot k funkcionálním datům.
 
-Uvažujme pro přehlednost opět data `phoneme` a pouze malý počet bázových funkcí. Uvedeme tři obrázky, jeden se znárorněnými bázovými funkcemi, druhý s bázovými funkcemi přenásobenými vypočtenou hodnotou parametru a třetí výslednou křivku poskládanou sečtením jednotlivých přeškálovaných bázových funkcí.
+Uvažujme pro přehlednost opět data `phoneme` a pouze malý počet bázových funkcí. Uvedeme tři obrázky, jeden se znázorněnými bázovými funkcemi, druhý s bázovými funkcemi přenásobenými vypočtenou hodnotou parametru a třetí výslednou křivku poskládanou sečtením jednotlivých přeškálovaných bázových funkcí.
 
 #### pro `nbasis = 5`
 
@@ -437,13 +441,13 @@ basisdf2 <-  data.frame(bs = c(ebchan),
                         x = df$x, 
                         basis = rep(colnames(fdF), each = length(df$x)))
 
-# tikz(file = "figures/DP_kap1_Fbasis_nbasis5.tex", width = 12, height = 4)
+# tikz(file = "figures/DP_kap1_Fbasis_nbasis5.tex", width = 9, height = 3)
 
 # samotna baze
 p1 <- ggplot(data = basisdf1, aes(x = x, y = bs, colour = basis)) +
   # geom_vline(xintercept = breaks, linetype = "dotted", linewidth = 0.1, colour = 'grey') +
   geom_line() +
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Fourierova báze',
        colour = 'Foném') +
   theme_classic() + 
@@ -456,7 +460,7 @@ p1 <- ggplot(data = basisdf1, aes(x = x, y = bs, colour = basis)) +
 p2 <- ggplot(data = basisdf2, aes(x = x, y = bs, colour = basis)) +
   # geom_vline(xintercept = breaks, linetype = "dotted", linewidth = 0.1, colour = 'grey') +
   geom_line() + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Fourierova báze (škálovaná)',
        colour = 'Foném') +
   theme_classic() + 
@@ -473,7 +477,7 @@ p3 <- ggplot(data = df, aes(x, y)) +
   theme_classic() + 
   #guides (colour = FALSE) + 
   ylim(c(0, 22)) + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném')
 
@@ -563,7 +567,7 @@ Bude nás zajímat vliv vyhlazovacího parametru $\lambda$ na výslednou odhadnu
 ### Počet bázových funkcí a výsledný odhad
 
 
-```{r fig.cap="B-spliny.", fig.width=12, fig.height=4, message=FALSE}
+```{r fig.cap="Počet bázových funkcí a výsledný odhad.", fig.width=12, fig.height=4, message=FALSE}
 df <- data.frame(x = 1:256, y = data[5, 2:257] |> c() |> unlist())
 norder <- 4
 rangeval <- range(df$x)
@@ -587,7 +591,7 @@ p1 <- ggplot(data = df, aes(x, y)) +
   geom_line(aes(y = fdBSmootheval1), linewidth = 0.7) +
   theme_classic() + 
   ylim(c(0, 22)) + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném')
 
@@ -598,7 +602,7 @@ p2 <- ggplot(data = df, aes(x, y)) +
   geom_line(aes(y = fdBSmootheval2), linewidth = 0.7) +
   theme_classic() + 
   ylim(c(0, 22)) + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném')
 
@@ -609,7 +613,7 @@ p3 <- ggplot(data = df, aes(x, y)) +
   geom_line(aes(y = fdBSmootheval3), linewidth = 0.7) +
   theme_classic() + 
   ylim(c(0, 22)) + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném')
 
@@ -618,7 +622,7 @@ p3 <- ggplot(data = df, aes(x, y)) +
 (p1 | p2 | p3)
 
 # dev.off()
-# ggsave('figures/DP_kap2_differentnbasis.tex', width = 12, height = 4, device = tikz)
+ggsave('figures/DP_kap2_differentnbasis.tex', width = 9, height = 3, device = tikz)
 ```
 
 
@@ -695,7 +699,7 @@ data.frame(time = rep(tt, length(lambdas)),
   facet_wrap(~lambda, ncol = 3, nrow = 2, labeller = labeller(lambda = lam_labs)) +
   theme_bw() + 
   theme(legend.position = 'none') + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném') 
   # scale_color_brewer()
@@ -748,7 +752,7 @@ data.frame(time = rep(tt, length(lambdas)),
   # facet_wrap(~lambda, ncol = 3, nrow = 2, labeller = labeller(lambda = lam_labs)) +
   theme_bw() + 
   theme(legend.position = 'none') + 
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném') 
   # scale_color_brewer()
@@ -877,7 +881,9 @@ p3 <- data.PCA.train |> ggplot(aes(x = V2, y = V3, colour = Y)) +
 # ggsave("figures/kap2_PCA_scores.tex", device = tikz, width = 12, height = 4)
 ```
 
-```{r message=FALSE}
+Podívejme se ještě na 3D graf skórů prvních třech hlavních komponent.
+
+```{r message=FALSE, fig.cap="3D graf skórů prvních třech hlavních komponent."}
 # 3D plot 
 library(plotly)
 plot_ly(data = data.PCA.train,
@@ -889,9 +895,9 @@ plot_ly(data = data.PCA.train,
                      zaxis = list(title = '3. hlavní komponenta')))
 ```
 
+Vykresleme si i průběh kumulativní vysvětlené variability. 
 
-
-```{r fig.width=6, fig.height=4, fig.cap="Kumulativní vysvětlená variabilita [v %] proti po4tu hlavn9ch komponent."}
+```{r fig.width=6, fig.height=4, fig.cap="Kumulativní vysvětlená variabilita [v %] proti počtu hlavních komponent."}
 data.frame(x = 1:15,
            y = pca.fd(XXfd, nharm = 15)$varprop |> cumsum() * 100) |>
   ggplot(aes(x, y)) + 
@@ -908,6 +914,8 @@ data.frame(x = 1:15,
 # ggsave("figures/kap2_PCA_nharm.tex", device = tikz, width = 5, height = 3)
 ```
 
+Také nás zajímá průběh prvních třech funkcionálních hlavních komponent.
+
 ```{r fig.width=6, fig.height=4, fig.cap="Hlavní komponenty."}
 ## Looking at the principal components:
 
@@ -920,7 +928,7 @@ df.comp <- data.frame(
 
 df.comp |> ggplot(aes(x = time, y = harmonics, color = component)) + 
   geom_line(linewidth = 0.7) +
-  labs(x = "Frekvence [v Hz]", 
+  labs(x = "Frekvence", 
        y = "Hlavní komponenty",
        colour = '') +
   theme_bw() + 
@@ -929,6 +937,7 @@ df.comp |> ggplot(aes(x = time, y = harmonics, color = component)) +
 # ggsave("figures/kap2_PCA_components.tex", device = tikz, width = 5, height = 3)
 ```
 
+Můžeme se také podívat na vliv prvních třech hlavních komponent na průměrnou křivku. Vždy je od průměru přičten nebo odečten dvojnásobek hlavní komponenty (škálovaný rozptylem). 
 
 ```{r fig.width=12, fig.height=4, fig.cap="Vliv komponent.", warning=FALSE, message=FALSE}
 library(plyr)
@@ -956,7 +965,7 @@ df.pv3 |> ggplot(aes (x = freq, y = m)) +
   geom_line() +
   geom_line(aes(y = m1), linetype = 'solid', color = 'deepskyblue2') +
   geom_line(aes(y = m2), linetype = 'dashed', color = 'deepskyblue2') +
-  labs(x = "Frekvence [v Hz]", 
+  labs(x = "Frekvence", 
        y = "Log-periodogram",
        colour = 'Komponenta') +
   theme_bw() +
@@ -965,6 +974,8 @@ df.pv3 |> ggplot(aes (x = freq, y = m)) +
 
 # ggsave("figures/kap2_PCA_impactofcomponents.tex", device = tikz, width = 9, height = 3)
 ```
+
+Podívejme se ještě na rekonstrukci původního log-periodogramu pomocí hlavních komponent. Nejprve uvažujme pouze průměr. 
 
 ```{r fig.width=6, fig.height=4, fig.cap="Původní křivka a průměr."}
 meanfd <- mean.fd(XXfd)
@@ -977,11 +988,12 @@ df <- data.frame(dfs[1:256, ], reconstruction =  fdm, estimate = "mean")
 p0 <- ggplot(data = df, aes (x = time, y = value)) +
   geom_line(color = "grey2", linewidth = 0.5, alpha = 0.7) +
   geom_line(aes(y = reconstruction), colour = "deepskyblue2", linewidth = 0.6) +
-  labs(x = "Frekvence [v Hz]", y = "Log-periodogram") +
+  labs(x = "Frekvence", y = "Log-periodogram") +
   theme_bw()
 print(p0)
 ```
 
+Konečně se podívejme na vybraný počet hlavních komponent a příslušnou rekonstrukci.
 
 ```{r fig.width=9, fig.height=6, fig.cap="Původní křivka a její rekonstrukce."}
 for (k in 1:20){
@@ -993,7 +1005,7 @@ for (k in 1:20){
  p1 <- ggplot(data = df1, aes (x = time, y = value)) +
   geom_line(color = "grey2", linewidth = 0.5, alpha = 0.7) +
   geom_line(aes(y = reconstruction), colour = "deepskyblue2", linewidth = 0.6) +
-  labs(x = "Frekvence [v Hz]", y = "Log-periodogram") +
+  labs(x = "Frekvence", y = "Log-periodogram") +
   theme_bw()
  # print(p1)
 }
@@ -1004,7 +1016,7 @@ df |> mutate(estimate = factor(estimate)) |>
   ggplot(aes (x = time, y = value)) +
   geom_line(color = "grey2", linewidth = 0.5, alpha = 0.5) +
   geom_line(aes(y = reconstruction), colour = "deepskyblue2", linewidth = 0.7) +
-  labs(x = "Frekvence [v Hz]", y = "Log-periodogram") +
+  labs(x = "Frekvence", y = "Log-periodogram") +
   theme_bw() + 
   facet_wrap(~estimate, ncol = 3, nrow = 2)
 
@@ -1397,10 +1409,10 @@ Y.test <- subset(Y, split == FALSE)
 # X.train <- XXfd
 # Y.train <- Y
 
-table(Y.train)
-
-# relativni zastoupeni
-table(Y.train) / sum(table(Y.train))
+# table(Y.train)
+# 
+# # relativni zastoupeni
+# table(Y.train) / sum(table(Y.train))
 ```
 
 ```{r}
@@ -1417,7 +1429,7 @@ data.PCA.train$Y <- factor(Y.train) # prislusnost do trid
 
 U všech třech jader projdeme hodnoty hyperparametru $C$ v intervalu $[10^{-3}, 10^{3}]$, přičemž u jádra polynomiálního zafixujeme hyperparametr $p$ na hodnotě 3, neboť pro jiné celočíselné hodnoty metoda nedává zdaleka tak dobré výsledky. Naopak pro radiální jádro využijeme k volbě optimální hodnoty hyperparametru $\gamma$ opět 10-násobnou CV, přičemž uvažujeme hodnoty v intervalu $[10^{-3}, 10^{2}]$. Zvolíme `coef0` $= 1$. 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 set.seed(42)
 k_cv <- 10
 # rozdelime trenovaci data na k casti
@@ -1732,7 +1744,7 @@ Y.test <- subset(Y, split == FALSE)
 Spočítáme skalární součiny prvního s ostatními.
 
 
-```{r}
+```{r include=FALSE}
 nn <- 3
 Inprod_vect <- inprod(XXfd_norm[nn], XXfd_norm[1:dim(XXfd$coefs)[2]])
 labels[order(Inprod_vect)[1:10]]
@@ -1740,7 +1752,7 @@ labels[rev(order(Inprod_vect))[1:10]]
 ```
 
 
-```{r fig.cap='Vykreslení prvních 100 vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čarou je zakreslen průměr pro každou třídu.'}
+```{r fig.cap='Vykreslení čtyř pozorování s minimální a maximální hodnotou skalárního součinu.'}
 n <- dim(XX)[2]
 abs.labs <- c("$< 20 \\%$", "$> 20 \\%$")
 # abs.labs <- c("$Y = {-1}$", "$Y = 1$")
@@ -1890,7 +1902,7 @@ fdobjSmootheval <- eval.fd(fdobj = XXfd_norm, evalarg = t)
 Spočítáme skalární součiny prvního log-periodogramu s ostatními.
 
 
-```{r}
+```{r include=FALSE}
 nn <- 1
 Inprod_vect <- inprod(XXfd_norm[nn], XXfd_norm[1:dim(XXfd$coefs)[2]])
 
@@ -1899,7 +1911,7 @@ y[rev(order(Inprod_vect))[1:10]]
 ```
 
 
-```{r fig.cap='Vykreslení prvních 100 vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čarou je zakreslen průměr pro každou třídu.'}
+```{r fig.cap='Vykreslení čtyř pozorování s minimální a maximální hodnotou skalárního součinu.'}
 n <- dim(XX)[2]
 y <- c(y_train, y_test)
 DFsmooth <- data.frame(
@@ -1928,7 +1940,7 @@ DFsmooth |>
             aes(group = time, linetype = 'nejvetsi'), linewidth = 0.6) +
   geom_line(linewidth = 1.1, aes(group = time, linetype = 'apozor x1')) +
   theme_bw() +
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Foném',
        linetype = 'Styl čáry') +
@@ -2203,7 +2215,7 @@ df_plot |> filter(curve %in% c('1', '5', '3')) |>
   ggplot(aes(x, y, col = line, linetype = curve)) +
   geom_line(linewidth = 0.8) + 
   theme_bw() +
-  labs(x = 'Frekvence [Hz]',
+  labs(x = 'Frekvence',
        y = 'Log-periodogram',
        colour = 'Křivka') +
   # scale_colour_discrete(labels = phoneme_subset) +

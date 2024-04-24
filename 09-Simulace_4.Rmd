@@ -5159,6 +5159,18 @@ SIMULACE$test |>
 ggsave('figures/sim_04_boxplot_test.pdf', width = 10, height = 6)
 ```
 
+Chtěli bychom nyní formálně otestovat, zda jsou některé klasifikační metody na základě předchozí simulace na těchto datech lepší než jiné, případně ukázat, že je můžeme považovat za stejně úspěšné. Vzhledem k nesplnění předpokladu normality nemůžeme použít klasický párový t-test. Využijeme jeho neparametrickou alternativu - párový Wilcoxonův test. Musíme si však v tomto případě dávat pozor na interpretaci.
+
+```{r}
+wilcox.test(SIMULACE$test[, 'LR_functional'], SIMULACE$test[, 'SVM linear - diskr'], alternative = 't', paired = T)$p.value
+
+wilcox.test(SIMULACE$test[, 'LR_functional'], SIMULACE$test[, 'SVM linear - Bbasis'], alternative = 'g', paired = T)$p.value
+
+wilcox.test(SIMULACE$test[, 'SVM linear - diskr'], SIMULACE$test[, 'SVM linear - Bbasis'], alternative = 'g', paired = T)$p.value
+```
+
+Testujeme přitom na adjustované hladině významnosti $\alpha_{adj} = 0.05 / 3 = 0.0167$.
+
 Nakonec se podívejme, jaké hodnoty hyperparametrů byly nejčastější volbou.
 
 ```{r echo=FALSE, eval=T}
@@ -5181,7 +5193,7 @@ CV_res |>
   filter(method %in% c('KNN_K', 'nharm', 'LR_func_n_basis')) |>
   ggplot(aes(x = hyperparameter, #y = after_stat(density),
              fill = method, colour = method)) + 
-  geom_histogram(binwidth = 5, alpha = 0.6) + 
+  geom_histogram(binwidth = 1, alpha = 0.6) + 
   theme_bw() + 
   facet_grid(~method, scales = 'free') +
   labs(x = 'Hodnoty hyperparametru',
@@ -5529,20 +5541,21 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
 abs.labs <- paste("Klasifikační třída:", c("$Y = 0$", "$Y = 1$"))
 names(abs.labs) <- c('0', '1')
 
-# fdobjSmootheval <- eval.fd(fdobj = XXfd, evalarg = t)
+tt <- seq(min(t), max(t), length = 91)
+fdobjSmootheval <- eval.fd(fdobj = XXder, evalarg = tt)
 
 DFsmooth <- data.frame(
-  t = rep(t, 2 * n),
-  time = rep(rep(1:n, each = length(t)), 2),
+  t = rep(tt, 2 * n),
+  time = rep(rep(1:n, each = length(tt)), 2),
   Smooth = c(fdobjSmootheval),
-  group = factor(rep(c(0, 1), each = n * length(t)))
+  group = factor(rep(c(0, 1), each = n * length(tt)))
 )
 
 DFmean <- data.frame(
-  t = rep(t, 2),
-  Mean = c(eval.fd(fdobj = mean.fd(XXder[1:n]), evalarg = t),
-           eval.fd(fdobj = mean.fd(XXder[(n + 1):(2 * n)]), evalarg = t)),
-  group = factor(rep(c(0, 1), each = length(t)))
+  t = rep(tt, 2),
+  Mean = c(eval.fd(fdobj = mean.fd(XXder[1:n]), evalarg = tt),
+           eval.fd(fdobj = mean.fd(XXder[(n + 1):(2 * n)]), evalarg = tt)),
+  group = factor(rep(c(0, 1), each = length(tt)))
 )
 
 DFsmooth |> ggplot(aes(x = t, y = Smooth, #group = interaction(time, group), 
@@ -10201,6 +10214,19 @@ SIMULACE$test |>
 ggsave('figures/sim_04_boxplot_test_der.pdf', width = 10, height = 6)
 ```
 
+Chtěli bychom nyní formálně otestovat, zda jsou některé klasifikační metody na základě předchozí simulace na těchto datech lepší než jiné, případně ukázat, že je můžeme považovat za stejně úspěšné. Vzhledem k nesplnění předpokladu normality nemůžeme použít klasický párový t-test. Využijeme jeho neparametrickou alternativu - párový Wilcoxonův test. Musíme si však v tomto případě dávat pozor na interpretaci.
+
+```{r}
+wilcox.test(SIMULACE$test[, 'LR_functional'], SIMULACE$test[, 'SVM linear - Bbasis'], alternative = 'g', paired = T)$p.value
+
+wilcox.test(SIMULACE$test[, 'LR_functional'], SIMULACE$test[, 'SVM linear - projection'], alternative = 'l', paired = T)$p.value
+
+wilcox.test(SIMULACE$test[, 'SVM linear - projection'], SIMULACE$test[, 'SVM linear - Bbasis'], alternative = 'g', paired = T)$p.value
+```
+
+Testujeme přitom na adjustované hladině významnosti $\alpha_{adj} = 0.05 / 3 = 0.0167$.
+
+
 Nakonec se podívejme, jaké hodnoty hyperparametrů byly nejčastější volbou.
 
 ```{r echo=FALSE, eval=T}
@@ -10307,5 +10333,38 @@ CV_res |>
 
 ```{r echo=FALSE, eval=T}
 ggsave('figures/sim_04_histogram_hyperparams_4_der.pdf', width = 10, height = 6)
+```
+
+Porovnejme na závěr nejlepší klasifikátory z každé derivace, tj. lineární SVM aplikovanou na koeficienty ortogonální projekce na systém B-splinových funkcí pro nederivovaná data (chybovost $9.55\,\%$) a aplikovanou na bázové koeficienty pro první (chybovost $9.58\,\%$) i druhou (chybovost $9.32\,\%$) derivaci. 
+
+Jelikož ve všech třech simulačních studiích nastavujeme generátor pseudonáhodných čísel na stejnou hodnotu, vygenerované diskrétní vektory $\boldsymbol y_i$ a jejich rozdělení na množiny $\mathcal T_1$ a $\mathcal T_2$ jsou u daného opakování z celkového počtu $N=100$ totožné. Proto pro porovnání mediánů testovacích chybovostí nejúspěšnějších metod využijeme opět Wilcoxonův párový test. 
+
+```{r}
+# nejprve si data ze všech simulací načteme
+
+load('RData/simulace_03_cv.RData', verbose = F)
+data_0der <- SIMULACE
+load('RData/simulace_04_cv.RData', verbose = F)
+data_1der <- SIMULACE
+load('RData/simulace_04_2der_cv.RData', verbose = F)
+data_2der <- SIMULACE
+```
+
+Ověříme, že jsme načetli správná data.
+
+```{r}
+mean(data_0der$test$`SVM linear - projection`)
+mean(data_1der$test$`SVM linear - Bbasis`)
+mean(data_2der$test$`SVM linear - Bbasis`)
+```
+
+Konečně provedeme formální testy.
+
+```{r}
+wilcox.test(data_0der$test$`SVM linear - projection`, data_1der$test$`SVM linear - Bbasis`, alternative = 't', paired = T)#$p.value
+
+wilcox.test(data_0der$test$`SVM linear - projection`, data_2der$test$`SVM linear - Bbasis`, alternative = 't', paired = T)#$p.value
+
+wilcox.test(data_1der$test$`SVM linear - Bbasis`, data_2der$test$`SVM linear - Bbasis`, alternative = 't', paired = T)#$p.value
 ```
 
