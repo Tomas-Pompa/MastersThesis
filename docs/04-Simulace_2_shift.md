@@ -441,52 +441,9 @@ neighb.model <- classif.knn(group = y.train,
                             fdataobj = x.train, 
                             knn = c(1:round(sqrt(length(y.train))))) 
 
-summary(neighb.model) # shrnuti modelu
-```
-
-```
-##      - SUMMARY - 
-## 
-## -Probability of correct classification by group (prob.classification):
-## y
-##         1         2 
-## 0.7746479 0.7246377 
-## 
-## -Confusion matrix between the theoretical groups (by rows)
-##   and estimated groups (by column) 
-##    
-##      1  2
-##   1 55 16
-##   2 19 50
-## 
-## -Vector of probability of correct classification
-##    by number of neighbors (knn):
-##      1      2      3      4      5      6      7      8      9     10     11 
-## 0.7286 0.7429 0.7357 0.7214 0.7500 0.7214 0.7000 0.6857 0.7429 0.7286 0.6929 
-##     12 
-## 0.6714 
-## 
-## -Optimal number of neighbors: knn.opt= 5 
-## with highest probability of correct classification max.prob=  0.75 
-## 
-## -Probability of correct classification:  0.75
-```
-
-```r
-plot(neighb.model$gcv, pch = 16) # vykresleni zavislosti GCV na poctu sousedu K
-```
-
-<img src="04-Simulace_2_shift_files/figure-html/unnamed-chunk-18-1.png" width="672" />
-
-```r
-neighb.model$max.prob # maximalni presnost
-```
-
-```
-## [1] 0.75
-```
-
-```r
+# summary(neighb.model) # shrnuti modelu
+# plot(neighb.model$gcv, pch = 16) # vykresleni zavislosti GCV na poctu sousedu K
+# neighb.model$max.prob # maximalni presnost
 (K.opt <- neighb.model$h.opt) # optimalni hodnota K
 ```
 
@@ -545,17 +502,10 @@ for (index in 1:k_cv) {
 CV.results <- apply(CV.results, 1, mean)
 K.opt <- which.max(CV.results)
 presnost.opt.cv <- max(CV.results)
-CV.results
+# CV.results
 ```
 
-```
-##  [1] 0.6887997 0.7483437 0.7368816 0.7384620 0.7559592 0.7304458 0.7198493
-##  [8] 0.7059212 0.7511321 0.7249606 0.6868431 0.6916845 0.6723656 0.6802993
-## [15] 0.6909588 0.6829584 0.6737427 0.6955291 0.6705774 0.6768249 0.6776039
-## [22] 0.6602983 0.6613755 0.6606879
-```
-
-Vidíme, že nejlépe vychází hodnota parametru $K$ jako 5 s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.756.
+Vidíme, že nejlépe vychází hodnota parametru $K$ jako 5 s hodnotou chybovosti spočtenou pomocí 10-násobné CV 0.244.
 Pro přehlednost si ještě vykresleme průběh validační chybovosti v závislosti na počtu sousedů $K$.
 
 
@@ -587,50 +537,18 @@ neighb.model <- classif.knn(group = y.train, fdataobj = x.train, knn = K.opt)
 model.neighb.predict <- predict(neighb.model, 
                                 new.fdataobj = fdata(X.test))
 
-summary(neighb.model)
-```
+# summary(neighb.model)
 
-```
-##      - SUMMARY - 
-## 
-## -Probability of correct classification by group (prob.classification):
-## y
-##         1         2 
-## 0.7746479 0.7246377 
-## 
-## -Confusion matrix between the theoretical groups (by rows)
-##   and estimated groups (by column) 
-##    
-##      1  2
-##   1 55 16
-##   2 19 50
-## 
-## -Vector of probability of correct classification
-##    by number of neighbors (knn):
-##    5 
-## 0.75 
-## 
-## -Optimal number of neighbors: knn.opt= 5 
-## with highest probability of correct classification max.prob=  0.75 
-## 
-## -Probability of correct classification:  0.75
-```
-
-```r
 # presnost na testovacich datech
 presnost <- table(as.numeric(factor(Y.test)), model.neighb.predict) |>
   prop.table() |>
   diag() |>
   sum()
 # chybovost
-1 - presnost
+# 1 - presnost
 ```
 
-```
-## [1] 0.2166667
-```
-
-Vidíme tedy, že přesnost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou 5, kterou jsme určili cross-validací, je na trénovacích datech rovna 0.25 a na testovacích datech 0.2167.
+Vidíme tedy, že chybovost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou 5, kterou jsme určili cross-validací, je na trénovacích datech rovna 0.25 a na testovacích datech 0.2167.
 
 K porovnání jendotlivých modelů můžeme použít oba typy chybovostí, pro přehlednost si je budeme ukládat do tabulky.
 
@@ -725,7 +643,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme jednak přesnost klasifikátoru na trénovacích (88.57 %), tak i na testovacích datech (85 %).
+Spočítali jsme jednak chybovost klasifikátoru na trénovacích (11.43 %), tak i na testovacích datech (15 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()`.
@@ -819,7 +737,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme tedy jednak přesnost klasifikátoru na trénovacích (87.14 %), tak i na testovacích datech (85 %).
+Spočítali jsme tedy jednak chybovost klasifikátoru na trénovacích (12.86 %), tak i na testovacích datech (15 %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v případě LDA.
@@ -913,11 +831,6 @@ U všech výše zmíněných jader musíme zvolit konstantu $C > 0$, která udá
 S rostoucí hodnotou $C$ bude metoda více penalizovat špatně klasifikovaná data a méně tvar hranice, naopak pro malé hodnoty $C$ metoda nedává takový význam špatně klasifikovaným datům, ale zaměřuje se více na penalizaci tvaru hranice.
 Tato konstanta $C$ se defaultně volí rovna 1, můžeme ji určit i přímo například pomocí cross-validace.
 
-Využitím cross-validace můžeme také určit optimální hodnoty ostatních hyperparametrů, které nyní závisí na naší volbě jádrové funkce.
-V případě lineárního jádra nevolíme žádný další parametr kromě konstanty $C$, u polynomiálního jádra musíme určit hodnoty hyperparametrů $\alpha_0, \gamma \text{ a } d$, jejichž defaultní hodnoty v `R` jsou postupně $\alpha_0^{default} = 0, \gamma^{default} = \frac{1}{dim(\texttt{data})} \text{ a } d^{default} = 3$.
-Při volbě radiálního jádra máme pouze jeden další hyperparametr $\gamma$, jehož defaultní hodnota v `R` je totožná jako u polynomiálního jádra.
-Opět bychom mohli hodnoty hyperparametrů určit jako optimální pro naše data, avšak vzhledem k relativní výpočetní náročnosti necháme hodnoty příslušných hyperparametrů na jejich defaultních hodnotách.
-
 V případě funkcionálních dat máme několik možností, jak použít metodu SVM.
 Nejjednodušší variantou je použít tuto klasifikační metodu přímo na diskretizovanou funkci (sekce \@ref(diskr2)).
 Další možností je opět využít skóre hlavních komponent a klasifikovat křivky pomocí jejich reprezentace \@ref(PCA-SVM2).
@@ -928,9 +841,36 @@ Jednak můžeme místo klasifikace původní křivky využít její derivaci (p�
 
 #### Diskretizace intervalu
 
-Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 1]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
+Začněme nejprve aplikací metody podpůrných vektorů přímo na diskretizovaná data (vyhodnocení funkce na dané síti bodů na intervalu $I = [0, 12]$), přičemž budeme uvažovat všech tři výše zmíněné jádrové funkce.
 
 
+```r
+# set norm equal to one
+norms <- c()
+for (i in 1:dim(XXfd$coefs)[2]) {
+  norms <- c(norms, as.numeric(1 / norm.fd(XXfd[i])))
+  }
+XXfd_norm <- XXfd 
+XXfd_norm$coefs <- XXfd_norm$coefs * matrix(norms, 
+                                            ncol = dim(XXfd$coefs)[2],
+                                            nrow = dim(XXfd$coefs)[1],
+                                            byrow = T)
+
+# rozdeleni na testovaci a trenovaci cast
+X.train_norm <- subset(XXfd_norm, split == TRUE)
+X.test_norm <- subset(XXfd_norm, split == FALSE)
+
+Y.train_norm <- subset(Y, split == TRUE)
+Y.test_norm <- subset(Y, split == FALSE)
+
+grid.data <- eval.fd(fdobj = X.train_norm, evalarg = t.seq)
+grid.data <- as.data.frame(t(grid.data)) 
+grid.data$Y <- Y.train_norm |> factor()
+
+grid.data.test <- eval.fd(fdobj = X.test_norm, evalarg = t.seq)
+grid.data.test <- as.data.frame(t(grid.data.test))
+grid.data.test$Y <- Y.test_norm |> factor()
+```
 
 
 ```r
@@ -943,6 +883,7 @@ clf.SVM.l <- svm(Y ~ ., data = grid.data,
 clf.SVM.p <- svm(Y ~ ., data = grid.data,
                  type = 'C-classification',
                  scale = TRUE,
+                 coef0 = 1,
                  kernel = 'polynomial')
 
 clf.SVM.r <- svm(Y ~ ., data = grid.data,
@@ -977,8 +918,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM na trénovacích datech je tedy 91.43 % pro lineární jádro, 67.86 % pro polynomiální jádro a 87.14 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 88.33 % pro lineární jádro, 70 % pro polynomiální jádro a 75 % pro radiální jádro.
+Chybovost metody SVM na trénovacích datech je tedy 11.43 % pro lineární jádro, 7.86 % pro polynomiální jádro a 11.43 % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody 10 % pro lineární jádro, 13.33 % pro polynomiální jádro a 15 % pro radiální jádro.
 
 
 ```r
@@ -1006,6 +947,7 @@ clf.SVM.l.PCA <- svm(Y ~ ., data = data.PCA.train,
 clf.SVM.p.PCA <- svm(Y ~ ., data = data.PCA.train,
                      type = 'C-classification',
                      scale = TRUE,
+                     coef0 = 1,
                      kernel = 'polynomial')
 
 clf.SVM.r.PCA <- svm(Y ~ ., data = data.PCA.train,
@@ -1040,8 +982,8 @@ presnost.test.r <- table(data.PCA.test$Y, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 88.57 % pro lineární jádro, 83.57 % pro polynomiální jádro a 87.86 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 81.67 % pro lineární jádro, 83.33 % pro polynomiální jádro a 81.67 % pro radiální jádro.
+Chybovost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy 11.43 % pro lineární jádro, 12.14 % pro polynomiální jádro a 12.14 % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody 18.33 % pro lineární jádro, 18.33 % pro polynomiální jádro a 18.33 % pro radiální jádro.
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v předchozích případech, kdy jsme také vykreslovali klasifikační hranici.
@@ -1110,6 +1052,7 @@ clf.SVM.l.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
 clf.SVM.p.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                         type = 'C-classification',
                         scale = TRUE,
+                        coef0 = 1,
                         kernel = 'polynomial')
 
 clf.SVM.r.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
@@ -1144,8 +1087,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 100 % pro lineární jádro, 100 % pro polynomiální jádro a 100 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 86.67 % pro lineární jádro, 75 % pro polynomiální jádro a 73.33 % pro radiální jádro.
+Chybovost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 0 % pro lineární jádro, 0 % pro polynomiální jádro a 0 % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody 13.33 % pro lineární jádro, 21.67 % pro polynomiální jádro a 26.67 % pro radiální jádro.
 
 
 ```r
@@ -1177,7 +1120,6 @@ Jde tedy o metodu redukce dimenze, kterou můžeme nazvat *filtrace*.
 Pro samotnou projekci použijeme v `R` funkci `project.basis()` z knihovny `fda`.
 Na jejím vstupu bude matice původních diskrétních (nevyhlazených) dat, hodnoty, ve kterých měříme hodnoty v matici původních dat a bázový objekt, na který chceme data projektovat.
 My zvolíme projekci na Fourierovu bázi, protože využití B-splinové báze není pro naše periodická data vhodné.
-Další možností je využít *wavelet basis*.
 
 Dimenzi $d$ volíme buď z nějaké předchozí expertní znalosti, nebo pomocí cross-validace.
 V našem případě určíme optimální dimenzi podprostoru $V_d$ pomocí $k$-násobné cross-validace (volíme $k \ll n$ kvůli výpočetní náročnosti metody, často se volí $k = 5$ nebo $k = 10$).
@@ -1238,6 +1180,7 @@ for (d in dimensions) {
     clf.SVM.p.projection <- svm(Y ~ ., data = data.projection.train.cv,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
                             kernel = 'polynomial')
     
     clf.SVM.r.projection <- svm(Y ~ ., data = data.projection.train.cv,
@@ -1287,11 +1230,11 @@ data.frame(d_opt = d.opt, ERR = 1 - presnost.opt.cv,
 ```
 ##        d_opt        ERR
 ## linear    34 0.09638278
-## poly      10 0.14627747
+## poly       4 0.12443223
 ## radial     4 0.12418040
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d$ jako 34 pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.9036, 10 pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV 0.8537 a 4 pro radiální jádro s hodnotou přesnosti 0.8758.
+Vidíme, že nejlépe vychází hodnota parametru $d$ jako 34 pro lineární jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV 0.0964, 4 pro polynomiální jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV 0.1244 a 4 pro radiální jádro s hodnotou chybovosti 0.1242.
 Pro přehlednost si ještě vykresleme průběh validačních chybovostí v závislosti na dimenzi $d$.
 
 
@@ -1369,6 +1312,7 @@ for (kernel_number in 1:3) {
   clf.SVM.projection <- svm(Y ~ ., data = data.projection.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
                             kernel = kernel_type)
   
   # presnost na trenovacich datech
@@ -1386,8 +1330,8 @@ for (kernel_number in 1:3) {
 }
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 0 % pro lineární jádro, 5.71 % pro polynomiální jádro a 7.86 % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody 21.67 % pro lineární jádro, 16.67 % pro polynomiální jádro a 15 % pro radiální jádro.
+Chybovost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy 0 % pro lineární jádro, 5.71 % pro polynomiální jádro a 7.86 % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody 21.67 % pro lineární jádro, 18.33 % pro polynomiální jádro a 15 % pro radiální jádro.
 
 
 ```r
@@ -1404,17 +1348,17 @@ Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\
 KNN                                                                                  0.2500                                                   0.2167
 LDA                                                                                  0.1143                                                   0.1500
 QDA                                                                                  0.1286                                                   0.1500
-SVM linear - diskr                                                                   0.0857                                                   0.1167
-SVM poly - diskr                                                                     0.3214                                                   0.3000
-SVM rbf - diskr                                                                      0.1286                                                   0.2500
+SVM linear - diskr                                                                   0.1143                                                   0.1000
+SVM poly - diskr                                                                     0.0786                                                   0.1333
+SVM rbf - diskr                                                                      0.1143                                                   0.1500
 SVM linear - PCA                                                                     0.1143                                                   0.1833
-SVM poly - PCA                                                                       0.1643                                                   0.1667
+SVM poly - PCA                                                                       0.1214                                                   0.1833
 SVM rbf - PCA                                                                        0.1214                                                   0.1833
 SVM linear - Fbasis                                                                  0.0000                                                   0.1333
-SVM poly - Fbasis                                                                    0.0000                                                   0.2500
+SVM poly - Fbasis                                                                    0.0000                                                   0.2167
 SVM rbf - Fbasis                                                                     0.0000                                                   0.2667
 SVM linear - projection                                                              0.0000                                                   0.2167
-SVM poly - projection                                                                0.0571                                                   0.1667
+SVM poly - projection                                                                0.0571                                                   0.1833
 SVM rbf - projection                                                                 0.0786                                                   0.1500
 
 ## Simulační studie
@@ -1676,13 +1620,31 @@ for (n_shift in 1:length(shift_vector)) {
     # posloupnost bodu, ve kterych funkce vyhodnotime
     t.seq <- seq(0, 12, length = 101)
        
-    grid.data <- eval.fd(fdobj = X.train, evalarg = t.seq)
-    grid.data <- as.data.frame(t(grid.data)) # transpozice kvuli funkcim v radku
-    grid.data$Y <- Y.train |> factor()
+    # normovani dat
+    norms <- c()
+    for (i in 1:dim(XXfd$coefs)[2]) {
+      norms <- c(norms, as.numeric(1 / norm.fd(XXfd[i])))
+      }
+    XXfd_norm <- XXfd 
+    XXfd_norm$coefs <- XXfd_norm$coefs * matrix(norms, 
+                                                ncol = dim(XXfd$coefs)[2],
+                                                nrow = dim(XXfd$coefs)[1],
+                                                byrow = T)
     
-    grid.data.test <- eval.fd(fdobj = X.test, evalarg = t.seq)
+    # rozdeleni na testovaci a trenovaci cast
+    X.train_norm <- subset(XXfd_norm, split == TRUE)
+    X.test_norm <- subset(XXfd_norm, split == FALSE)
+    
+    Y.train_norm <- subset(Y, split == TRUE)
+    Y.test_norm <- subset(Y, split == FALSE)
+    
+    grid.data <- eval.fd(fdobj = X.train_norm, evalarg = t.seq)
+    grid.data <- as.data.frame(t(grid.data)) 
+    grid.data$Y <- Y.train_norm |> factor()
+    
+    grid.data.test <- eval.fd(fdobj = X.test_norm, evalarg = t.seq)
     grid.data.test <- as.data.frame(t(grid.data.test))
-    grid.data.test$Y <- Y.test |> factor()
+    grid.data.test$Y <- Y.test_norm |> factor()
     
     # trenovaci dataset
     data.Bbasis.train <- t(X.train$coefs) |> as.data.frame()
@@ -1700,6 +1662,7 @@ for (n_shift in 1:length(shift_vector)) {
     clf.SVM.p <- svm(Y ~ ., data = grid.data,
                      type = 'C-classification',
                      scale = TRUE,
+                     coef0 = 1,
                      kernel = 'polynomial')
     
     clf.SVM.r <- svm(Y ~ ., data = grid.data,
@@ -1754,6 +1717,7 @@ for (n_shift in 1:length(shift_vector)) {
     clf.SVM.p.PCA <- svm(Y ~ ., data = data.PCA.train,
                          type = 'C-classification',
                          scale = TRUE,
+                         coef0 = 1,
                          kernel = 'polynomial')
     
     clf.SVM.r.PCA <- svm(Y ~ ., data = data.PCA.train,
@@ -1808,6 +1772,7 @@ for (n_shift in 1:length(shift_vector)) {
     clf.SVM.p.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
                             type = 'C-classification',
                             scale = TRUE,
+                            coef0 = 1,
                             kernel = 'polynomial')
     
     clf.SVM.r.Bbasis <- svm(Y ~ ., data = data.Bbasis.train,
@@ -1889,6 +1854,7 @@ for (n_shift in 1:length(shift_vector)) {
         clf.SVM.p.projection <- svm(Y ~ ., data = data.projection.train.cv,
                                 type = 'C-classification',
                                 scale = TRUE,
+                                coef0 = 1,
                                 kernel = 'polynomial')
         
         clf.SVM.r.projection <- svm(Y ~ ., data = data.projection.train.cv,
@@ -1957,6 +1923,7 @@ for (n_shift in 1:length(shift_vector)) {
       clf.SVM.projection <- svm(Y ~ ., data = data.projection.train,
                                 type = 'C-classification',
                                 scale = TRUE,
+                                coef0 = 1,
                                 kernel = kernel_type)
       
       # presnost na trenovacich datech

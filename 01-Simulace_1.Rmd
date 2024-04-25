@@ -324,9 +324,9 @@ neighb.model <- classif.knn(group = y.train,
                             fdataobj = x.train, 
                             knn = c(1:round(sqrt(length(y.train))))) 
 
-summary(neighb.model) # shrnuti modelu
-plot(neighb.model$gcv, pch = 16) # vykresleni zavislosti GCV na poctu sousedu K
-neighb.model$max.prob # maximalni presnost
+# summary(neighb.model) # shrnuti modelu
+# plot(neighb.model$gcv, pch = 16) # vykresleni zavislosti GCV na poctu sousedu K
+# neighb.model$max.prob # maximalni presnost
 (K.opt <- neighb.model$h.opt) # optimalni hodnota K
 ```
 
@@ -381,10 +381,10 @@ CV.results <- apply(CV.results, 1, mean)
 K.opt <- which.max(CV.results)
 presnost.opt.cv <- max(CV.results)
 CV.results <- data.frame(K = neighbours, CV = CV.results)
-CV.results |> t()
+# CV.results |> t()
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $K$ jako `r K.opt` s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(presnost.opt.cv, 4)`.
+Vidíme, že nejlépe vychází hodnota parametru $K$ jako `r K.opt` s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(1-presnost.opt.cv, 4)`.
 Pro přehlednost si ještě vykresleme průběh validační chybovosti v závislosti na počtu sousedů $K$.
 
 ```{r fig.cap='Závislost validační chybovosti na hodnotě $K$, tedy na počtu sousedů.'}
@@ -408,7 +408,7 @@ neighb.model <- classif.knn(group = y.train, fdataobj = x.train, knn = K.opt)
 model.neighb.predict <- predict(neighb.model, 
                                 new.fdataobj = fdata(X.test))
 
-summary(neighb.model)
+# summary(neighb.model)
 
 # presnost na testovacich datech
 presnost <- table(as.numeric(factor(Y.test)), model.neighb.predict) |>
@@ -416,10 +416,10 @@ presnost <- table(as.numeric(factor(Y.test)), model.neighb.predict) |>
   diag() |>
   sum()
 # chybovost
-1 - presnost
+# 1 - presnost
 ```
 
-Vidíme tedy, že přesnost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou `r K.opt`, kterou jsme určili cross-validací, je na trénovacích datech rovna `r 1 - round(neighb.model$max.prob, 4)` a na testovacích datech `r round(1 - presnost, 4)`.
+Vidíme tedy, že chybovost modelu sestrojeného pomocí metody $K$ nejbližších sousedů s optimální volbou $K_{optimal}$ rovnou `r K.opt`, kterou jsme určili cross-validací, je na trénovacích datech rovna `r 1 - round(neighb.model$max.prob, 4)` a na testovacích datech `r round(1 - presnost, 4)`.
 
 K porovnání jendotlivých modelů můžeme použít oba typy chybovostí, pro přehlednost si je budeme ukládat do tabulky.
 
@@ -504,7 +504,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme jednak přesnost klasifikátoru na trénovacích (`r 100 * round(presnost.train, 4)` %), tak i na testovacích datech (`r 100 * round(presnost.test, 4)` %).
+Spočítali jsme jednak chybovost klasifikátoru na trénovacích (`r 100 * round(1-presnost.train, 4)` %), tak i na testovacích datech (`r 100 * round(1-presnost.test, 4)` %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()`.
@@ -611,7 +611,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test$class) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme tedy jednak přesnost klasifikátoru na trénovacích (`r 100 * round(presnost.train, 4)` %), tak i na testovacích datech (`r 100 * round(presnost.test, 4)` %).
+Spočítali jsme tedy jednak chybovost klasifikátoru na trénovacích (`r 100 * round(1-presnost.train, 4)` %), tak i na testovacích datech (`r 100 * round(1-presnost.test, 4)` %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v případě LDA.
@@ -903,7 +903,7 @@ presnost.test <- table(Y.test, predictions.test$Y.pred) |>
 Spočítali jsme trénovací chybovost (rovna `r 100 * (1 - round(presnost.train, 4))` %) i testovací chybovost (rovna `r 100 * (1 - round(presnost.test, 4))` %).
 Pro lepší představu si ještě můžeme vykreslit hodnoty odhadnutých pravděpodobností příslušnosti do klasifikační třídy $Y = 1$ na trénovacích datech v závislosti na hodnotách lineárního prediktoru.
 
-```{r fig.cap='Závoslost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.'}
+```{r fig.cap='Závislost odhadnutých pravděpodobností na hodnotách lineárního prediktoru. Barevně jsou odlišeny body podle příslušnosti do klasifikační třídy.'}
 data.frame(
   linear.predictor = model.glm$linear.predictors,
   response = model.glm$fitted.values,
@@ -1001,7 +1001,7 @@ presnost.test <- table(data.PCA.test$Y, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Spočítali jsme tedy přesnost klasifikátoru na trénovacích (`r 100 * round(presnost.train, 4)` %) i na testovacích datech (`r 100 * round(presnost.test, 4)` %).
+Spočítali jsme tedy chybovost klasifikátoru na trénovacích (`r 100 * round(1-presnost.train, 4)` %) i na testovacích datech (`r 100 * round(1-presnost.test, 4)` %).
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v případě LDA i QDA.
@@ -1115,7 +1115,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost klasifikátoru na testovacích datech je tedy `r 100 * round(presnost.test, 4)` % a na trénovacích datech `r 100 * round(presnost.train, 4)` %.
+Chybovost klasifikátoru na testovacích datech je tedy `r 100 * round(1-presnost.test, 4)` % a na trénovacích datech `r 100 * round(1-presnost.train, 4)` %.
 
 Graficky si rozhodovací strom můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1173,7 +1173,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na testovacích datech je tedy `r 100 * round(presnost.test, 4)` % a na trénovacích datech `r 100 * round(presnost.train, 4)` %.
+Chybovost rozhodovacího stromu na testovacích datech je tedy `r 100 * round(1-presnost.test, 4)` % a na trénovacích datech `r 100 * round(1-presnost.train, 4)` %.
 
 Graficky si rozhodovací strom sestrojený na skórech hlavních komponent můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1241,7 +1241,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy `r 100 * round(presnost.train, 4)` % a na testovacích datech `r 100 * round(presnost.test, 4)` %.
+Chybovost rozhodovacího stromu na trénovacích datech je tedy `r 100 * round(1-presnost.train, 4)` % a na testovacích datech `r 100 * round(1-presnost.test, 4)` %.
 
 Graficky si rozhodovací strom sestrojený na koeficientech B-splinového vyjádření můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
 Nastavíme barvy uzlů tak, aby reflektovaly předchozí barevné odlišení.
@@ -1313,7 +1313,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost náhodného lesu na trénovacích datech je tedy `r 100 * round(presnost.train, 4)` % a na testovacích datech `r 100 * round(presnost.test, 4)` %.
+Chybovost náhodného lesu na trénovacích datech je tedy `r 100 * round(1-presnost.train, 4)` % a na testovacích datech `r 100 * round(1-presnost.test, 4)` %.
 
 ```{r}
 Res <- data.frame(model = 'RForest - diskr', 
@@ -1345,7 +1345,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost rozhodovacího stromu na trénovacích datech je tedy `r 100 * round(presnost.train, 4)` % a na testovacích datech `r 100 * round(presnost.test, 4)` %.
+Chybovost lesu na trénovacích datech je tedy `r 100 * round(1-presnost.train, 4)` % a na testovacích datech `r 100 * round(1-presnost.test, 4)` %.
 
 ```{r}
 Res <- data.frame(model = 'RForest - score', 
@@ -1377,7 +1377,7 @@ presnost.test <- table(Y.test, predictions.test) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost tohoto klasifikátoru na trénovacích datech je `r 100 * round(presnost.train, 4)` % a na testovacích datech `r 100 * round(presnost.test, 4)` %.
+Chybovost tohoto klasifikátoru na trénovacích datech je `r 100 * round(1-presnost.train, 4)` % a na testovacích datech `r 100 * round(1-presnost.test, 4)` %.
 
 ```{r}
 Res <- data.frame(model = 'RForest - Bbasis', 
@@ -1412,8 +1412,7 @@ S rostoucí hodnotou $C$ bude metoda více penalizovat špatně klasifikovaná d
 Tato konstanta $C$ se defaultně volí rovna 1, můžeme ji určit i přímo například pomocí cross-validace.
 
 Využitím cross-validace můžeme také určit optimální hodnoty ostatních hyperparametrů, které nyní závisí na naší volbě jádrové funkce.
-V případě lineárního jádra nevolíme žádný další parametr kromě konstanty $C$, u polynomiálního jádra musíme určit hodnoty hyperparametrů $\alpha_0, \gamma \text{ a } d$, jejichž defaultní hodnoty v `R` jsou postupně $\alpha_0^{default} = 0, \gamma^{default} = \frac{1}{dim(\texttt{data})} \text{ a } d^{default} = 3$.
-Při volbě radiálního jádra máme pouze jeden další hyperparametr $\gamma$, jehož defaultní hodnota v `R` je totožná jako u polynomiálního jádra.
+V případě lineárního jádra nevolíme žádný další parametr kromě konstanty $C$, u polynomiálního a radiálního jádra musíme určit hodnoty hyperparametrů $\alpha_0, \gamma \text{ a } d$, jejichž defaultní hodnoty v `R` jsou postupně $\alpha_0^{default} = 0, \gamma^{default} = \frac{1}{dim(\texttt{data})} \text{ a } d^{default} = 3$.
 Opět bychom mohli hodnoty hyperparametrů určit jako optimální pro naše data, avšak vzhledem k relativní výpočetní náročnosti necháme hodnoty příslušných hyperparametrů na jejich defaultních hodnotách.
 
 V případě funkcionálních dat máme několik možností, jak použít metodu SVM.
@@ -1502,8 +1501,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM na trénovacích datech je tedy `r 100 * round(presnost.train.l, 4)` % pro lineární jádro, `r 100 * round(presnost.train.p, 4)` % pro polynomiální jádro a `r 100 * round(presnost.train.r, 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(presnost.test.l, 4)` % pro lineární jádro, `r 100 * round(presnost.test.p, 4)` % pro polynomiální jádro a `r 100 * round(presnost.test.r, 4)` % pro radiální jádro.
+Chybovost metody SVM na trénovacích datech je tedy `r 100 * round(1-presnost.train.l, 4)` % pro lineární jádro, `r 100 * round(1-presnost.train.p, 4)` % pro polynomiální jádro a `r 100 * round(1-presnost.train.r, 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(1-presnost.test.l, 4)` % pro lineární jádro, `r 100 * round(1-presnost.test.p, 4)` % pro polynomiální jádro a `r 100 * round(1-presnost.test.r, 4)` % pro radiální jádro.
 
 ```{r}
 Res <- data.frame(model = c('SVM linear - diskr', 
@@ -1564,8 +1563,8 @@ presnost.test.r <- table(data.PCA.test$Y, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy `r 100 * round(presnost.train.l, 4)` % pro lineární jádro, `r 100 * round(presnost.train.p, 4)` % pro polynomiální jádro a `r 100 * round(presnost.train.r, 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(presnost.test.l, 4)` % pro lineární jádro, `r 100 * round(presnost.test.p, 4)` % pro polynomiální jádro a `r 100 * round(presnost.test.r, 4)` % pro radiální jádro.
+Chybovost metody SVM aplikované na skóre hlavních komponent na trénovacích datech je tedy `r 100 * round(1-presnost.train.l, 4)` % pro lineární jádro, `r 100 * round(1-presnost.train.p, 4)` % pro polynomiální jádro a `r 100 * round(1-presnost.train.r, 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(1-presnost.test.l, 4)` % pro lineární jádro, `r 100 * round(1-presnost.test.p, 4)` % pro polynomiální jádro a `r 100 * round(1-presnost.test.r, 4)` % pro radiální jádro.
 
 Pro grafické znázornění metody můžeme zaznačit dělící hranici do grafu skórů prvních dvou hlavních komponent.
 Tuto hranici spočítáme na husté síti bodů a zobrazíme ji pomocí funkce `geom_contour()` stejně jako v předchozích případech, kdy jsme také vykreslovali klasifikační hranici.
@@ -1704,8 +1703,8 @@ presnost.test.r <- table(Y.test, predictions.test.r) |>
   prop.table() |> diag() |> sum()
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy `r 100 * round(presnost.train.l, 4)` % pro lineární jádro, `r 100 * round(presnost.train.p, 4)` % pro polynomiální jádro a `r 100 * round(presnost.train.r, 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(presnost.test.l, 4)` % pro lineární jádro, `r 100 * round(presnost.test.p, 4)` % pro polynomiální jádro a `r 100 * round(presnost.test.r, 4)` % pro radiální jádro.
+Chybovost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy `r 100 * round(1-presnost.train.l, 4)` % pro lineární jádro, `r 100 * round(1-presnost.train.p, 4)` % pro polynomiální jádro a `r 100 * round(1-presnost.train.r, 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(1-presnost.test.l, 4)` % pro lineární jádro, `r 100 * round(1-presnost.test.p, 4)` % pro polynomiální jádro a `r 100 * round(1-presnost.test.r, 4)` % pro radiální jádro.
 
 ```{r}
 Res <- data.frame(model = c('SVM linear - Bbasis', 
@@ -1736,7 +1735,6 @@ Jde tedy o metodu redukce dimenze, kterou můžeme nazvat *filtrace*.
 Pro samotnou projekci použijeme v `R` funkci `project.basis()` z knihovny `fda`.
 Na jejím vstupu bude matice původních diskrétních (nevyhlazených) dat, hodnoty, ve kterých měříme hodnoty v matici původních dat a bázový objekt, na který chceme data projektovat.
 My zvolíme projekci na B-splinovou bázi, protože využití Fourierovy báze není pro naše neperiodická data vhodné.
-Další možností je využít *wavelet basis*.
 
 Dimenzi $d$ volíme buď z nějaké předchozí expertní znalosti, nebo pomocí cross-validace.
 V našem případě určíme optimální dimenzi podprostoru $V_d$ pomocí $k$-násobné cross-validace (volíme $k \ll n$ kvůli výpočetní náročnosti metody, často se volí $k = 5$ nebo $k = 10$).
@@ -1853,7 +1851,7 @@ data.frame(d_opt = d.opt, ERR = 1 - presnost.opt.cv,
            row.names = c('linear', 'poly', 'radial'))
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d$ jako `r d.opt[1]` pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(presnost.opt.cv[1], 4)`, `r d.opt[2]` pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(presnost.opt.cv[2], 4)` a `r d.opt[3]` pro radiální jádro s hodnotou přesnosti `r round(presnost.opt.cv[3], 4)`.
+Vidíme, že nejlépe vychází hodnota parametru $d$ jako `r d.opt[1]` pro lineární jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(1-presnost.opt.cv[1], 4)`, `r d.opt[2]` pro polynomiální jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(1-presnost.opt.cv[2], 4)` a `r d.opt[3]` pro radiální jádro s hodnotou chybovosti `r round(1-presnost.opt.cv[3], 4)`.
 Pro přehlednost si ještě vykresleme průběh validačních chybovostí v závislosti na dimenzi $d$.
 
 ```{r fig.cap='Závislost validační chybovosti na dimenzi podprostoru $V_d$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM. Černými body jsou vyznačeny optimální hodnoty dimenze $V_d$ pro jednotlivé jádrové funkce.'}
@@ -1943,8 +1941,8 @@ for (kernel_number in 1:3) {
 }
 ```
 
-Přesnost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
+Chybovost metody SVM aplikované na bázové koeficienty na trénovacích datech je tedy `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
 
 ```{r}
 RESULTS <- rbind(RESULTS, Res)
@@ -2414,7 +2412,7 @@ knitr::kable(df.RKHS.res,
              format = 'simple')
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ `r d.opt[1]` a $\gamma={}$ `r round(gamma.opt[1], 4)` pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(1-err.opt.cv[1], 4)`, $d={}$ `r d.opt[2]` a $\gamma={}$ `r round(gamma.opt[2], 4)` pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(1 - err.opt.cv[2], 4)` a $d={}$ `r d.opt[3]` a $\gamma={}$ `r round(gamma.opt[3], 4)` pro radiální jádro s hodnotou přesnosti `r round(1 - err.opt.cv[3], 4)`.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ `r d.opt[1]` a $\gamma={}$ `r round(gamma.opt[1], 4)` pro lineární jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(err.opt.cv[1], 4)`, $d={}$ `r d.opt[2]` a $\gamma={}$ `r round(gamma.opt[2], 4)` pro polynomiální jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(err.opt.cv[2], 4)` a $d={}$ `r d.opt[3]` a $\gamma={}$ `r round(gamma.opt[3], 4)` pro radiální jádro s hodnotou chybovosti `r round(err.opt.cv[3], 4)`.
 Pro zajímavost si ještě vykresleme funkci validační chybovosti v závislosti na dimenzi $d$ a hodnotě hyperparametru $\gamma$.
 
 ```{r fig.cap='Závislost validační chybovosti na volbě hyperparametrů $d$ a $\\gamma$, zvlášť pro všechna tři uvažovaná jádra v metodě SVM.'}
@@ -2544,8 +2542,8 @@ knitr::kable(Res,
              format = 'simple')
 ```
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
+Chybovost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
 
 ```{r}
 RESULTS <- rbind(RESULTS, Res)
@@ -2723,7 +2721,7 @@ knitr::kable(df.RKHS.res,
              format = 'simple')
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ `r d.opt[1]` a $p={}$ `r poly.opt[1]` pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(1-err.opt.cv[1], 4)`, $d={}$ `r d.opt[2]` a $p={}$ `r poly.opt[2]` pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(1 - err.opt.cv[2], 4)` a $d={}$ `r d.opt[3]` a $p={}$ `r poly.opt[3]` pro radiální jádro s hodnotou přesnosti `r round(1 - err.opt.cv[3], 4)`.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ `r d.opt[1]` a $p={}$ `r poly.opt[1]` pro lineární jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(err.opt.cv[1], 4)`, $d={}$ `r d.opt[2]` a $p={}$ `r poly.opt[2]` pro polynomiální jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(err.opt.cv[2], 4)` a $d={}$ `r d.opt[3]` a $p={}$ `r poly.opt[3]` pro radiální jádro s hodnotou chybovosti `r round(err.opt.cv[3], 4)`.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -2826,8 +2824,8 @@ knitr::kable(Res,
              format = 'simple')
 ```
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
+Chybovost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
 
 ```{r}
 RESULTS <- rbind(RESULTS, Res)
@@ -2989,7 +2987,7 @@ knitr::kable(df.RKHS.res,
              format = 'simple')
 ```
 
-Vidíme, že nejlépe vychází hodnota parametru $d={}$ `r d.opt[1]` pro lineární jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(1-err.opt.cv[1], 4)`, $d={}$ `r d.opt[2]` pro polynomiální jádro s hodnotou přesnosti spočtenou pomocí 10-násobné CV `r round(1 - err.opt.cv[2], 4)` a $d={}$ `r d.opt[3]` pro radiální jádro s hodnotou přesnosti `r round(1 - err.opt.cv[3], 4)`.
+Vidíme, že nejlépe vychází hodnota parametru $d={}$ `r d.opt[1]` pro lineární jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(err.opt.cv[1], 4)`, $d={}$ `r d.opt[2]` pro polynomiální jádro s hodnotou chybovosti spočtenou pomocí 10-násobné CV `r round(err.opt.cv[2], 4)` a $d={}$ `r d.opt[3]` pro radiální jádro s hodnotou chybovosti `r round(err.opt.cv[3], 4)`.
 
 Jelikož již máme nalezeny optimální hodnoty hyperparametrů, můžeme zkounstruovat finální modely a určit jejich úspěšnost klasifikace na testovacích datech.
 
@@ -3089,8 +3087,8 @@ knitr::kable(Res,
              format = 'simple')
 ```
 
-Přesnost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
-Na testovacích datech je potom přesnost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
+Chybovost metody SVM v kombinaci s projekcí na Reproducing Kernel Hilbert Space je tedy na trénovacích datech rovna `r 100 * round(Res[1, 2], 4)` % pro lineární jádro, `r 100 * round(Res[2, 2], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 2], 4)` % pro gaussovské jádro.
+Na testovacích datech je potom chybovost metody `r 100 * round(Res[1, 3], 4)` % pro lineární jádro, `r 100 * round(Res[2, 3], 4)` % pro polynomiální jádro a `r 100 * round(Res[3, 3], 4)` % pro radiální jádro.
 
 ```{r}
 RESULTS <- rbind(RESULTS, Res)
@@ -4804,7 +4802,7 @@ CV_res |>
   filter(method %in% c('KNN_K', 'nharm', 'LR_func_n_basis')) |>
   ggplot(aes(x = hyperparameter, #y = after_stat(density),
              fill = method, colour = method)) + 
-  geom_histogram(binwidth = 5, alpha = 0.6) + 
+  geom_histogram(binwidth = 1, alpha = 0.6) + 
   theme_bw() + 
   facet_grid(~method, scales = 'free') +
   labs(x = 'Hodnoty hyperparametru',

@@ -58,7 +58,7 @@ y.1 <- c(0.1, 0.4, 0.71, 1.08, 1.47, 1.39, 0.81, 0.05, -0.1, -0.4,
 ```
 
 
-```{r}
+```{r fig.cap="Body definující interpolační polynomy."}
 # graf bodu
 dat_points <- data.frame(x = c(x.0, x.1),
                          y = c(y.0, y.1),
@@ -271,7 +271,7 @@ DF |> ggplot(aes(x = t, y = Vsmooth, group = interaction(time, group),
 
 Ještě znázorněme všechny křivky včetně průměru zvlášť pro každou třídu.
 
-```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.', warning=FALSE}
+```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu.', warning=FALSE}
 DFsmooth <- data.frame(
   t = rep(t, 2 * n),
   time = rep(rep(1:n, each = length(t)), 2),
@@ -303,7 +303,7 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
   scale_y_continuous(expand = c(0.01, 0.01))#, limits = c(-1, 2))
 ```
 
-```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.', warning=FALSE}
+```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.', warning=FALSE}
 DFsmooth <- data.frame(
   t = rep(t, 2 * n),
   time = rep(rep(1:n, each = length(t)), 2),
@@ -375,7 +375,7 @@ Y.test <- subset(Y, split == FALSE)
 
 Ještě se podíváme na zastoupení jednotlivých skupin v testovací a trénovací části dat.
 
-```{r}
+```{r include=FALSE}
 # absolutni zastoupeni
 table(Y.train)
 table(Y.test)
@@ -535,31 +535,6 @@ RESULTS <- rbind(RESULTS, Res)
 
 Nyní se podívejme na klasifikaci našich nasimulovaných křivek pomocí metody podpůrných vektorů (ang. Support Vector Machines, SVM).
 Výhodou této klasifikační metody je její výpočetní nenáročnost, neboť pro definici hraniční křivky mezi třídami využívá pouze několik (často málo) pozorování.
-
-Hlavní výhodou SVM je použití tzv.
-*jádrového triku* (kernel trick), pomocí kterého nahradíme obyčejný skalární součin jiným skalárním součinem transformovaných dat, aniž bychom tuto transformaci museli přímo definovat.
-Tím dostaneme obecně nelineární dělící hranici mezi klasifikačními třídami.
-*Jádro* (jádrová funkce, ang. kernel, kernel function) $K$ je taková funkce, která splňuje
-
-$$
-K(x_i, x_j) = \langle \phi(x_i), \phi(x_j) \rangle_{\mathcal H}, 
-$$
-kde $\phi$ je nějaká (neznámá) transformace (ang. feature map), $\mathcal H$ je Hilbertův prostor a $\langle \cdot, \cdot \rangle_{\mathcal H}$ je nějaký skalární součin na tomto Hilbertově prostoru.
-
-Nejčastěji se v praxi volí tři typy jádrových funkcí:
-
--   lineární jádro -- $K(x_i, x_j) = \langle x_i, x_j \rangle$,
--   polynomiální jádro -- $K(x_i, x_j) = \big(\alpha_0 + \gamma \langle x_i, x_j \rangle \big)^d$,
--   radiální (gaussovské) jádro -- $\displaystyle{K(x_i, x_j) = \text e^{-\gamma \|x_i - x_j \|^2}}$.
-
-U všech výše zmíněných jader musíme zvolit konstantu $C > 0$, která udává míru penalizace za překročení dělící hranice mezi třídami (ang. inverse regularization parameter).
-S rostoucí hodnotou $C$ bude metoda více penalizovat špatně klasifikovaná data a méně tvar hranice, naopak pro malé hodnoty $C$ metoda nedává takový význam špatně klasifikovaným datům, ale zaměřuje se více na penalizaci tvaru hranice.
-Tato konstanta $C$ se defaultně volí rovna 1, můžeme ji určit i přímo například pomocí cross-validace.
-
-Využitím cross-validace můžeme také určit optimální hodnoty ostatních hyperparametrů, které nyní závisí na naší volbě jádrové funkce.
-V případě lineárního jádra nevolíme žádný další parametr kromě konstanty $C$, u polynomiálního jádra musíme určit hodnoty hyperparametrů $\alpha_0, \gamma \text{ a } d$, jejichž defaultní hodnoty v `R` jsou postupně $\alpha_0^{default} = 0, \gamma^{default} = \frac{1}{dim(\texttt{data})} \text{ a } d^{default} = 3$.
-Při volbě radiálního jádra máme pouze jeden další hyperparametr $\gamma$, jehož defaultní hodnota v `R` je totožná jako u polynomiálního jádra.
-Opět bychom mohli hodnoty hyperparametrů určit jako optimální pro naše data, avšak vzhledem k relativní výpočetní náročnosti necháme hodnoty příslušných hyperparametrů na jejich defaultních hodnotách.
 
 V případě funkcionálních dat máme několik možností, jak použít metodu SVM.
 Nejjednodušší variantou je použít tuto klasifikační metodu přímo na diskretizovanou funkci.
@@ -908,7 +883,7 @@ Proto dělat jakékoli závěry o metodách a porovnávat je mezi sebou může b
 
 Z tohoto důvodu se v této části zaměříme na opakování celého předchozího postupu pro různé vygenerované soubory.
 Výsledky si budeme ukládat do tabulky a nakonec spočítáme průměrné charakteristiky modelů přes jednotlivá opakování.
-Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 10$.
+Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 50$.
 
 Nyní zopakujeme celou předchozí část `n.sim`-krát a hodnoty chybovostí si budeme ukládat to objektu `SIMUL_params`. Přitom budeme měnit hodnotu parametru $p$ a podíváme se, jak se mění výsledky jednotlivých vybraných klasifikačních metod v závislosti na této hodnotě.
 
@@ -1670,3 +1645,4 @@ p2
 # ggsave("figures/kap6_sim_03diskr_curvesTime.tex", device = tikz, width = 4.5, height = 4.5)
 ```
 
+Podrobné komentáře k výsledkům této simulační studie lze najít v diplomové práci.

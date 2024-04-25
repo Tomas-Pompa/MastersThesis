@@ -335,8 +335,8 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
 ```
 
 <div class="figure">
-<img src="06-Simulace_3_sigma_files/figure-html/unnamed-chunk-16-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-16)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.</p>
+<img src="06-Simulace_3_sigma_files/figure-html/unnamed-chunk-16-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-16)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu.</p>
 </div>
 
 
@@ -373,8 +373,8 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
 ```
 
 <div class="figure">
-<img src="06-Simulace_3_sigma_files/figure-html/unnamed-chunk-17-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-17)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.</p>
+<img src="06-Simulace_3_sigma_files/figure-html/unnamed-chunk-17-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-17)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.</p>
 </div>
 
 ## Klasifikace křivek

@@ -74,7 +74,10 @@ ggplot(dat_points, aes(x = x, y = y, colour = Class)) +
   labs(colour = 'Klasifikační\n      třída')
 ```
 
-<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<div class="figure">
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-3-1.png" alt="Body definující interpolační polynomy." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-3)Body definující interpolační polynomy.</p>
+</div>
 
 Pro výpočet interpolačních polynomů využijeme funkci `poly.calc()` z knihovny `polynom`. Dále definujeme funkce `poly.0()` a `poly.1()`, které budou počítat hodnoty polynomů v daném bodě intervalu. K jejich vytvoření použijeme funkci `predict()`, na jejíž vstup zadáme příslušný polynom a bod, ve kterám chceme polynom vyhodnotit.
 
@@ -341,8 +344,8 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
 ```
 
 <div class="figure">
-<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-15-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-15)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.</p>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-15-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-15)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu.</p>
 </div>
 
 
@@ -379,8 +382,8 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
 ```
 
 <div class="figure">
-<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-16-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-16)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.</p>
+<img src="08-Simulace_3_discretisation_files/figure-html/unnamed-chunk-16-1.png" alt="Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-16)Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.</p>
 </div>
 
 
@@ -426,47 +429,6 @@ Y.test <- subset(Y, split == FALSE)
 Ještě se podíváme na zastoupení jednotlivých skupin v testovací a trénovací části dat.
 
 
-```r
-# absolutni zastoupeni
-table(Y.train)
-```
-
-```
-## Y.train
-##  0  1 
-## 71 69
-```
-
-```r
-table(Y.test)
-```
-
-```
-## Y.test
-##  0  1 
-## 29 31
-```
-
-```r
-# relativni zastoupeni
-table(Y.train) / sum(table(Y.train))
-```
-
-```
-## Y.train
-##         0         1 
-## 0.5071429 0.4928571
-```
-
-```r
-table(Y.test) / sum(table(Y.test))
-```
-
-```
-## Y.test
-##         0         1 
-## 0.4833333 0.5166667
-```
 
 ### Rozhodovací stromy
 
@@ -532,7 +494,7 @@ duration |> print()
 ```
 
 ```
-## Time difference of 0.49158 secs
+## Time difference of 0.435359 secs
 ```
 
 Graficky si rozhodovací strom můžeme vykreslit pomocí funkce `fancyRpartPlot()`.
@@ -620,7 +582,7 @@ duration |> print()
 ```
 
 ```
-## Time difference of 0.406394 secs
+## Time difference of 0.343611 secs
 ```
 
 
@@ -637,31 +599,6 @@ RESULTS <- rbind(RESULTS, Res)
 
 Nyní se podívejme na klasifikaci našich nasimulovaných křivek pomocí metody podpůrných vektorů (ang. Support Vector Machines, SVM).
 Výhodou této klasifikační metody je její výpočetní nenáročnost, neboť pro definici hraniční křivky mezi třídami využívá pouze několik (často málo) pozorování.
-
-Hlavní výhodou SVM je použití tzv.
-*jádrového triku* (kernel trick), pomocí kterého nahradíme obyčejný skalární součin jiným skalárním součinem transformovaných dat, aniž bychom tuto transformaci museli přímo definovat.
-Tím dostaneme obecně nelineární dělící hranici mezi klasifikačními třídami.
-*Jádro* (jádrová funkce, ang. kernel, kernel function) $K$ je taková funkce, která splňuje
-
-$$
-K(x_i, x_j) = \langle \phi(x_i), \phi(x_j) \rangle_{\mathcal H}, 
-$$
-kde $\phi$ je nějaká (neznámá) transformace (ang. feature map), $\mathcal H$ je Hilbertův prostor a $\langle \cdot, \cdot \rangle_{\mathcal H}$ je nějaký skalární součin na tomto Hilbertově prostoru.
-
-Nejčastěji se v praxi volí tři typy jádrových funkcí:
-
--   lineární jádro -- $K(x_i, x_j) = \langle x_i, x_j \rangle$,
--   polynomiální jádro -- $K(x_i, x_j) = \big(\alpha_0 + \gamma \langle x_i, x_j \rangle \big)^d$,
--   radiální (gaussovské) jádro -- $\displaystyle{K(x_i, x_j) = \text e^{-\gamma \|x_i - x_j \|^2}}$.
-
-U všech výše zmíněných jader musíme zvolit konstantu $C > 0$, která udává míru penalizace za překročení dělící hranice mezi třídami (ang. inverse regularization parameter).
-S rostoucí hodnotou $C$ bude metoda více penalizovat špatně klasifikovaná data a méně tvar hranice, naopak pro malé hodnoty $C$ metoda nedává takový význam špatně klasifikovaným datům, ale zaměřuje se více na penalizaci tvaru hranice.
-Tato konstanta $C$ se defaultně volí rovna 1, můžeme ji určit i přímo například pomocí cross-validace.
-
-Využitím cross-validace můžeme také určit optimální hodnoty ostatních hyperparametrů, které nyní závisí na naší volbě jádrové funkce.
-V případě lineárního jádra nevolíme žádný další parametr kromě konstanty $C$, u polynomiálního jádra musíme určit hodnoty hyperparametrů $\alpha_0, \gamma \text{ a } d$, jejichž defaultní hodnoty v `R` jsou postupně $\alpha_0^{default} = 0, \gamma^{default} = \frac{1}{dim(\texttt{data})} \text{ a } d^{default} = 3$.
-Při volbě radiálního jádra máme pouze jeden další hyperparametr $\gamma$, jehož defaultní hodnota v `R` je totožná jako u polynomiálního jádra.
-Opět bychom mohli hodnoty hyperparametrů určit jako optimální pro naše data, avšak vzhledem k relativní výpočetní náročnosti necháme hodnoty příslušných hyperparametrů na jejich defaultních hodnotách.
 
 V případě funkcionálních dat máme několik možností, jak použít metodu SVM.
 Nejjednodušší variantou je použít tuto klasifikační metodu přímo na diskretizovanou funkci.
@@ -779,7 +716,7 @@ duration.l |> print()
 ```
 
 ```
-## Time difference of 0.03050113 secs
+## Time difference of 0.02797294 secs
 ```
 
 ```r
@@ -795,7 +732,7 @@ duration.p |> print()
 ```
 
 ```
-## Time difference of 0.01895189 secs
+## Time difference of 0.01821589 secs
 ```
 
 ```r
@@ -811,7 +748,7 @@ duration.r |> print()
 ```
 
 ```
-## Time difference of 0.02759504 secs
+## Time difference of 0.0297451 secs
 ```
 
 
@@ -834,11 +771,11 @@ Table: (\#tab:unnamed-chunk-35)Souhrnné výsledky použitých metod na simulova
 
 Model                                $\widehat{Err}_{train}\quad\quad\quad\quad\quad$         $\widehat{Err}_{test}\quad\quad\quad\quad\quad$          Duration
 ----------------------------------  -------------------------------------------------------  -------------------------------------------------------  ---------
-Tree - diskr.                                                                        0.3357                                                   0.4667     0.4916
-RForest - diskr                                                                      0.0000                                                   0.4000     0.4064
-SVM linear - diskr                                                                   0.0571                                                   0.1667     0.0305
-SVM poly - diskr                                                                     0.0214                                                   0.1667     0.0190
-SVM rbf - diskr                                                                      0.0357                                                   0.1333     0.0276
+Tree - diskr.                                                                        0.3357                                                   0.4667     0.4354
+RForest - diskr                                                                      0.0000                                                   0.4000     0.3436
+SVM linear - diskr                                                                   0.0571                                                   0.1667     0.0280
+SVM poly - diskr                                                                     0.0214                                                   0.1667     0.0182
+SVM rbf - diskr                                                                      0.0357                                                   0.1333     0.0297
 
 ## Simulační studie {#simul3diskr}
 
@@ -852,7 +789,7 @@ Proto dělat jakékoli závěry o metodách a porovnávat je mezi sebou může b
 
 Z tohoto důvodu se v této části zaměříme na opakování celého předchozího postupu pro různé vygenerované soubory.
 Výsledky si budeme ukládat do tabulky a nakonec spočítáme průměrné charakteristiky modelů přes jednotlivá opakování.
-Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 10$.
+Aby byly naše závěry dostatečně obecné, zvolíme počet opakování $n_{sim} = 50$.
 
 Nyní zopakujeme celou předchozí část `n.sim`-krát a hodnoty chybovostí si budeme ukládat to objektu `SIMUL_params`. Přitom budeme měnit hodnotu parametru $p$ a podíváme se, jak se mění výsledky jednotlivých vybraných klasifikačních metod v závislosti na této hodnotě.
 
@@ -1652,3 +1589,4 @@ p2
 # ggsave("figures/kap6_sim_03diskr_curvesTime.tex", device = tikz, width = 4.5, height = 4.5)
 ```
 
+Podrobné komentáře k výsledkům této simulační studie lze najít v diplomové práci.

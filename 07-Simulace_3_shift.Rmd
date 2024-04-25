@@ -293,7 +293,7 @@ DF |> ggplot(aes(x = t, y = Vsmooth, group = interaction(time, group),
 
 Ještě znázorněme všechny křivky včetně průměru zvlášť pro každou třídu.
 
-```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu.', warning=FALSE}
+```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu.', warning=FALSE}
 DFsmooth <- data.frame(
   t = rep(t, 2 * n),
   time = rep(rep(1:n, each = length(t)), 2),
@@ -325,7 +325,7 @@ DFsmooth |> ggplot(aes(x = t, y = Smooth, group = interaction(time, group),
   scale_y_continuous(expand = c(0.01, 0.01))#, limits = c(-1, 2))
 ```
 
-```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Černou čerchovanou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.', warning=FALSE}
+```{r fig.cap='Vykreslení všech vyhlazených pozorovaných křivek, barevně jsou odlišeny křivky podle příslušnosti do klasifikační třídy. Tlustou čarou je zakreslen průměr pro každou třídu. Přiblížený pohled.', warning=FALSE}
 DFsmooth <- data.frame(
   t = rep(t, 2 * n),
   time = rep(rep(1:n, each = length(t)), 2),
