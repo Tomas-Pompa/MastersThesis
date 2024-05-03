@@ -9020,8 +9020,8 @@ SIMULACE$test |>
                notch = FALSE, colour = 'black') + 
   theme_bw() + 
   labs(x = 'Klasifikační metoda',
-       y = "$\\widehat{\\textnormal{Err}}_{test}$"
-       # y = expression(widehat(Err)[test])
+       # y = "$\\widehat{\\textnormal{Err}}_{test}$"
+       y = expression(widehat(Err)[test])
        ) + 
   theme(legend.position = 'none',
         axis.text.x = element_text(angle = 50, hjust = 1)) +
@@ -9029,10 +9029,10 @@ SIMULACE$test |>
               colour = "black") +
   stat_summary(fun = "mean", geom = "point", shape = '+',
                size = 3, color = "black", alpha = 0.9) +
-  scale_x_discrete(labels = methods_names) +
-  theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
-  scale_fill_manual(values = box_col) +
-  scale_alpha_manual(values = box_alpha) +
+  # scale_x_discrete(labels = methods_names) +
+  # theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
+  # scale_fill_manual(values = box_col) +
+  # scale_alpha_manual(values = box_alpha) +
   geom_hline(yintercept = min(SIMULACE.df$Err.test), 
              linetype = 'dashed', colour = 'gray25', alpha = 0.8)
 ```
@@ -11232,8 +11232,8 @@ SIMULACE$test |>
                notch = FALSE, colour = 'black') + 
   theme_bw() + 
   labs(x = 'Klasifikační metoda',
-       y = "$\\widehat{\\textnormal{Err}}_{test}$"
-       # y = expression(widehat(Err)[train])
+       # y = "$\\widehat{\\textnormal{Err}}_{test}$"
+       y = expression(widehat(Err)[train])
        ) + 
   theme(legend.position = 'none',
         axis.text.x = element_text(angle = 50, hjust = 1)) +
@@ -11241,11 +11241,11 @@ SIMULACE$test |>
               colour = "black") +
   stat_summary(fun = "mean", geom = "point", shape = '+',
                size = 3, color = "black", alpha = 0.9) +
-  scale_x_discrete(labels = methods_names) +
-  theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
-  coord_cartesian(ylim = c(0, 0.15)) +
-  scale_fill_manual(values = box_col) +
-  scale_alpha_manual(values = box_alpha) + 
+  # scale_x_discrete(labels = methods_names) +
+  # theme(plot.margin = unit(c(0.5, 0.5, 2, 2), "cm")) +
+  # coord_cartesian(ylim = c(0, 0.15)) +
+  # scale_fill_manual(values = box_col) +
+  # scale_alpha_manual(values = box_alpha) + 
   geom_hline(yintercept = min(SIMULACE.df$Err.test), 
              linetype = 'dashed', colour = 'grey20', alpha = 0.8)
 ```
